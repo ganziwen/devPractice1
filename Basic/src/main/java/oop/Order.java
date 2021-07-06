@@ -8,19 +8,44 @@ package oop;
  * @date 2021/7/2-18:35
  */
 public class Order {
-    //    4-9:11
     Long amount;
     String payeeUserId;
     String payerUserId;
+
+    public Order() {
+    }
+
+    public Order(Long amount, String payeeUserId) {
+        this.amount = amount;
+        this.payeeUserId = payeeUserId;
+    }
+
+    /**
+     * 构造方法的重载
+     *
+     * @param amount
+     * @param payeeUserId
+     * @param payerUserId
+     */
+    public Order(Long amount, String payeeUserId, String payerUserId) {
+        // 常用方式
+//        this.amount = amount;
+//        this.payeeUserId = payeeUserId;
+//        this.payerUserId = payerUserId;
+
+        // 调用上面的两参数构造器
+        this(amount, payeeUserId);
+        // 再加上缺失参数的构造器
+        this.payerUserId = payerUserId;
+
+    }
 
     public Long getAmount() {
         return amount;
     }
 
     public void setAmount(Long amount) {
-        /**
-         * this 标志对象本身
-         */
+//        this 标志对象本身
         this.amount = amount;
     }
 
