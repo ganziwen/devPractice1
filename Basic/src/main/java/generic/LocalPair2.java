@@ -15,6 +15,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class LocalPair2<K, V> {
     // 数据类型是一个变量
-    private K K;
-    private V V;
+    private K val1;
+    private V val2;
 }

@@ -36,13 +36,13 @@ public class LocalPairApp {
      * @return
      */
     public static LocalPair2<String, String> foo3() {
-        LocalPair2<String, String> localPair2 = new LocalPair2("test1,test2", "test3,test4");
+        LocalPair2<String, String> localPair2 = new LocalPair2<>("test1,test2", "test3,test4");
         // 假设经过了一堆逻辑的处理
         return localPair2;
     }
 
     public static LocalPair2<Integer, String> foo4() {
-        LocalPair2<Integer, String> localPair2 = new LocalPair2(12345, "t,e,s,t");
+        LocalPair2<Integer, String> localPair2 = new LocalPair2<>(12345, "t,e,s,t");
         return localPair2;
     }
 
@@ -72,8 +72,8 @@ public class LocalPairApp {
         LocalPair2<String, String> localPair2 = foo3();
         // 编译就会报错
 //        LocalPair2<String, String> localPair3 = foo4();
-        String val1 = localPair2.getK();
-        String val2 = localPair2.getV();
+        String val1 = localPair2.getVal1();
+        String val2 = localPair2.getVal2();
 
         // 这里一定是需要强转的,才能转换成对应的数据类型使用 api
         String[] arr1 = val1.split(",");
