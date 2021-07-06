@@ -72,8 +72,8 @@ public class LocalPairApp {
         LocalPair2<String, String> localPair2 = foo3();
         // 编译就会报错
 //        LocalPair2<String, String> localPair3 = foo4();
-        String val1 = localPair2.getVal1();
-        String val2 = localPair2.getVal2();
+        String val1 = localPair2.getK();
+        String val2 = localPair2.getV();
 
         // 这里一定是需要强转的,才能转换成对应的数据类型使用 api
         String[] arr1 = val1.split(",");

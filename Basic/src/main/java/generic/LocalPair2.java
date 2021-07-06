@@ -13,8 +13,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class LocalPair2<k, v> {
+public class LocalPair2<K, V> {
     // 数据类型是一个变量
-    private k val1;
-    private v val2;
+    private K K;
+    private V V;
 }
