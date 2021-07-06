@@ -27,7 +27,10 @@ public class StringDemo1 {
     }
 
     public static void test2() {
+        // 被定义在常量池内
         String string1 = "hello world";
+
+        // 被定义在堆内存内
         String string2 = new String("hello world");
     }
 }
