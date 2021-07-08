@@ -9,7 +9,7 @@ import java.util.*;
  */
 public class SetFunc {
     public static void main(String[] args) {
-        Set set = new HashSet();
+        Set set = new HashSet<>();
         System.out.println("set = " + set);
         set.add("123");
         set.add("asd");
@@ -49,10 +49,10 @@ public class SetFunc {
         arrayList.add("123");
         arrayList.add("345");
 //        list 转 set
-        Set setList = new HashSet(arrayList);
+        Set<String> setList = new HashSet<>(arrayList);
         System.out.println("setList = " + setList);
 
-        Set setSet = new HashSet();
+        Set<String> setSet = new HashSet<>();
         setSet.add("123");
         setSet.add("999");
 //        set 转 list
