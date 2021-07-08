@@ -2,6 +2,7 @@ package collection;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 
 import java.util.*;
 
@@ -10,7 +11,7 @@ import java.util.*;
  * @version 1.0
  * @date 2021/7/8-20:20
  */
-public class GoogleCollect {
+public class Guavas {
     public static void main(String[] args) {
         testCollection();
         testGoogle();
@@ -38,7 +39,7 @@ public class GoogleCollect {
         List<Integer> l2 = Lists.reverse(l1);
         System.out.println("l2 = " + l2);
 
-//        s1-s2
+//        s1 s2 取差集
         Set<Integer> different = Sets.difference(s1, s2);
         System.out.println("different = " + different);
 
