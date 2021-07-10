@@ -55,7 +55,7 @@ public class FileInputAndOutPutStream {
     }
 
     /**
-     * 正规写法(java7之前的写法)
+     * 字节流读取正规写法(java7之前的写法)
      *
      * @throws Exception
      */
@@ -63,7 +63,7 @@ public class FileInputAndOutPutStream {
         String filePath = "Basic/src/main/java/io/testReadFile.txt";
         InputStream inputStream = null;
         try {
-            java.io.File file = new java.io.File(filePath);
+            File file = new File(filePath);
             inputStream = new FileInputStream(file);
             int length = 0;
             byte[] buffer = new byte[1024 * 256];

@@ -3,32 +3,28 @@ package io;
 import java.io.*;
 
 /**
+ * 一行一行读取
+ *
  * @author Ganziwen
  * @version 1.0
- * @ClassName FileReaderAndWriter
+ * @ClassName BufferReaderAndPrintWriter
  * @Description
- * @date 2021/7/10 10:00
+ * @date 2021/7/10 11:43
  */
-public class FileReaderAndWriter {
+public class BufferReaderAndPrintWriter {
     public static void main(String[] args) {
-        testReader();
+        testBufferReader();
     }
 
-    /**
-     * 字符流读取正确写法
-     */
-    public static void testReader() {
+    public static void testBufferReader() {
         String filePath = "Basic/src/main/java/io/testReadFile.txt";
-        Reader reader = null;
+        BufferedReader reader = null;
 
-        File file = new File(filePath);
         try {
-            reader = new FileReader(file);
-            int length = 0;
-            char[] chars = new char[1024 * 256];
-            while ((length = reader.read(chars)) != -1) {
-                String string = new String(chars, 0, length);
-                System.out.println(string);
+            FileReader fileReader = new FileReader(filePath);
+            reader = new BufferedReader(fileReader);
+            while (reader.readLine() != null) {
+                System.out.println(reader.readLine());
             }
 
         } catch (FileNotFoundException e) {
@@ -47,12 +43,4 @@ public class FileReaderAndWriter {
             }
         }
     }
-
-    /**
-     * 待补充
-     */
-    public static void testWriter() {
-
-    }
 }
-
