@@ -8,10 +8,11 @@ import java.nio.charset.StandardCharsets;
  * @version 1.0
  * @date 2021/7/9-15:34
  */
-public class IODemo1 {
+public class FileInputAndOutPutStream {
 
     public static void main(String[] args) throws Exception {
-        testReadFile();
+//        testReadFile();
+        normalReadFile();
 //        testWriteFile();
     }
 
@@ -23,7 +24,7 @@ public class IODemo1 {
     public static void testReadFile() throws Exception {
 //        path 可以用针对工程的相对路径
         String filePath = "Basic/src/main/java/io/testReadFile.txt";
-        File file = new File(filePath);
+        java.io.File file = new java.io.File(filePath);
         InputStream inputStream = new FileInputStream(file);
         int length = 0;
 //        申请一个 buffer ,256 字节
@@ -44,7 +45,7 @@ public class IODemo1 {
      */
     public static void testWriteFile() throws Exception {
         String filePath = "Basic/src/main/java/io/testWriteFile.txt";
-        File file = new File(filePath);
+        java.io.File file = new java.io.File(filePath);
         OutputStream outputStream = new FileOutputStream(file);
         for (int i = 0; i < 100; i++) {
             String string = "hello java " + i + "\n";
@@ -62,10 +63,10 @@ public class IODemo1 {
         String filePath = "Basic/src/main/java/io/testReadFile.txt";
         InputStream inputStream = null;
         try {
-            File file = new File(filePath);
+            java.io.File file = new java.io.File(filePath);
             inputStream = new FileInputStream(file);
             int length = 0;
-            byte[] buffer = new byte[256];
+            byte[] buffer = new byte[1024 * 256];
             while ((length = inputStream.read(buffer)) != -1) {
                 String string = new String(buffer, 0, length);
                 System.out.println(string);
