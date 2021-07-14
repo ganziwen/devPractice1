@@ -1,5 +1,8 @@
 package jdbc;
 
+import com.mysql.cj.jdbc.result.ResultSetImpl;
+
+import java.io.Reader;
 import java.sql.*;
 
 /**
@@ -11,6 +14,15 @@ import java.sql.*;
  */
 public class Demo2 {
     public static void main(String[] args) {
+        testNormalException();
+        testTryWithSourceException();
+
+    }
+
+    /**
+     * 常规的版本
+     */
+    public static void testNormalException() {
         String url = "jdbc:mysql://www.xiaowenshu.cn:3388/test_table?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC";
         String userName = "root";
         String password = "123456";
@@ -19,6 +31,7 @@ public class Demo2 {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
+
         try {
             // 1. 建立连接
             connection = DriverManager.getConnection(url, userName, password);
@@ -53,21 +66,42 @@ public class Demo2 {
             }
             if (statement != null) {
                 try {
-                    resultSet.close();
+                    statement.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
             if (connection != null) {
                 try {
-                    resultSet.close();
+                    connection.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
 
         }
+    }
+
+    /**
+     * try-with-source 版本
+     */
+    public static void testTryWithSourceException() {
+        String url = "jdbc:mysql://www.xiaowenshu.cn:3388/test_table?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC";
+        String userName = "root";
+        String password = "123456";
+        String sql = "SELECT * from tb_user";
 
 
+        try (Connection connection = DriverManager.getConnection(url, userName, password);
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery(sql)) {
+
+            while (resultSet.next()) {
+                System.out.println(resultSet.getLong("id"));
+                System.out.println(resultSet.getString("user_name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
