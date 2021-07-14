@@ -24,7 +24,7 @@ public class Demo1 {
         PreparedStatement statement = connection.prepareStatement(sql);
 
         // 2.2 执行查询
-        ResultSet resultSet = statement.executeQuery(sql);
+        ResultSet resultSet = statement.executeQuery();
 
         // 2.3 处理结果集
         while (resultSet.next()) {

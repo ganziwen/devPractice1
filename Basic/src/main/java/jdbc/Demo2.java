@@ -14,7 +14,7 @@ import java.sql.*;
  */
 public class Demo2 {
     public static void main(String[] args) {
-        testNormalException();
+        // testNormalException();
         testTryWithSourceException();
 
     }
@@ -94,7 +94,8 @@ public class Demo2 {
 
         try (Connection connection = DriverManager.getConnection(url, userName, password);
              PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery(sql)) {
+             ResultSet resultSet = statement.executeQuery();
+        ) {
 
             while (resultSet.next()) {
                 System.out.println(resultSet.getLong("id"));
