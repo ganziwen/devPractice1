@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>Basic</module>
+        <module>java8</module>
     </modules>
 
     <properties>
