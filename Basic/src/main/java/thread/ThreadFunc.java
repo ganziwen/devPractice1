@@ -26,18 +26,13 @@ public class ThreadFunc {
         // 判断是否存活
         System.out.println("currentThread.isAlive() = " + thread.isAlive());
 
-        Thread.sleep(5000);
-        System.out.println("thread.getState() = " + thread.getState());
-        thread.suspend();
-        System.out.println("thread.getState() = " + thread.getState());
-        Thread.sleep(5000);
-        System.out.println("thread.getState() = " + thread.getState());
-        thread.resume();
-        System.out.println("thread.getState() = " + thread.getState());
 
     }
 }
 
+/**
+ * 设定的任务
+ */
 class Coo implements Runnable {
     @Override
     public void run() {
