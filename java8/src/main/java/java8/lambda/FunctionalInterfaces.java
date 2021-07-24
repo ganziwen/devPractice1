@@ -1,5 +1,6 @@
 package java8.lambda;
 
+import java.sql.SQLOutput;
 import java.time.LocalDateTime;
 import java.util.function.*;
 
@@ -14,12 +15,15 @@ import java.util.function.*;
  * - java.util.function.Consumer<T>: 消费型
  * - java.util.function.Supplier<T>: 供给型
  * - java.util.function.Predicate<T>: 断言型
+ * - Bi 开头的就是多个
  */
 public class FunctionalInterfaces {
     public static void main(String[] args) {
         testFunction();
 
         testConsumer();
+        testSupplier();
+        testPredicate();
     }
 
     /**
@@ -74,19 +78,37 @@ public class FunctionalInterfaces {
     }
 
     /**
-     * 进来的为空,返回要的类型;其实可以理解为跟消费者是相对的
+     * 供给型:进来的为空,返回要的类型;其实可以理解为跟消费者是相对的
      */
     public static void testSupplier() {
+        System.out.println("供给型");
         Supplier<LocalDateTime> supplier1 = new Supplier<LocalDateTime>() {
             @Override
             public LocalDateTime get() {
                 return LocalDateTime.now();
             }
         };
-        supplier1.get();
+        System.out.println("supplier1.get() = " + supplier1.get());
 
         Supplier<LocalDateTime> supplier2 = () -> LocalDateTime.now();
-        supplier2.get();
+        System.out.println("supplier2.get() = " + supplier2.get());
     }
 
+    /**
+     * 断言型
+     */
+    public static void testPredicate() {
+        System.out.println("断言型");
+        Predicate<Integer> predicate1 = new Predicate<Integer>() {
+
+            @Override
+            public boolean test(Integer integer) {
+                return integer > 1024;
+            }
+        };
+        System.out.println("predicate1.test(2048) = " + predicate1.test(2048));
+
+        Predicate<Integer> predicate2 = integer -> integer > 1024;
+        System.out.println("predicate2.test(2048) = " + predicate2.test(2048));
+    }
 }
