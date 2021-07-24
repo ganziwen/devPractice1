@@ -2,7 +2,6 @@ package java8.lambda;
 
 import com.google.common.collect.Lists;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.function.Function;
  * - 参数是可以有多个,多个时是一定要加 () 的,即使没有参数也要写一个空的 ()
  * - 参数列表就是接口内抽象方法的参数列表,也就是示例中 run() 的参数列表
  * - 当只有一个参数时,可以省略括号
- *
+ * <p>
  * 右边:方法体
  * - 方法体需要用 {} 括起来
  * - 方法体只有一行,可以省略 {}, 多行当然不能省略
@@ -35,6 +34,8 @@ public class Demo1 {
 
         testCompareLambda();
         testlambdaOneparam();
+
+        testMyFunctionalInterFace();
 
 
     }
@@ -115,4 +116,16 @@ public class Demo1 {
         System.out.println("str = " + str);
     }
 
+
+    /**
+     * @FunctionalInterface 代表该接口只能有一个抽象方法, 这种接口叫做函数式接口
+     */
+    @FunctionalInterface
+    interface Foo1 {
+        int foo1(int x);
+    }
+
+    public static void testMyFunctionalInterFace() {
+        Foo1 foo1 = x -> x + 10;
+    }
 }
