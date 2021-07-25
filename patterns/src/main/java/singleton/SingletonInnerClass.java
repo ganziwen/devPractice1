@@ -7,6 +7,7 @@ package singleton;
  * @Description
  * @date 2021/7/25 16:55
  * 比较推荐的：匿名内部类的方式
+ * 此方式可以模板化
  */
 public final class SingletonInnerClass {
     private SingletonInnerClass() {
