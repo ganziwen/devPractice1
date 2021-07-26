@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
  * @ClassName ThreadSingleton
  * @Description
  * @date 2021/7/25 17:30
+ * 线程池的正常玩法
  */
 public class ThreadSingleton {
 
