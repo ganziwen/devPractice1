@@ -44,7 +44,9 @@ public class AnimalFactory {
      */
     public Optional<Animal> createAnimalInstanceWithReflect(String className) {
         try {
+            // 根据报名找到字节码
             Class<?> aClass = Class.forName(className);
+            // 根据字节码新建一个实例出来
             return Optional.of((Animal) aClass.newInstance());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
