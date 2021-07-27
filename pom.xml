@@ -12,6 +12,7 @@
         <module>Basic</module>
         <module>java8</module>
         <module>patterns</module>
+        <module>spring</module>
     </modules>
 
     <properties>
