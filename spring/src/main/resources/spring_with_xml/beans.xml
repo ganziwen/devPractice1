@@ -7,7 +7,8 @@
     <!-- id 唯一,随便写;class 是相对 java 文件夹的路径 -->
     <bean id="helloService" class="course.spring.spring_with_xml.HelloServiceImpl">
         <!-- property 是 class内的属性,name 对应 value,相当于 Autowired  -->
-        <property name="name" value="zs"/>
+        <property name="name" value="Bob"/>
+        <property name="age" value="18"/>
 <!--        <property name="age" ref="aa"/>-->
     </bean>
     <!--    <bean id="helloB" class="com.bt.study_spring.demo3.HelloB">-->

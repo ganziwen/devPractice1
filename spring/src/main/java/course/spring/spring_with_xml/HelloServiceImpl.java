@@ -15,6 +15,6 @@ public class HelloServiceImpl implements HelloService {
 
     @Override
     public String sayHello(String msg) {
-        return String.format("hello:%s", msg);
+        return String.format("hello:%s,name=%s,age=%s", msg,name,age);
     }
 }
