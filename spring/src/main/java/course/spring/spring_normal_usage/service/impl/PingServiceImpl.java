@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
  * @author steven01.gan
  * @version 1.0
  * @date 2021/7/30-15:29
+ *
+ * <bean id = "PingServiceImpl" class="PingServiceImpl">
+ * <property name = "pingDao" ref = "PingDao">
+ * </bean>
  */
 
 @Service

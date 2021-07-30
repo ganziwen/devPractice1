@@ -1,5 +1,6 @@
 package course.spring.spring_with_scope;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -10,8 +11,10 @@ import org.springframework.stereotype.Component;
  * @date 2021/7/30-16:14
  */
 @Component
-@Scope(ConfigurableListableBeanFactory.SCOPE_SINGLETON)
+// @Scope(ConfigurableListableBeanFactory.SCOPE_SINGLETON)
 // @Scope(ConfigurableListableBeanFactory.SCOPE_PROTOTYPE)
+@Scope(scopeName = ConfigurableBeanFactory.SCOPE_SINGLETON)
+// @Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class FooScopeServiceImpl implements FooScopeService {
 
     public FooScopeServiceImpl() {
