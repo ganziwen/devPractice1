@@ -6,5 +6,5 @@
         https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
     <!-- 直接写上层目录就行 -->
-    <context:component-scan base-package="course.spring.spring_with_component"/>
+    <context:component-scan base-package="course.spring.spring_with_only_component"/>
 </beans>

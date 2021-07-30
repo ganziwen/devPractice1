@@ -7,7 +7,6 @@ package course.spring.spring_with_only_configuration;
  * 注意这里还没使用 Component
  */
 
-// @Component
 public class Foo2ServiceImpl implements Foo2Service {
     @Override
     public String foo2(String msgs) {

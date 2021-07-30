@@ -1,4 +1,4 @@
-package course.spring.spring_with_component;
+package course.spring.spring_with_only_component;
 
 /**
  * @author steven01.gan
