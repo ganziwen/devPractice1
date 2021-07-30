@@ -12,7 +12,7 @@ public class App {
     public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(Conf.class);
 
-        // 发现是单例
+        // 单例由 scope 控制,单例的话,构造器只会调用一次
         FooScopeService bean1 = context.getBean(FooScopeService.class);
         FooScopeService bean2 = context.getBean(FooScopeService.class);
         FooScopeService bean3 = context.getBean(FooScopeService.class);
