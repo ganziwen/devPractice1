@@ -3,6 +3,8 @@ package course.spring.spring_with_only_configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.LocalDateTime;
+
 /**
  * @author steven01.gan
  * @version 1.0
