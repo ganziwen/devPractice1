@@ -1,5 +1,6 @@
 package course.aop.aop;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -15,4 +16,8 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @ComponentScan
 @EnableAspectJAutoProxy
 public class Conf {
+    @Bean
+    public Foo2ServiceOtherJar foo2ServiceOtherJar() {
+        return new Foo2ServiceOtherJar();
+    }
 }
