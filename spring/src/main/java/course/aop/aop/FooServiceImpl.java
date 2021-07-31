@@ -15,5 +15,6 @@ public class FooServiceImpl implements FooService {
     @Override
     public void foo1() {
         System.out.println("FooServiceImpl.foo1");
+        int i = 1 / 0;
     }
 }

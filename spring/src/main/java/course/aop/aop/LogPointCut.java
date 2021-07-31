@@ -1,8 +1,6 @@
 package course.aop.aop;
 
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
@@ -14,17 +12,38 @@ import org.springframework.stereotype.Component;
  * @date 2021/7/31 10:51
  */
 @Component
-@Aspect
+@Aspect // 切面
 public class LogPointCut {
 
+    // 切点
     @Pointcut("execution(public * course.aop.aop.*.*(..))")
-    public void pointcut() {
+    public void logPointcut() {
 
     }
 
-    // 注意要把 () 带上
-    @Before("pointcut()")
+    /**
+     * 切前面
+     * 注意 logPointcut 需要加 ()
+     */
+    @Before("logPointcut()")
     public void logBefore() {
         System.out.println("---LogPointCut.logBefore---");
+    }
+
+    /**
+     * 切后面
+     */
+    @After("logPointcut()")
+    public void logAfter() {
+        System.out.println("---LogPointCut.logAfter---");
+    }
+
+
+    /**
+     * 异常的时候
+     */
+    @AfterThrowing("logPointcut()")
+    public void afterThrow() {
+        System.out.println("---LogPointCut.afterThrow---");
     }
 }
