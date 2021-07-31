@@ -15,7 +15,13 @@ import org.springframework.stereotype.Component;
 @Aspect // 切面
 public class LogPointCut {
 
-    // 切点
+    /**
+     * 定义往需要加日志的范围
+     * public 代表方法的权限修饰符
+     * 后面是返回类型, * 代表所有,是一个通配符
+     * 再后面是跟着类,方法
+     * (..)代表的是方法参数, .. 代表通配
+     */
     @Pointcut("execution(public * course.aop.aop.*.*(..))")
     public void logPointcut() {
 

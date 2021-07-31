@@ -14,7 +14,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  */
 @Configuration
 @ComponentScan
-@EnableAspectJAutoProxy
+@EnableAspectJAutoProxy // 自动完成代理
 public class Conf {
     @Bean
     public Foo2ServiceOtherJar foo2ServiceOtherJar() {
