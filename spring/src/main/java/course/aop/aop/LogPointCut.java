@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 public class LogPointCut {
 
     /**
+     * 这个就是切点
      * 定义往需要加日志的范围
      * public 代表方法的权限修饰符
      * 后面是返回类型, * 代表所有,是一个通配符
@@ -28,7 +29,7 @@ public class LogPointCut {
     }
 
     /**
-     * 切前面
+     * 前置通知
      * 注意 logPointcut 需要加 ()
      */
     @Before("logPointcut()")
@@ -37,7 +38,7 @@ public class LogPointCut {
     }
 
     /**
-     * 切后面
+     * 后置通知
      */
     @After("logPointcut()")
     public void logAfter() {
@@ -46,7 +47,7 @@ public class LogPointCut {
 
 
     /**
-     * 异常的时候
+     * 异常通知
      */
     @AfterThrowing("logPointcut()")
     public void afterThrow() {
