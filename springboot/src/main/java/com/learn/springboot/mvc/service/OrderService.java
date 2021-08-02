@@ -1,4 +1,4 @@
-package com.learn.springboot.service;
+package com.learn.springboot.mvc.service;
 
 /**
  * @author steven01.gan

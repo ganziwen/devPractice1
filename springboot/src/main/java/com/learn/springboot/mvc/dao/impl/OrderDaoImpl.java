@@ -1,6 +1,6 @@
-package com.learn.springboot.dao.impl;
+package com.learn.springboot.mvc.dao.impl;
 
-import com.learn.springboot.dao.OrderDao;
+import com.learn.springboot.mvc.dao.OrderDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

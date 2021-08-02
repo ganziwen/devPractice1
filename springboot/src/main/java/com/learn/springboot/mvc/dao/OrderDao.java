@@ -1,4 +1,4 @@
-package com.learn.springboot.dao;
+package com.learn.springboot.mvc.dao;
 
 /**
  * @author steven01.gan

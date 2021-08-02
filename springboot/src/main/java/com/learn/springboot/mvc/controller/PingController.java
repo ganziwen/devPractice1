@@ -1,4 +1,4 @@
-package com.learn.springboot.controller;
+package com.learn.springboot.mvc.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

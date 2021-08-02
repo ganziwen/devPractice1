@@ -1,6 +1,6 @@
-package com.learn.springboot.controller;
+package com.learn.springboot.mvc.controller;
 
-import com.learn.springboot.service.OrderService;
+import com.learn.springboot.mvc.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
