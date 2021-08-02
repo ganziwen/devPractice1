@@ -1,6 +1,5 @@
-package com.learn.springboot;
+package com.learn.springboot.controller;
 
-import com.sun.xml.internal.ws.server.ServerRtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
