@@ -1,6 +1,7 @@
 package com.learn.springboot.mvc.controller;
 
 import com.learn.springboot.mvc.service.OrderService;
+import com.learn.springboot.mvc.service.impl.PayServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,28 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private PayServiceImpl payService;
+
+    /**
+     * controller 层做异常处理
+     *
+     * @param orderId
+     * @return
+     */
     @RequestMapping("/create")
     public String createOrder(String orderId) {
         LOGGER.info("create order start,orderId:{}", orderId);
-        Boolean isCreateOrder = orderService.createOrder(orderId);
-        return isCreateOrder ? "success" : "failed";
+
+        try {
+
+            Boolean isCreateOrder = orderService.createOrder(orderId);
+            Boolean isPayOrder = payService.payOrder(orderId);
+            return isCreateOrder ? "success" : "failed";
+        } catch (Exception e) {
+            LOGGER.error("occur error.", e);
+            return "error = " + e.getMessage();
+        }
+
     }
 }

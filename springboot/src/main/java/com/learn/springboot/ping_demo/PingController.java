@@ -1,4 +1,4 @@
-package com.learn.springboot.mvc.controller;
+package com.learn.springboot.ping_demo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @ClassName PingController
  * @Description
  * @date 2021/8/1 2:22
+ * 最简单的 demo
  */
 
 @RestController
