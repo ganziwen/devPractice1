@@ -13,3 +13,9 @@ server:
 
 user:
   userName: Bob
+
+singleUserName: Tom
+
+person:
+  user-name: person_name
+  int-age: 18
