@@ -1,2 +1,15 @@
 server:
   port: 8081
+  #  url 最上级的路径
+  #  servlet:
+  #    context-path: /examples
+  tomcat:
+    #    超时时间
+    connection-timeout: 200
+    #    最大连接
+    max-connections: 256
+    #    最大线程数
+    max-threads: 128
+
+user:
+  userName: Bob
