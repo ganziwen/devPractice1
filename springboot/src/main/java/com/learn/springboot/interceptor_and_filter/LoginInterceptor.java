@@ -1,10 +1,9 @@
 package com.learn.springboot.interceptor_and_filter;
 
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -26,6 +25,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     /**
      * 前置处理
+     * 取 header 的 token ,存在再往下处理
      *
      * @param request
      * @param response
@@ -36,7 +36,18 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         logger.info("---LoginInterceptor.preHandle---");
-        return true;
+
+        String token = request.getHeader("token");
+        logger.info("token={}", token);
+
+        // 这个判断条件一般是要去 passport 看是否存在,我们这里就简写
+        if (Strings.isNullOrEmpty(token)) {
+            logger.error("token is null or empty");
+            return false;
+
+        } else {
+            return true;
+        }
     }
 
     /**
