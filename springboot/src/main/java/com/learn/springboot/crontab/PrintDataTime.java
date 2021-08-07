@@ -1,4 +1,4 @@
-package com.learn.springboot.component;
+package com.learn.springboot.crontab;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +23,7 @@ public class PrintDataTime {
      */
     @Scheduled(cron = "*/5 * * * * *")
     public void printTime() {
+        // 以下就是任务调度的业务逻辑代码处理
         logger.info("schedule print time = {}", LocalDateTime.now());
     }
 }
