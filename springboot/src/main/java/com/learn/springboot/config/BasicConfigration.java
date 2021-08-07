@@ -1,12 +1,13 @@
 package com.learn.springboot.config;
 
-import com.learn.springboot.interceptor_and_filter.LoginInterceptor;
-import com.learn.springboot.interceptor_and_filter.MyFilter;
+import com.learn.springboot.interceptor_and_filter.component.LoginInterceptor;
+import com.learn.springboot.interceptor_and_filter.component.MyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @ServletComponentScan(basePackages = "com.learn.servlet")
+@EnableScheduling
 public class BasicConfigration implements WebMvcConfigurer {
 
     @Autowired

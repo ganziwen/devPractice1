@@ -1,4 +1,4 @@
-package com.learn.springboot.interceptor_and_filter;
+package com.learn.springboot.interceptor_and_filter.component;
 
 import com.google.common.base.Strings;
 import org.slf4j.Logger;

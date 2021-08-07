@@ -1,4 +1,4 @@
-package com.learn.springboot.interceptor_and_filter;
+package com.learn.springboot.interceptor_and_filter.component;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
