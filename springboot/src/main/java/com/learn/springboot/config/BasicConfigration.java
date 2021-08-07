@@ -1,6 +1,11 @@
-package com.learn.springboot.interceptor_and_filter;
+package com.learn.springboot.config;
 
+import com.learn.springboot.interceptor_and_filter.LoginInterceptor;
+import com.learn.springboot.interceptor_and_filter.MyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -15,10 +20,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 
 @Configuration
+@ServletComponentScan(basePackages = "com.learn.servlet")
 public class BasicConfigration implements WebMvcConfigurer {
 
     @Autowired
     LoginInterceptor loginInterceptor;
+
+    // @Autowired
+    // MyFilter filter;
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -26,4 +36,9 @@ public class BasicConfigration implements WebMvcConfigurer {
         interceptorRegistration.addPathPatterns("/**");
     }
 
+
+    @Bean
+    public FilterRegistrationBean<MyFilter> bascicFilter() {
+        return new FilterRegistrationBean<>(new MyFilter());
+    }
 }

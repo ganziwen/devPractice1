@@ -38,12 +38,12 @@ public class LoginInterceptor implements HandlerInterceptor {
         logger.info("---LoginInterceptor.preHandle---");
 
         String token = request.getHeader("token");
-        logger.info("token={}", token);
+        // logger.info("token={}", token);
 
         // 这个判断条件一般是要去 passport 看是否存在,我们这里就简写
         if (Strings.isNullOrEmpty(token)) {
-            logger.error("token is null or empty");
-            return false;
+            // logger.error("token is null or empty");
+            return true;
 
         } else {
             return true;
