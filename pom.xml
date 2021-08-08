@@ -13,6 +13,8 @@
         <module>java8</module>
         <module>patterns</module>
         <module>spring</module>
+        <module>MyBaties</module>
+        <module>MyBatiesAnno</module>
     </modules>
 
     <properties>

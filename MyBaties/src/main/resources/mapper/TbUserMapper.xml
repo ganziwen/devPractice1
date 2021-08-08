@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace的名字必须和mappr接口的全类名一致 -->
+<mapper namespace="mybaties.xml.mapper.TbUserMapper1">
+    <!-- id 要和方法名一致 -->
+    <select id="selectByUserId" resultType="mybaties.xml.bean.TbUser1">
+        select * from `tb_user` where `user_id` = #{userId}
+    </select>
+</mapper>
