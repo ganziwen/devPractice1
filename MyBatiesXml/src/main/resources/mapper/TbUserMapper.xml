@@ -6,6 +6,22 @@
 <mapper namespace="mybaties.xml.mapper.TbUserMapper1">
     <!-- id 要和方法名一致 -->
     <select id="selectByUserId" resultType="mybaties.xml.bean.TbUser1">
-        select * from `tb_user` where `user_id` = #{userId}
+        select *
+        from `tb_user`
+        where `user_id` = #{userId}
+    </select>
+
+    <select id="selectByUser1" resultType="mybaties.xml.bean.TbUser1">
+        select *
+        from `tb_user`
+        where `user_id` = #{userId}
+          and `user_name` = #{userName}
+    </select>
+
+    <select id="selectByUser2" resultType="mybaties.xml.bean.TbUser1" parameterType="mybaties.xml.bean.TbUser1">
+        select *
+        from `tb_user`
+        where `user_id` = #{userId}
+          and `user_name` = #{userName}
     </select>
 </mapper>
