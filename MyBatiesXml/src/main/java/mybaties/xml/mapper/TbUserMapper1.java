@@ -21,5 +21,5 @@ public interface TbUserMapper1 {
     List<TbUser1> selectByUser1(@Param("userId") String userId, @Param("userName") String userName);
 
     // 多参数方式2
-    List<TbUser1> selectByUser2(String userId, String userName);
+    List<TbUser1> selectByUser2(TbUser1 tbUser1);
 }

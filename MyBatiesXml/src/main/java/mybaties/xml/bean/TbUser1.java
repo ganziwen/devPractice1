@@ -1,8 +1,12 @@
 package mybaties.xml.bean;
 
+import jdk.nashorn.internal.objects.annotations.Constructor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
+import java.beans.ConstructorProperties;
 
 /**
  * @author Ganziwen
@@ -19,5 +23,9 @@ public class TbUser1 {
     private String userId;
     private String userName;
 
+    public TbUser1(String userId, String userName) {
+        this.userId = userId;
+        this.userName = userName;
+    }
 }
 
