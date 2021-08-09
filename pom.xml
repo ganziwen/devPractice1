@@ -14,7 +14,6 @@
         <module>patterns</module>
         <module>spring</module>
         <module>MyBatiesXml</module>
-        <module>MyBatiesAnno</module>
         <module>MyBatiesAnnotation</module>
     </modules>
 
