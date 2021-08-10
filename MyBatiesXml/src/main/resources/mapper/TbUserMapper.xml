@@ -25,7 +25,8 @@
           and `user_name` = #{userName}
     </select>
 
-    <select id="selectByUser3" resultType="mybaties.xml.bean.TbUser1" parameterType="mybaties.xml.bean.TbUser1">
+    <!--    resultType 以及 parameterType 只需要写类名即可-->
+    <select id="selectByUser3" resultType="TbUser1" parameterType="TbUser1">
         select *
         from `tb_user`
         where `user_id` = #{param1}
@@ -34,7 +35,7 @@
 
 
     <!--自定义 resultmap-->
-    <resultMap id="testResultMap" type="mybaties.xml.bean.TbUser1">
+    <resultMap id="testResultMap" type="TbUser1">
         <id column="id" property="id"/>
         <result column="user_id" property="userId"/>
         <result column="user_name" property="userName"/>
@@ -44,8 +45,8 @@
     <select id="selectByUser4" resultMap="testResultMap">
         select *
         from `tb_user`
-        where `user_id` = #{userId}
-          and `user_name` = #{userName}
+        where `user_id` = #{userIdWithDesignMap}
+          and `user_name` = #{userNameWithDesignMap}
     </select>
 
 </mapper>

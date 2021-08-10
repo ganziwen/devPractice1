@@ -4,9 +4,17 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <!--    驼峰与下划线转换-->
-    <!--    <settings>-->
-    <!--        <setting name="mapUnderscoreToCamelCase" value="true"/>-->
-    <!--    </settings>-->
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <typeAliases>
+        <!--        这里写包名即可-->
+        <package name="mybaties.xml.bean"/>
+    </typeAliases>
+
+    <!--    捞取 properties 配置-->
+    <properties resource="db.properties"/>
 
     <environments default="development">
         <environment id="development">
@@ -17,6 +25,18 @@
                           value="jdbc:mysql://www.xiaowenshu.cn:3388/test_table?useUnicode=true&amp;ampcharacterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=UTC"/>
                 <property name="username" value="root"/>
                 <property name="password" value="123456"/>
+            </dataSource>
+        </environment>
+
+        <!--        从 properties 文件读取-->
+
+        <environment id="test">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
             </dataSource>
         </environment>
     </environments>
