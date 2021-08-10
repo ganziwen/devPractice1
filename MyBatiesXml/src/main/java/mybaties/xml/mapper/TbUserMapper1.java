@@ -25,4 +25,6 @@ public interface TbUserMapper1 {
 
     // 多参数方式3(不是很推荐)
     List<TbUser1> selectByUser3(String userId, String userName);
+
+    // TODO: 2021/8/10 xml形式的 curd
 }
