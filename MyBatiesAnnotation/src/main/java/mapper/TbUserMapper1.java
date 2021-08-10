@@ -2,9 +2,7 @@ package mapper;
 
 
 import bean.TbUser1;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -35,6 +33,23 @@ public interface TbUserMapper1 {
     @Insert("insert into `tb_user` (`user_id`,`user_name`) values (#{userId},#{userName})")
     boolean insertUser2(TbUser1 tbUser1);
 
+    /**
+     * 返回主键
+     *
+     * @param tbUser1
+     * @return
+     */
+    @Insert("insert into `tb_user` (`user_id`,`user_name`) values (#{userId},#{userName})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    Long insertUser3(TbUser1 tbUser1);
+
+
+    @Update("update `tb_user` set user_id = #{userId}, user_name = #{userName} where 1=1 and id = #{id}")
+    int updateUser1(TbUser1 tbUser1);
+
+
+    @Delete("delete from `tb_user`  where 1=1 and id = #{id}")
+    int deleteUser1(TbUser1 tbUser1);
 
     /**
      * 查询

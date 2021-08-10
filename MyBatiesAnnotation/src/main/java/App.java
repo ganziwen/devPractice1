@@ -59,8 +59,48 @@ public class App {
     @Test
     public void testInsertUser() {
         TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
-        Integer insertNums = tbUser1Mapper.insertUser1(new TbUser1("1000004", "zhangsan4"));
+        Integer insertNums = tbUser1Mapper.insertUser1(new TbUser1("1000005", "zhangsan5"));
         System.out.println("insertNums = " + insertNums);
+
+        // 一定记得 close
+        sqlSession.close();
+    }
+
+    /**
+     * 奇怪的是返回的 key = 1?这还是有些许奇怪的
+     */
+    @Test
+    public void testInsertUserRetKey() {
+        TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
+        Long key = tbUser1Mapper.insertUser3(new TbUser1("1000005", "zhangsan5"));
+        System.out.println("key = " + key);
+
+        // 一定记得 close
+        sqlSession.close();
+    }
+
+
+    /**
+     * update
+     */
+    @Test
+    public void testUpdateUser1() {
+        TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
+        int effectRows = tbUser1Mapper.updateUser1(new TbUser1(1L, "1000001", "zhangsan1"));
+        System.out.println("effectRows = " + effectRows);
+
+        // 一定记得 close
+        sqlSession.close();
+    }
+
+    /**
+     * delete
+     */
+    @Test
+    public void testdeleteUser1() {
+        TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
+        int effectRows = tbUser1Mapper.deleteUser1(new TbUser1(5L, "1000005", "zhangsan5"));
+        System.out.println("effectRows = " + effectRows);
 
         // 一定记得 close
         sqlSession.close();
