@@ -49,4 +49,17 @@
           and `user_name` = #{userNameWithDesignMap}
     </select>
 
+    <!--动态sql配置-->
+    <select id="selectUserForDynamic" resultType="TbUser1" parameterType="TbUser1">
+        select *
+        from `tb_user`
+        where 1 = 1
+        <if test="userId != null">
+            and `user_id` = #{userId}
+        </if>
+        <if test="userName != null">
+            and `user_name` = #{userName}
+        </if>
+    </select>
+
 </mapper>

@@ -30,4 +30,12 @@ public interface TbUserMapper1 {
     List<TbUser1> selectByUser4(@Param("userIdWithDesignMap") String userId, @Param("userNameWithDesignMap") String userName);
 
     // TODO: 2021/8/10 xml形式的 curd
+
+    /**
+     * 动态sql
+     * @param tbUser1
+     * @return
+     */
+    List<TbUser1> selectUserForDynamic(TbUser1 tbUser1);
+
 }

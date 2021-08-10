@@ -14,7 +14,10 @@
     </typeAliases>
 
     <!--    捞取 properties 配置-->
-    <properties resource="db.properties"/>
+    <!--    <properties resource="db.properties"/>-->
+    <properties resource="db.properties">
+        <property name="driver" value="${driver}"/>
+    </properties>
 
     <environments default="development">
         <environment id="development">

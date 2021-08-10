@@ -81,4 +81,11 @@ public class App {
         List<TbUser1> tu1s = tbUser1Mapper.selectByUser4("1000003", "zhangsan3");
         System.out.println("tu1s = " + tu1s);
     }
+
+    @Test
+    public void testSelectByUser5() {
+        TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
+        List<TbUser1> tu1s = tbUser1Mapper.selectUserForDynamic(new TbUser1("1000001", null));
+        System.out.println("tu1s = " + tu1s);
+    }
 }
