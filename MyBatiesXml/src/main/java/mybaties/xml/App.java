@@ -6,6 +6,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,14 +42,16 @@ public class App {
         this.sqlSession = sqlSessionFactory.openSession(true);
     }
 
+    @After
+    public void close() {
+        this.sqlSession.close();
+    }
+
     @Test
     public void testSelectByUserId() {
         TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
         List<TbUser1> tu1s = tbUser1Mapper.selectByUserId("1000001");
         System.out.println("tu1s = " + tu1s);
-
-        // 一定记得 close
-        sqlSession.close();
     }
 
     @Test
@@ -56,9 +59,6 @@ public class App {
         TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
         List<TbUser1> tu1s = tbUser1Mapper.selectByUser1("1000002", "zhangsan2");
         System.out.println("tu1s = " + tu1s);
-
-        // 一定记得 close
-        sqlSession.close();
     }
 
     @Test
@@ -66,9 +66,6 @@ public class App {
         TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
         List<TbUser1> tu1s = tbUser1Mapper.selectByUser2(new TbUser1("1000003", "zhangsan3"));
         System.out.println("tu1s = " + tu1s);
-
-        // 一定记得 close
-        sqlSession.close();
     }
 
     @Test
@@ -76,8 +73,12 @@ public class App {
         TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
         List<TbUser1> tu1s = tbUser1Mapper.selectByUser3("1000003", "zhangsan3");
         System.out.println("tu1s = " + tu1s);
+    }
 
-        // 一定记得 close
-        sqlSession.close();
+    @Test
+    public void testSelectByUser4() {
+        TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
+        List<TbUser1> tu1s = tbUser1Mapper.selectByUser4("1000003", "zhangsan3");
+        System.out.println("tu1s = " + tu1s);
     }
 }

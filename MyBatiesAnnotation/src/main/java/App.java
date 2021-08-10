@@ -4,6 +4,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,6 +36,10 @@ public class App {
         this.sqlSession = sqlSessionFactory.openSession(true);
     }
 
+    @After
+    public void close() {
+        this.sqlSession.close();
+    }
 
     @Test
     public void testSelectByUserId() {
@@ -42,8 +47,6 @@ public class App {
         List<TbUser1> tu1s = tbUser1Mapper.selectByUserId("1000001");
         System.out.println("tu1s = " + tu1s);
 
-        // 一定记得 close
-        sqlSession.close();
     }
 
     @Test
@@ -51,9 +54,6 @@ public class App {
         TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
         List<TbUser1> tu1s = tbUser1Mapper.selectByUser1("1000002", "zhangsan2");
         System.out.println("tu1s = " + tu1s);
-
-        // 一定记得 close
-        sqlSession.close();
     }
 
     @Test
@@ -61,9 +61,6 @@ public class App {
         TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
         Integer insertNums = tbUser1Mapper.insertUser1(new TbUser1("1000005", "zhangsan5"));
         System.out.println("insertNums = " + insertNums);
-
-        // 一定记得 close
-        sqlSession.close();
     }
 
     /**
@@ -74,9 +71,6 @@ public class App {
         TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
         Long key = tbUser1Mapper.insertUser3(new TbUser1("1000005", "zhangsan5"));
         System.out.println("key = " + key);
-
-        // 一定记得 close
-        sqlSession.close();
     }
 
 
@@ -88,9 +82,6 @@ public class App {
         TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
         int effectRows = tbUser1Mapper.updateUser1(new TbUser1(1L, "1000001", "zhangsan1"));
         System.out.println("effectRows = " + effectRows);
-
-        // 一定记得 close
-        sqlSession.close();
     }
 
     /**
@@ -101,8 +92,5 @@ public class App {
         TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
         int effectRows = tbUser1Mapper.deleteUser1(new TbUser1(5L, "1000005", "zhangsan5"));
         System.out.println("effectRows = " + effectRows);
-
-        // 一定记得 close
-        sqlSession.close();
     }
 }
