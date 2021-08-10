@@ -31,4 +31,21 @@
         where `user_id` = #{param1}
           and `user_name` = #{param2}
     </select>
+
+
+    <!--自定义 resultmap-->
+    <resultMap id="testResultMap" type="mybaties.xml.bean.TbUser1">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+    </resultMap>
+
+    <!--使用自定义 resultmap-->
+    <select id="selectByUser4" resultMap="testResultMap">
+        select *
+        from `tb_user`
+        where `user_id` = #{userId}
+          and `user_name` = #{userName}
+    </select>
+
 </mapper>
