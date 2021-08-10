@@ -19,5 +19,9 @@ public class TbUser1 {
     private String userId;
     private String userName;
 
+    public TbUser1(String userId, String userName) {
+        this.userId = userId;
+        this.userName = userName;
+    }
 }
 
