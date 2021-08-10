@@ -22,4 +22,7 @@ public interface TbUserMapper1 {
 
     // 多参数方式2
     List<TbUser1> selectByUser2(TbUser1 tbUser1);
+
+    // 多参数方式3(不是很推荐)
+    List<TbUser1> selectByUser3(String userId, String userName);
 }

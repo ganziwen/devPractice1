@@ -24,4 +24,11 @@
         where `user_id` = #{userId}
           and `user_name` = #{userName}
     </select>
+
+    <select id="selectByUser3" resultType="mybaties.xml.bean.TbUser1" parameterType="mybaties.xml.bean.TbUser1">
+        select *
+        from `tb_user`
+        where `user_id` = #{param1}
+          and `user_name` = #{param2}
+    </select>
 </mapper>
