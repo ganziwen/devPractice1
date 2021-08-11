@@ -69,8 +69,11 @@ public class App {
     @Test
     public void testInsertUserRetKey() {
         TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
-        Long key = tbUser1Mapper.insertUser3(new TbUser1("1000005", "zhangsan5"));
-        System.out.println("key = " + key);
+        TbUser1 tbUser1 = new TbUser1("1000007", "zhangsan7");
+        System.out.println("tbUser1 = " + tbUser1);
+        int efdfectRows = tbUser1Mapper.insertUser3(tbUser1);
+        System.out.println("efdfectRows = " + efdfectRows);
+        System.out.println("tbUser1 = " + tbUser1);
     }
 
 

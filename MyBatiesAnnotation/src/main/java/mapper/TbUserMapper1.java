@@ -41,7 +41,7 @@ public interface TbUserMapper1 {
      */
     @Insert("insert into `tb_user` (`user_id`,`user_name`) values (#{userId},#{userName})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    Long insertUser3(TbUser1 tbUser1);
+    int insertUser3(TbUser1 tbUser1);
 
 
     @Update("update `tb_user` set user_id = #{userId}, user_name = #{userName} where 1=1 and id = #{id}")

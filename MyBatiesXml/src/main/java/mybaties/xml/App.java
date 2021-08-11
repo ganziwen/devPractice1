@@ -126,4 +126,14 @@ public class App {
         System.out.println("tu0s = " + tu0s);
 
     }
+
+    @Test
+    public void testInsertUser() {
+        TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
+        TbUser1 tbUser1 = new TbUser1("1000006", "zhangsan6");
+        System.out.println("tbUser1 = " + tbUser1);
+        int efdfectRows = tbUser1Mapper.insertUSer(tbUser1);
+        System.out.println("efdfectRows = " + efdfectRows);
+        System.out.println("tbUser1 = " + tbUser1);
+    }
 }

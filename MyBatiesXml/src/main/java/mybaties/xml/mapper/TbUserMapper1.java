@@ -43,5 +43,5 @@ public interface TbUserMapper1 {
 
     List<TbUser1> selectUserForDynamicWithEach2(List<String> userId);
 
-
+    int insertUSer(TbUser1 tbUser1);
 }
