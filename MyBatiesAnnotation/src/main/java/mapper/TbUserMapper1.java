@@ -70,4 +70,7 @@ public interface TbUserMapper1 {
      */
     @Select("select * from `tb_user` where `user_id` = #{userId} and `user_name` = #{userName}")
     List<TbUser1> selectByUser1(@Param("userId") String userId, @Param("userName") String userName);
+
+    @Select("")
+    List<TbUser1> selectUserForDynamic(TbUser1 tbUser1);
 }

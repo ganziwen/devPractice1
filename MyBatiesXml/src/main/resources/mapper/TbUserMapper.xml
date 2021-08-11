@@ -62,4 +62,31 @@
         </if>
     </select>
 
+    <!--    传入的是对象-->
+    <select id="selectUserForDynamicWithEach1" resultType="TbUser1">
+        select *
+        from `tb_user`
+        where 1 = 1
+        and `user_id`
+        in
+        <foreach item="item" index="index" collection="list"
+                 open="(" separator="," close=")">
+            #{item.userId}
+        </foreach>
+    </select>
+
+    <!--    单list-->
+    <select id="selectUserForDynamicWithEach2" resultType="TbUser1">
+        select *
+        from `tb_user`
+        where 1 = 1
+        and `user_id`
+        in
+        <foreach item="item" index="index" collection="list"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
 </mapper>

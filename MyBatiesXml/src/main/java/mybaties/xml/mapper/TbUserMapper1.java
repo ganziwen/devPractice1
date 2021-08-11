@@ -33,9 +33,15 @@ public interface TbUserMapper1 {
 
     /**
      * 动态sql
+     *
      * @param tbUser1
      * @return
      */
     List<TbUser1> selectUserForDynamic(TbUser1 tbUser1);
+
+    List<TbUser1> selectUserForDynamicWithEach1(List<TbUser1> tbUserList1);
+
+    List<TbUser1> selectUserForDynamicWithEach2(List<String> userId);
+
 
 }

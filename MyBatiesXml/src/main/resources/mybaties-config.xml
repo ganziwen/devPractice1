@@ -13,11 +13,13 @@
         <package name="mybaties.xml.bean"/>
     </typeAliases>
 
+
     <!--    捞取 properties 配置-->
     <!--    <properties resource="db.properties"/>-->
-    <properties resource="db.properties">
-        <property name="driver" value="${driver}"/>
-    </properties>
+<!--    <properties resource="db.properties">-->
+<!--        <property name="url"-->
+<!--                  value="jdbc:mysql://127.0.0.1:3388/bt?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=UTC"/>-->
+<!--    </properties>-->
 
     <environments default="development">
         <environment id="development">
