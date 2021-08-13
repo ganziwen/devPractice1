@@ -14,6 +14,7 @@ import java.lang.annotation.Retention;
  * @author steven01.gan
  * @version 1.0
  * @date 2021/8/2-19:48
+ * url 参数
  */
 @RestController
 @RequestMapping("/pay")
