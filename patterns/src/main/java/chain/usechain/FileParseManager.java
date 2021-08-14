@@ -18,12 +18,15 @@ public final class FileParseManager {
         this.fileParseHandlder = initParseHandleChain();
     }
 
+    // 构建一个调用链:mp4->avi->png
     private AbstractHandlder<MyFile> initParseHandleChain() {
         AbstractHandlder<MyFile> mp4ParseHandler = new MP4ParseHandler();
         AbstractHandlder<MyFile> aviParseHandler = new AVIParseHandler();
         AbstractHandlder<MyFile> pngParseHandler = new PNGParseHandler();
 
+        //设置 avi 为 MP4 的 下一个节点
         mp4ParseHandler.addNextHandler(aviParseHandler);
+        // png 作为 avi 的下一个节点
         aviParseHandler.addNextHandler(pngParseHandler);
         return mp4ParseHandler;
     }

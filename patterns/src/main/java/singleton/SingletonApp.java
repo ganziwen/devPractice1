@@ -4,7 +4,7 @@ package singleton;
  * @author Ganziwen
  * @version 1.0
  * @ClassName SingletonApp
- * @Description
+ * @Description 单例设计模式
  * @date 2021/7/25 16:38
  * 优缺点:
  * - 懒汉式:占用资源,一直会被实例化

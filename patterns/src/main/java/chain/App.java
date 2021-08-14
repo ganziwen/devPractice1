@@ -10,7 +10,7 @@ import chain.usechain.FileParseManager;
  * @author Ganziwen
  * @version 1.0
  * @ClassName App
- * @Description
+ * @Description 责任链设计模式
  * @date 2021/8/14 11:39
  */
 public class App {

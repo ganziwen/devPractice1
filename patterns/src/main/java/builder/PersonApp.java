@@ -4,6 +4,7 @@ package builder;
  * @author steven01.gan
  * @version 1.0
  * @date 2021/7/26-18:48
+ * 建造者设计模式
  */
 public class PersonApp {
     public static void main(String[] args) {

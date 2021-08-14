@@ -8,6 +8,7 @@ import java.util.Optional;
  * @author steven01.gan
  * @version 1.0
  * @date 2021/7/26-16:18
+ * 工厂设计模式
  */
 public class AnimalApp {
 
