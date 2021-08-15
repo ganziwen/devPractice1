@@ -24,7 +24,8 @@ public class App {
 
     private static void testUseObserve() {
         Tickets tickets = Tickets.builder().amount(100).src("Beijing").dst("ShangHai").build();
-        ObserverManger.of().doReceive(tickets);
+        new AirComp().send(tickets);
+
     }
 
 }
