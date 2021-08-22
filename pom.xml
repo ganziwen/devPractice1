@@ -15,6 +15,7 @@
         <module>spring</module>
         <module>MyBatiesXml</module>
         <module>MyBatiesAnnotation</module>
+        <module>mysql-schema-sync</module>
     </modules>
 
     <properties>
@@ -32,7 +33,7 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>RELEASE</version>
-<!--            <scope>compile</scope>-->
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -49,7 +50,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
-<!--            <scope>test</scope>-->
+            <!--            <scope>test</scope>-->
         </dependency>
     </dependencies>
 

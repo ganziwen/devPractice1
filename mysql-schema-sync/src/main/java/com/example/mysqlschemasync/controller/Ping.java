@@ -7,15 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Ganziwen
  * @version 1.0
  * @ClassName Ping
- * @Description
+ * @Description 测试通信
  * @date 2021/8/22 17:28
  */
 @RestController
 public class Ping {
     @RequestMapping("/ping")
     public String ping() {
-        String str = "ping";
-        return str;
+        return "ping";
 
     }
 }
