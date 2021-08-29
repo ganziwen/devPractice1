@@ -19,9 +19,9 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("sync")
-public class SyncConrtoller {
+public class SyncController {
 
-    private static final Logger logger = LoggerFactory.getLogger(SyncConrtoller.class);
+    private static final Logger logger = LoggerFactory.getLogger(SyncController.class);
 
     @Autowired
     private SyncService syncService;
