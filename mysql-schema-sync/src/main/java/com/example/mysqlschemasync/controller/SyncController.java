@@ -37,10 +37,7 @@ public class SyncController {
         logger.info("do sync start. syncInfo = {}", syncInfo);
 
         try {
-            // 1.校验入参
-            verifySyncInfo(syncInfo);
-
-            // 2.处理业务
+            // 处理业务
             syncService.doSync(syncInfo);
             return RetMsg.buildSuccessMsg("test do sync success");
         } catch (Exception e) {
@@ -62,10 +59,7 @@ public class SyncController {
         logger.info("do sync start. syncInfo = {}", syncInstaceRequest);
 
         try {
-            // 1.校验入参
-            verifySyncInfo(syncInstaceRequest);
-
-            // 2.处理业务
+            // 处理业务
             syncService.doSyncInstance(syncInstaceRequest);
             return RetMsg.buildSuccessMsg("test doSyncInstance success");
         } catch (Exception e) {
@@ -87,10 +81,7 @@ public class SyncController {
         logger.info("do sync start. syncInfo = {}", syncDatabaseRequest);
 
         try {
-            // 1.校验入参
-            verifySyncInfo(syncDatabaseRequest);
-
-            // 2.处理业务
+            // 处理业务
             syncService.doSyncDatabse(syncDatabaseRequest);
             return RetMsg.buildSuccessMsg("test doSyncDatabase success");
         } catch (Exception e) {
@@ -113,21 +104,12 @@ public class SyncController {
         logger.info("do sync start. syncInfo = {}", syncTableRequest);
 
         try {
-            // 1.校验入参
-            verifySyncInfo(syncTableRequest);
-
-            // 2.处理业务
+            // 处理业务
             syncService.doSyncTable(syncTableRequest);
             return RetMsg.buildSuccessMsg("test doSyncTable success");
         } catch (Exception e) {
             logger.error("do Sync failed.", e);
             return RetMsg.buildFailMsg(e.getMessage());
         }
-
-
-    }
-
-    private void verifySyncInfo(Object syncInfo) {
-        logger.info("这里本来是要做实体类内属性的校验，可用 validator 直接限定");
     }
 }
