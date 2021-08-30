@@ -29,6 +29,13 @@ public class LocalDataSourceFactory {
     }
 
 
+    /**
+     * druid 的一些配置,因为毕竟是一个服务,自己玩当然没必要
+     * https://github.com/alibaba/druid/wiki/DruidDataSource%E9%85%8D%E7%BD%AE
+     *
+     * @param connectInfo
+     * @return
+     */
     public DataSource getDataSource(ConnectInfo connectInfo) {
         DruidDataSource druidDataSource = new DruidDataSource();
 
@@ -36,6 +43,19 @@ public class LocalDataSourceFactory {
         druidDataSource.setUsername(connectInfo.getUserName());
         druidDataSource.setPassword(connectInfo.getPassWord());
         druidDataSource.setDriverClassName(Driver.class.getName());
+        // druidDataSource.setFilters("stat");
+        druidDataSource.setMaxActive(20);
+        druidDataSource.setInitialSize(1);
+        druidDataSource.setMaxWait(6000);
+        druidDataSource.setMinIdle(1);
+        druidDataSource.setTimeBetweenEvictionRunsMillis(60000);
+        druidDataSource.setMinEvictableIdleTimeMillis(300000);
+        druidDataSource.setTestWhileIdle(true);
+        druidDataSource.setTestOnBorrow(false);
+        druidDataSource.setTestOnReturn(false);
+        druidDataSource.setPoolPreparedStatements(true);
+        druidDataSource.setMaxOpenPreparedStatements(20);
+        druidDataSource.setAsyncInit(true);
 
         return druidDataSource;
     }
