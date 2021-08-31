@@ -1,5 +1,6 @@
 package com.example.mysqlschemasync.model;
 
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 

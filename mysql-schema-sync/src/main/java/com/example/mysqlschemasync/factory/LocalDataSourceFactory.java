@@ -30,7 +30,7 @@ public class LocalDataSourceFactory {
 
 
     /**
-     * druid 的一些配置,因为毕竟是一个服务,自己玩当然没必要
+     * druid 的一些配置,因为毕竟是一个服务,自己玩当然没必要,返回的是 DataSource 连接池
      * https://github.com/alibaba/druid/wiki/DruidDataSource%E9%85%8D%E7%BD%AE
      *
      * @param connectInfo
