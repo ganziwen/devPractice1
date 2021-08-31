@@ -2,8 +2,11 @@ package com.example.mysqlschemasync;
 
 import com.example.mysqlschemasync.dao.DaoFacade;
 import com.example.mysqlschemasync.mapper.SchemaMapper;
+import com.example.mysqlschemasync.mapper.TablesMapper;
 import com.example.mysqlschemasync.model.ConnectInfo;
 import com.example.mysqlschemasync.model.SchemataDo;
+import com.example.mysqlschemasync.model.TablesDo;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,16 +23,28 @@ import java.util.List;
 @SpringBootTest
 public class TestDao {
 
+    ConnectInfo connectInfo;
+
+    @Before
+    public void init() {
+        connectInfo = new ConnectInfo();
+        connectInfo.setUrl("jdbc:mysql://www.xiaowenshu.cn:3388");
+        connectInfo.setUserName("root");
+        connectInfo.setPassWord("123456");
+    }
+
     /**
      * 测试数据库连接
      */
     @Test
     public void testSchema() {
-        ConnectInfo connectInfo = new ConnectInfo();
-        connectInfo.setUrl("jdbc:mysql://www.xiaowenshu.cn:3388");
-        connectInfo.setUserName("root");
-        connectInfo.setPassWord("123456");
         List<SchemataDo> schemataDos = DaoFacade.ofMapper(connectInfo, SchemaMapper.class, SchemaMapper::selectAllSchame);
         schemataDos.forEach(System.out::println);
+    }
+
+    @Test
+    public void testTable() {
+        List<TablesDo> tablesDos = DaoFacade.ofMapper(connectInfo, TablesMapper.class, TablesMapper -> TablesMapper.selectByTableName("tb_user"));
+        tablesDos.forEach(System.out::println);
     }
 }
