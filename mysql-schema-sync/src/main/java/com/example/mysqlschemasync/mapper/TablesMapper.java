@@ -10,6 +10,7 @@ import java.util.List;
  * @author steven01.gan
  * @version 1.0
  * @date 2021/8/31-21:23
+ * @Description 数据库表信息
  */
 public interface TablesMapper extends BaseMapper {
 

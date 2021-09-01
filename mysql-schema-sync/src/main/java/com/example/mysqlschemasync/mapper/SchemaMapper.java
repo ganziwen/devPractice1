@@ -9,7 +9,7 @@ import java.util.List;
  * @author Ganziwen
  * @version 1.0
  * @ClassName SchemaMapper
- * @Description
+ * @Description 数据库信息
  * @date 2021/8/29 17:15
  */
 public interface SchemaMapper extends BaseMapper {
