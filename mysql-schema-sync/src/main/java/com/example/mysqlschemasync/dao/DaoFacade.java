@@ -15,7 +15,7 @@ import java.util.function.Function;
  * @author Ganziwen
  * @version 1.0
  * @ClassName DaoFacade
- * @Description 门面设计模式
+ * @Description 门面设计模式, 需要重点理解一下
  * @date 2021/8/29 17:31
  */
 @NoArgsConstructor
