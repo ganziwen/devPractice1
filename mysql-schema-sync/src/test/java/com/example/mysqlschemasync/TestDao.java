@@ -1,11 +1,11 @@
 package com.example.mysqlschemasync;
 
 import com.example.mysqlschemasync.dao.DaoFacade;
+import com.example.mysqlschemasync.mapper.ColumnsMapper;
 import com.example.mysqlschemasync.mapper.SchemaMapper;
+import com.example.mysqlschemasync.mapper.StatisticsMapper;
 import com.example.mysqlschemasync.mapper.TablesMapper;
-import com.example.mysqlschemasync.model.ConnectInfo;
-import com.example.mysqlschemasync.model.SchemataDo;
-import com.example.mysqlschemasync.model.TablesDo;
+import com.example.mysqlschemasync.model.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +44,19 @@ public class TestDao {
 
     @Test
     public void testTable() {
-        List<TablesDo> tablesDos = DaoFacade.ofMapper(connectInfo, TablesMapper.class, TablesMapper -> TablesMapper.selectByTableName("tb_user"));
+        List<TablesDo> tablesDos = DaoFacade.ofMapper(connectInfo, TablesMapper.class, TablesMapper -> TablesMapper.selectByTable("test_table", "tb_user"));
         tablesDos.forEach(System.out::println);
+    }
+
+    @Test
+    public void testColumn() {
+        List<ColumnsDo> columnsDos = DaoFacade.ofMapper(connectInfo, ColumnsMapper.class, columnsMapper -> columnsMapper.selectByTable("test_table", "tb_user"));
+        columnsDos.forEach(System.out::println);
+    }
+
+    @Test
+    public void testStatistics() {
+        List<StatisticsDo> statisticsDos = DaoFacade.ofMapper(connectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTable("test_table", "tb_user"));
+        statisticsDos.forEach(System.out::println);
     }
 }
