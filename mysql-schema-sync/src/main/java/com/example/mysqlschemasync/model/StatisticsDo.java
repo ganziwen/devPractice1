@@ -16,9 +16,86 @@ public class StatisticsDo {
     // SEQ_IN_INDEX: 字段在索引中的顺序
     // COLUMN_NAME: 字段名
 
+    /**
+     *
+     */
+    private String tableCatalog;
+
+    /**
+     *
+     */
     private String tableSchema;
+
+    /**
+     *
+     */
     private String tableName;
+
+    /**
+     *
+     */
+    private Long nonUnique;
+
+    /**
+     *
+     */
+    private String indexSchema;
+
+    /**
+     *
+     */
     private String indexName;
-    private String seqInIndex;
+
+    /**
+     *
+     */
+    private Long seqInIndex;
+
+    /**
+     *
+     */
     private String columnName;
+
+    /**
+     *
+     */
+    private String collation;
+
+    /**
+     *
+     */
+    private Long cardinality;
+
+    /**
+     *
+     */
+    private Long subPart;
+
+    /**
+     *
+     */
+    private String packed;
+
+    /**
+     *
+     */
+    private String nullable;
+
+    /**
+     *
+     */
+    private String indexType;
+
+    /**
+     *
+     */
+    private String comment;
+
+    /**
+     *
+     */
+    private String indexComment;
+
+    private static final long serialVersionUID = 1L;
+
 }

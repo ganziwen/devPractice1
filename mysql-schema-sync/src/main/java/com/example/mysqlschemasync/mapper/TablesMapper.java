@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author steven01.gan
@@ -16,9 +17,9 @@ import java.util.List;
 public interface TablesMapper extends BaseMapper {
 
     @Select("select TABLE_SCHEMA,TABLE_NAME,ENGINE,TABLE_ROWS,DATA_LENGTH,INDEX_LENGTH,TABLE_COMMENT from information_schema.TABLES")
-    List<TablesDo> selectAllTables();
+    Set<TablesDo> selectAllTables();
 
     @Select("select TABLE_SCHEMA,TABLE_NAME,ENGINE,TABLE_ROWS,DATA_LENGTH,INDEX_LENGTH,TABLE_COMMENT from information_schema.TABLES where 1=1 and table_schema = #{tableSchema} and TABLE_NAME = #{tableName}")
-    List<TablesDo> selectByTable(@Param("tableSchema") String tableSchema, @Param("tableName") String tableName);
+    Set<TablesDo> selectByTable(@Param("tableSchema") String tableSchema, @Param("tableName") String tableName);
 }
 

@@ -2,6 +2,8 @@ package com.example.mysqlschemasync.model;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @author steven01.gan
  * @version 1.0
@@ -17,11 +19,111 @@ public class TablesDo {
     // INDEX_LENGTH : 记录表的索引大小
     // TABLE_COMMENT : 记录备注
 
+    /**
+     *
+     */
+    private String tableCatalog;
+
+    /**
+     *
+     */
     private String tableSchema;
+
+    /**
+     *
+     */
     private String tableName;
+
+    /**
+     *
+     */
+    private String tableType;
+
+    /**
+     *
+     */
     private String engine;
-    private String tableRows;
-    private String dataLength;
-    private String indexLength;
+
+    /**
+     *
+     */
+    private Long version;
+
+    /**
+     *
+     */
+    private String rowFormat;
+
+    /**
+     *
+     */
+    private Long tableRows;
+
+    /**
+     *
+     */
+    private Long avgRowLength;
+
+    /**
+     *
+     */
+    private Long dataLength;
+
+    /**
+     *
+     */
+    private Long maxDataLength;
+
+    /**
+     *
+     */
+    private Long indexLength;
+
+    /**
+     *
+     */
+    private Long dataFree;
+
+    /**
+     *
+     */
+    private Long autoIncrement;
+
+    /**
+     *
+     */
+    private Date createTime;
+
+    /**
+     *
+     */
+    private Date updateTime;
+
+    /**
+     *
+     */
+    private Date checkTime;
+
+    /**
+     *
+     */
+    private String tableCollation;
+
+    /**
+     *
+     */
+    private Long checksum;
+
+    /**
+     *
+     */
+    private String createOptions;
+
+    /**
+     *
+     */
     private String tableComment;
+
+    private static final long serialVersionUID = 1L;
+
 }

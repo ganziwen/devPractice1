@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author steven01.gan
@@ -38,25 +39,25 @@ public class TestDao {
      */
     @Test
     public void testSchema() {
-        List<SchemataDo> schemataDos = DaoFacade.ofMapper(connectInfo, SchemaMapper.class, SchemaMapper::selectAllSchame);
+        Set<SchemataDo> schemataDos = DaoFacade.ofMapper(connectInfo, SchemaMapper.class, SchemaMapper::selectAllSchame);
         schemataDos.forEach(System.out::println);
     }
 
     @Test
     public void testTable() {
-        List<TablesDo> tablesDos = DaoFacade.ofMapper(connectInfo, TablesMapper.class, TablesMapper -> TablesMapper.selectByTable("test_table", "tb_user"));
+        Set<TablesDo> tablesDos = DaoFacade.ofMapper(connectInfo, TablesMapper.class, TablesMapper -> TablesMapper.selectByTable("test_table", "tb_user"));
         tablesDos.forEach(System.out::println);
     }
 
     @Test
     public void testColumn() {
-        List<ColumnsDo> columnsDos = DaoFacade.ofMapper(connectInfo, ColumnsMapper.class, columnsMapper -> columnsMapper.selectByTable("test_table", "tb_user"));
+        Set<ColumnsDo> columnsDos = DaoFacade.ofMapper(connectInfo, ColumnsMapper.class, columnsMapper -> columnsMapper.selectByTable("test_table", "tb_user"));
         columnsDos.forEach(System.out::println);
     }
 
     @Test
     public void testStatistics() {
-        List<StatisticsDo> statisticsDos = DaoFacade.ofMapper(connectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTable("test_table", "tb_user"));
+        Set<StatisticsDo> statisticsDos = DaoFacade.ofMapper(connectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTable("test_table", "tb_user"));
         statisticsDos.forEach(System.out::println);
     }
 }
