@@ -65,9 +65,9 @@ public class SyncServiceImpl implements SyncService {
         });
 
 
-        //  4. 基于差异, 生产 sql
-        Set<String> columnSql = getColumnSql(diffColumn);
-        Set<String> statisticsSql = getStatisticsSql(diffStatistics);
+        //  4. 基于差异, 生成 sql
+        List<String> columnSql = getColumnSql(diffColumn);
+        List<String> statisticsSql = getStatisticsSql(diffStatistics);
 
         //  5. 执行 sql
         executeSql(columnSql);
@@ -100,7 +100,12 @@ public class SyncServiceImpl implements SyncService {
      * @param diffColumn
      * @return
      */
-    private Set<String> getColumnSql(Set<ColumnsDo> diffColumn) {
+    private List<String> getColumnSql(Set<ColumnsDo> diffColumn) {
+
+        // 添加列：alter table 表名 add column 列名 varchar(30);
+        // 修改列名MySQL： alter table bbb change nnnnn hh int;
+        // 修改列属性：alter table t_book modify name varchar(22);
+        diffColumn.stream().map(column -> column.getColumnName());
         return null;
     }
 
@@ -110,12 +115,12 @@ public class SyncServiceImpl implements SyncService {
      * @param diffStatistics
      * @return
      */
-    private Set<String> getStatisticsSql(Set<StatisticsDo> diffStatistics) {
+    private List<String> getStatisticsSql(Set<StatisticsDo> diffStatistics) {
         return null;
     }
 
 
-    private void executeSql(Set<String> sqls) {
+    private void executeSql(List<String> sqls) {
     }
 
     /**
