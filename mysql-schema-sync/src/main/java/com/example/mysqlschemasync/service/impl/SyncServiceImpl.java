@@ -10,7 +10,9 @@ import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import sun.text.resources.cldr.ti.FormatData_ti_ER;
 
+import javax.xml.ws.EndpointReference;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Set;
@@ -115,16 +117,10 @@ public class SyncServiceImpl implements SyncService {
 
         // .filter(col -> dstColumns.stream().map(cols -> cols.getColumnName()).collect(Collectors.toList()).contains(col.getColumnName()))
 
+        // String strFormate =
+
         // TODO: 2021/9/11 修改的部分没有生成真实 sql,只有新增列成了 sql
-        List<String> columnList = diffColumn.stream().map(column -> dstColumns.stream().map(ColumnsDo::getColumnName).collect(Collectors.toList()).contains(column.getColumnName()) ? SqlFormatterConst.MODIFY_COLUMN : SqlFormatterConst.ADD_COLUMN.
-                replace("{schemaName}", column.getTableSchema()).
-                replace("{tableName}", column.getTableName()).
-                replace("{columnName}", column.getColumnName()).
-                replace("{columnType}", column.getColumnType()).
-                replace("{isNullable}", "NO".equals(column.getIsNullable()) ? "not null" : "can be null").
-                replace("{columnDefault}", column.getColumnDefault()).
-                replace("{columnComment}", column.getColumnComment())
-        ).collect(Collectors.toList());
+        List<String> columnList = diffColumn.stream().map(column -> dstColumns.stream().map(ColumnsDo::getColumnName).collect(Collectors.toList()).contains(column.getColumnName()) ? getColumnFormate(SqlFormatterConst.MODIFY_COLUMN, column) : getColumnFormate(SqlFormatterConst.ADD_COLUMN, column)).collect(Collectors.toList());
         return columnList;
     }
 
@@ -138,6 +134,17 @@ public class SyncServiceImpl implements SyncService {
         return null;
     }
 
+
+    public String getColumnFormate(String formatter, ColumnsDo column) {
+        return formatter.
+                replace("{schemaName}", column.getTableSchema()).
+                replace("{tableName}", column.getTableName()).
+                replace("{columnName}", column.getColumnName()).
+                replace("{columnType}", column.getColumnType()).
+                replace("{isNullable}", "NO".equals(column.getIsNullable()) ? "not null" : "can be null").
+                replace("{columnDefault}", column.getColumnDefault()).
+                replace("{columnComment}", column.getColumnComment());
+    }
 
     private void executeSql(List<String> sqls) {
     }
