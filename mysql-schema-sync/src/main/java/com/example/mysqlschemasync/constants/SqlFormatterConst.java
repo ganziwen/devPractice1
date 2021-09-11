@@ -13,11 +13,17 @@ public interface SqlFormatterConst {
 
 
     /**
-     * 修改列
+     * 修改列模板
      * alter table test_table.tb_user add/modify user_id varchar(64) default '' not null comment '唯一id';
      */
     String COLUMN = "ALTER TABLE {schemaName}.`{tableName}` %s COLUMN `{columnName}` {columnType} {isNullable} default '{columnDefault}' comment '{columnComment}';";
+    /**
+     * 修改列
+     */
     String MODIFY_COLUMN = String.format(COLUMN, "MODIFY");
+    /**
+     * 新增列
+     */
     String ADD_COLUMN = String.format(COLUMN, "ADD");
 
     /**

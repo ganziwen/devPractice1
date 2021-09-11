@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -68,7 +69,7 @@ public class SyncServiceImpl implements SyncService {
 
 
         //  4. 基于差异, 生成 sql
-        List<String> columnSql = getColumnSql(diffColumn);
+        List<String> columnSql = getColumnSql(diffColumn, dstColumns);
         columnSql.forEach(col -> {
             LOGGER.info("拼接的 sql 语句：{}", col);
         });
@@ -105,14 +106,17 @@ public class SyncServiceImpl implements SyncService {
      * @param diffColumn
      * @return
      */
-    private List<String> getColumnSql(Set<ColumnsDo> diffColumn) {
+    private List<String> getColumnSql(Set<ColumnsDo> diffColumn, Set<ColumnsDo> dstColumns) {
 
         // 添加列：alter table 表名 add column 列名 varchar(30);
         // alter table TABLE modify COLUMN column 数据长度 not null default '' comment '';
         // 修改列名MySQL： alter table bbb change nnnnn hh int;
         // 修改列属性：alter table t_book modify name varchar(22);
 
-        List<String> columnList = diffColumn.stream().map(column -> SqlFormatterConst.MODIFY_COLUMN.
+        // .filter(col -> dstColumns.stream().map(cols -> cols.getColumnName()).collect(Collectors.toList()).contains(col.getColumnName()))
+
+        // TODO: 2021/9/11 修改的部分没有生成真实 sql,只有新增列成了 sql
+        List<String> columnList = diffColumn.stream().map(column -> dstColumns.stream().map(ColumnsDo::getColumnName).collect(Collectors.toList()).contains(column.getColumnName()) ? SqlFormatterConst.MODIFY_COLUMN : SqlFormatterConst.ADD_COLUMN.
                 replace("{schemaName}", column.getTableSchema()).
                 replace("{tableName}", column.getTableName()).
                 replace("{columnName}", column.getColumnName()).
