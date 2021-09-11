@@ -1,18 +1,20 @@
 package com.example.mysqlschemasync.service.impl;
 
+import com.example.mysqlschemasync.constants.SqlFormatterConst;
 import com.example.mysqlschemasync.dao.DaoFacade;
 import com.example.mysqlschemasync.mapper.ColumnsMapper;
 import com.example.mysqlschemasync.mapper.StatisticsMapper;
 import com.example.mysqlschemasync.model.*;
 import com.example.mysqlschemasync.service.SyncService;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Formatter;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Ganziwen
@@ -43,7 +45,7 @@ public class SyncServiceImpl implements SyncService {
         String dbName = syncInfo.getDbName();
         String tableName = syncInfo.getTableName();
 
-        // 1. 去 src 找到对应的 实例.数据库.表 获取字段+索引
+        // 1. 去 src 找到对应的 实例.数据库.表 获取字段+索引(获取索引和列的字段可以用 druid 进行获取，到时看看能不能优化)
         Set<ColumnsDo> srcColumns = DaoFacade.ofMapper(srcConnectInfo, ColumnsMapper.class, columnsMapper -> columnsMapper.selectByTable(dbName, tableName));
         Set<StatisticsDo> srcStatistics = DaoFacade.ofMapper(srcConnectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTable(dbName, tableName));
 
@@ -59,14 +61,17 @@ public class SyncServiceImpl implements SyncService {
         diffColumn.forEach(col -> {
             LOGGER.info("不同的行信息为:{}\n", col.toString());
         });
-
-        diffStatistics.forEach(statistics -> {
-            LOGGER.info("不同的索引信息为:{}\n", statistics.toString());
-        });
+        //
+        // diffStatistics.forEach(statistics -> {
+        //     LOGGER.info("不同的索引信息为:{}\n", statistics.toString());
+        // });
 
 
         //  4. 基于差异, 生成 sql
         List<String> columnSql = getColumnSql(diffColumn);
+        columnSql.forEach(col -> {
+            LOGGER.info("拼接的 sql 语句：{}", col);
+        });
         List<String> statisticsSql = getStatisticsSql(diffStatistics);
 
         //  5. 执行 sql
@@ -103,10 +108,20 @@ public class SyncServiceImpl implements SyncService {
     private List<String> getColumnSql(Set<ColumnsDo> diffColumn) {
 
         // 添加列：alter table 表名 add column 列名 varchar(30);
+        // alter table TABLE modify COLUMN column 数据长度 not null default '' comment '';
         // 修改列名MySQL： alter table bbb change nnnnn hh int;
         // 修改列属性：alter table t_book modify name varchar(22);
-        diffColumn.stream().map(column -> column.getColumnName());
-        return null;
+
+        List<String> columnList = diffColumn.stream().map(column -> SqlFormatterConst.MODIFY_COLUMN.
+                replace("{schemaName}", column.getTableSchema()).
+                replace("{tableName}", column.getTableName()).
+                replace("{columnName}", column.getColumnName()).
+                replace("{columnType}", column.getColumnType()).
+                replace("{isNullable}", "NO".equals(column.getIsNullable()) ? "not null" : "can be null").
+                replace("{columnDefault}", column.getColumnDefault()).
+                replace("{columnComment}", column.getColumnComment())
+        ).collect(Collectors.toList());
+        return columnList;
     }
 
     /**
