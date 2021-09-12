@@ -6,16 +6,17 @@ import com.example.mysqlschemasync.mapper.ColumnsMapper;
 import com.example.mysqlschemasync.mapper.StatisticsMapper;
 import com.example.mysqlschemasync.model.*;
 import com.example.mysqlschemasync.service.SyncService;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import org.apache.ibatis.javassist.compiler.ast.StringL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import sun.text.resources.cldr.ti.FormatData_ti_ER;
 
 import javax.xml.ws.EndpointReference;
-import java.util.Formatter;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -57,12 +58,15 @@ public class SyncServiceImpl implements SyncService {
         Set<StatisticsDo> dstStatistics = DaoFacade.ofMapper(dstConnectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTable(dbName, tableName));
 
         // 3. diff 差异. 字段不一致,索引不一致
-        Set<ColumnsDo> diffColumn = diffColumn(srcColumns, dstColumns);
+        HashMap<String, Set<ColumnsDo>> diffColumn = diffColumn(srcColumns, dstColumns);
         Set<StatisticsDo> diffStatistics = diffStatistics(srcStatistics, dstStatistics);
 
         // 调试信息
-        diffColumn.forEach(col -> {
-            LOGGER.info("不同的行信息为:{}\n", col.toString());
+        diffColumn.get(SqlFormatterConst.MODIFY_COLUMN).forEach(col -> {
+            LOGGER.info("需要进行修改的列:{}\n", col.toString());
+        });
+        diffColumn.get(SqlFormatterConst.ADD_COLUMN).forEach(col -> {
+            LOGGER.info("需要进行新增的列:{}\n", col.toString());
         });
         //
         // diffStatistics.forEach(statistics -> {
@@ -71,11 +75,11 @@ public class SyncServiceImpl implements SyncService {
 
 
         //  4. 基于差异, 生成 sql
-        List<String> columnSql = getColumnSql(diffColumn, dstColumns);
+        List<String> columnSql = getColumnSql(diffColumn);
         columnSql.forEach(col -> {
             LOGGER.info("拼接的 sql 语句：{}", col);
         });
-        List<String> statisticsSql = getStatisticsSql(diffStatistics);
+        List<String> statisticsSql = getStatisticsSql(diffStatistics, dstStatistics);
 
         //  5. 执行 sql
         executeSql(columnSql);
@@ -91,9 +95,22 @@ public class SyncServiceImpl implements SyncService {
      * @param dstColumns
      * @return
      */
-    private Set<ColumnsDo> diffColumn(Set<ColumnsDo> srcColumns, Set<ColumnsDo> dstColumns) {
+    private HashMap<String, Set<ColumnsDo>> diffColumn(Set<ColumnsDo> srcColumns, Set<ColumnsDo> dstColumns) {
         // 对比 src 和 dst,不管是长度还是注释还是默认值不一致,只要存在这些情况就以 src 为准,生成 sql 执行语句
-        return Sets.difference(srcColumns, dstColumns).immutableCopy();
+        // 判断一下字段名,src有 dst 没有的,则为需要插入的 column,否则为需要 modify 的
+        HashMap<String, Set<ColumnsDo>> columnsMap = new HashMap<>();
+        Set<ColumnsDo> diffColumnsDos = Sets.difference(srcColumns, dstColumns).immutableCopy();
+        // 差异的所有行名字
+        Set<String> diffColumnsName = diffColumnsDos.stream().map(ColumnsDo::getColumnName).collect(Collectors.toSet());
+        Set<String> dstColumnsName = dstColumns.stream().map(ColumnsDo::getColumnName).collect(Collectors.toSet());
+
+        // 目标数据库的行包含在了差异的行列表内,则为需要修改的
+        Set<ColumnsDo> modifyColumns = diffColumnsDos.stream().filter(diffColumnName -> dstColumnsName.contains(diffColumnName.getColumnName())).collect(Collectors.toSet());
+        // 目标数据库的行不包含在差异的列表内,则为新增
+        Set<ColumnsDo> addColumns = diffColumnsDos.stream().filter(diffColumnName -> !dstColumnsName.contains(diffColumnName.getColumnName())).collect(Collectors.toSet());
+        columnsMap.put(SqlFormatterConst.MODIFY_COLUMN, modifyColumns);
+        columnsMap.put(SqlFormatterConst.ADD_COLUMN, addColumns);
+        return columnsMap;
     }
 
 
@@ -103,25 +120,27 @@ public class SyncServiceImpl implements SyncService {
     }
 
     /**
-     * 如何可以快速解决?可不可以根据对象转成 sql
+     * 根据有差异的列以及目标列,生成列的相关 sql
+     * 思路是:先将差异的列去dst内查一下，假设列名存在则需要 modify,不存在说明需要 add
      *
      * @param diffColumn
      * @return
      */
-    private List<String> getColumnSql(Set<ColumnsDo> diffColumn, Set<ColumnsDo> dstColumns) {
+    private List<String> getColumnSql(HashMap<String, Set<ColumnsDo>> diffColumn) {
 
-        // 添加列：alter table 表名 add column 列名 varchar(30);
-        // alter table TABLE modify COLUMN column 数据长度 not null default '' comment '';
-        // 修改列名MySQL： alter table bbb change nnnnn hh int;
-        // 修改列属性：alter table t_book modify name varchar(22);
+        List<String> columnSql = Lists.newArrayList();
+        Set<Map.Entry<String, Set<ColumnsDo>>> entries = diffColumn.entrySet();
+        for (Map.Entry<String, Set<ColumnsDo>> entry : entries) {
+            if (SqlFormatterConst.ADD_COLUMN.equals(entry.getKey())) {
+                List<String> stringList = entry.getValue().stream().map(col -> getColumnFormate(entry.getKey(), col)).collect(Collectors.toList());
+                columnSql.addAll(stringList);
+            } else if (SqlFormatterConst.MODIFY_COLUMN.equals(entry.getKey())) {
+                List<String> stringList = entry.getValue().stream().map(col -> getColumnFormate(entry.getKey(), col)).collect(Collectors.toList());
+                columnSql.addAll(stringList);
+            }
+        }
+        return columnSql;
 
-        // .filter(col -> dstColumns.stream().map(cols -> cols.getColumnName()).collect(Collectors.toList()).contains(col.getColumnName()))
-
-        // String strFormate =
-
-        // TODO: 2021/9/11 修改的部分没有生成真实 sql,只有新增列成了 sql
-        List<String> columnList = diffColumn.stream().map(column -> dstColumns.stream().map(ColumnsDo::getColumnName).collect(Collectors.toList()).contains(column.getColumnName()) ? getColumnFormate(SqlFormatterConst.MODIFY_COLUMN, column) : getColumnFormate(SqlFormatterConst.ADD_COLUMN, column)).collect(Collectors.toList());
-        return columnList;
     }
 
     /**
@@ -130,19 +149,22 @@ public class SyncServiceImpl implements SyncService {
      * @param diffStatistics
      * @return
      */
-    private List<String> getStatisticsSql(Set<StatisticsDo> diffStatistics) {
+    private List<String> getStatisticsSql(Set<StatisticsDo> diffStatistics, Set<StatisticsDo> Statistics) {
         return null;
     }
 
 
     public String getColumnFormate(String formatter, ColumnsDo column) {
+        LOGGER.info(formatter);
+        LOGGER.info(column.getColumnDefault());
+
         return formatter.
                 replace("{schemaName}", column.getTableSchema()).
                 replace("{tableName}", column.getTableName()).
                 replace("{columnName}", column.getColumnName()).
+                replace("{columnDefault}", column.getColumnDefault()).
                 replace("{columnType}", column.getColumnType()).
                 replace("{isNullable}", "NO".equals(column.getIsNullable()) ? "not null" : "can be null").
-                replace("{columnDefault}", column.getColumnDefault()).
                 replace("{columnComment}", column.getColumnComment());
     }
 

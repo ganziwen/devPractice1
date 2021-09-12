@@ -30,19 +30,25 @@ public interface SqlFormatterConst {
      * 删除索引
      */
     String DROP_INDEX = "ALTER TABLE {schemaName}.`{tableName}` DROP INDEX {indexName};";
+
     /**
      * 添加索引
      */
-    String ADD_INDEX = "ALTER TABLE {schemaName}.`{tableName}` ADD INDEX {indexName}(columnName);";
+    String ADD_INDEX = "ALTER TABLE {schemaName}.`{tableName}` ADD INDEX {indexName}({columnName});";
+
+    /**
+     * 添加唯一性索引
+     */
+    String ADD_UNIQUE_INDEX = "ALTER TABLE {schemaName}.`{tableName}` ADD UNIQUE {indexName}({columnName});";
 
     /**
      * 删除主键
      */
-    String DROP_UNIQUEKEY = "ALTER TABLE {schemaName}.`{tableName}` DROP PRIMARY KEY;";
+    String DROP_PRIMARY_KEY = "ALTER TABLE {schemaName}.`{tableName}` DROP PRIMARY KEY;";
 
     /**
      * 新增主键
      */
-    String ADD_UNIQUEKEY = "ALTER TABLE {schemaName}.`{tableName}` ADD PRIMARY KEY ({columnName}});";
+    String ADD_PRIMARY_KEY = "ALTER TABLE {schemaName}.`{tableName}` ADD PRIMARY KEY ({columnName});";
 
 }
