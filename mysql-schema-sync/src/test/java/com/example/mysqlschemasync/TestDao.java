@@ -6,6 +6,7 @@ import com.example.mysqlschemasync.mapper.SchemaMapper;
 import com.example.mysqlschemasync.mapper.StatisticsMapper;
 import com.example.mysqlschemasync.mapper.TablesMapper;
 import com.example.mysqlschemasync.model.*;
+import org.apache.coyote.http11.filters.VoidOutputFilter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,6 +59,12 @@ public class TestDao {
     @Test
     public void testStatistics() {
         Set<StatisticsDo> statisticsDos = DaoFacade.ofMapper(connectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTable("test_table", "tb_user"));
+        statisticsDos.forEach(System.out::println);
+    }
+
+    @Test
+    public void testStatisticWithGroupBy() {
+        Set<StatisticsDo> statisticsDos = DaoFacade.ofMapper(connectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTableGroupBy("test_table", "tb_user"));
         statisticsDos.forEach(System.out::println);
     }
 }

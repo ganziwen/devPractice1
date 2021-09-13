@@ -34,12 +34,12 @@ public interface SqlFormatterConst {
     /**
      * 添加索引
      */
-    String ADD_INDEX = "ALTER TABLE {schemaName}.`{tableName}` ADD INDEX {indexName}({columnName});";
+    String ADD_INDEX = "ALTER TABLE {schemaName}.`{tableName}` ADD INDEX {indexName}(`{columnName}`);";
 
     /**
      * 添加唯一性索引
      */
-    String ADD_UNIQUE_INDEX = "ALTER TABLE {schemaName}.`{tableName}` ADD UNIQUE {indexName}({columnName});";
+    String ADD_UNIQUE_INDEX = "ALTER TABLE {schemaName}.`{tableName}` ADD UNIQUE {indexName}(`{columnName}`);";
 
     /**
      * 删除主键
@@ -49,6 +49,11 @@ public interface SqlFormatterConst {
     /**
      * 新增主键
      */
-    String ADD_PRIMARY_KEY = "ALTER TABLE {schemaName}.`{tableName}` ADD PRIMARY KEY ({columnName});";
+    String ADD_PRIMARY_KEY = "ALTER TABLE {schemaName}.`{tableName}` ADD PRIMARY KEY (`{columnName}`);";
+
+    /**
+     * 新增FULLTEXT
+     */
+    String ADD_FULLTEXT = "ALTER TABLE {schemaName}.`{tableName}` ADD FULLTEXT (`{columnName}`);";
 
 }

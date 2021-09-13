@@ -46,11 +46,11 @@ public class SyncServiceImpl implements SyncService {
 
         // 1. 去 src 找到对应的 实例.数据库.表 获取字段+索引(获取索引和列的字段可以用 druid 进行获取，到时看看能不能优化)
         Set<ColumnsDo> srcColumns = DaoFacade.ofMapper(srcConnectInfo, ColumnsMapper.class, columnsMapper -> columnsMapper.selectByTable(dbName, tableName));
-        Set<StatisticsDo> srcStatistics = DaoFacade.ofMapper(srcConnectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTable(dbName, tableName));
+        Set<StatisticsDo> srcStatistics = DaoFacade.ofMapper(srcConnectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTableGroupBy(dbName, tableName));
 
         // 2. 去 dst 找到对应的 实例.数据库.表 获取字段+索引
         Set<ColumnsDo> dstColumns = DaoFacade.ofMapper(dstConnectInfo, ColumnsMapper.class, columnsMapper -> columnsMapper.selectByTable(dbName, tableName));
-        Set<StatisticsDo> dstStatistics = DaoFacade.ofMapper(dstConnectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTable(dbName, tableName));
+        Set<StatisticsDo> dstStatistics = DaoFacade.ofMapper(dstConnectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTableGroupBy(dbName, tableName));
 
         // 3. diff 差异. 字段不一致,索引不一致
         HashMap<String, Set<ColumnsDo>> diffColumn = diffColumn(srcColumns, dstColumns);
@@ -65,22 +65,26 @@ public class SyncServiceImpl implements SyncService {
         });
 
         diffStatistics.get(SqlFormatterConst.ADD_INDEX).forEach(statis -> {
-            LOGGER.info("需要进行新增的索引:{}\n", statis.toString());
+            LOGGER.info("需要进行新增的 index 索引:{}\n", statis.toString());
+        });
+        diffStatistics.get(SqlFormatterConst.ADD_FULLTEXT).forEach(statis -> {
+            LOGGER.info("需要进行新增的 FULLTEXT 索引:{}\n", statis.toString());
         });
 
 
         //  4. 基于差异, 生成 sql
         List<String> columnSql = getColumnSql(diffColumn);
+        List<String> statisticsSql = getStatisticsSql(diffStatistics);
+
+        // 打印调试信息
         columnSql.forEach(col -> {
             LOGGER.info("拼接的列 sql 语句：{}", col);
         });
+        LOGGER.info("====分割线====");
 
-        List<String> statisticsSql = getStatisticsSql(diffStatistics);
         statisticsSql.forEach(statis -> {
             LOGGER.info("拼接的索引 sql 语句：{}", statis);
-
         });
-
         //  5. 执行 sql
         executeSql(columnSql);
         executeSql(statisticsSql);
@@ -126,10 +130,15 @@ public class SyncServiceImpl implements SyncService {
         HashMap<String, Set<StatisticsDo>> statisticsMap = new HashMap<>();
         Set<StatisticsDo> diffStatisticsDos = Sets.difference(srcStatistics, dstStatistics).immutableCopy();
         Set<String> dstStatisName = dstStatistics.stream().map(StatisticsDo::getIndexName).collect(Collectors.toSet());
-        Set<StatisticsDo> addIndex = diffStatisticsDos.stream().filter(diffStaits -> !dstStatisName.contains(diffStaits.getIndexName())).collect(Collectors.toSet());
+        // 差异的索引名称被包含在 dst 内,说明是需要 drop 的 index,但是 drop 也分为 primyKey 和 index .然后需要进行新增
+        Set<StatisticsDo> dropIndexs = diffStatisticsDos.stream().filter(diffStatis -> dstStatisName.contains(diffStatis.getIndexName())).collect(Collectors.toSet());
 
-        // 新增索引
-        statisticsMap.put(SqlFormatterConst.ADD_INDEX, addIndex);
+        Set<StatisticsDo> addIndexs = diffStatisticsDos.stream().filter(diffStatis -> (!dstStatisName.contains(diffStatis.getIndexName()) && !"FULLTEXT".equals(diffStatis.getIndexType()))).collect(Collectors.toSet());
+        Set<StatisticsDo> addFullText = diffStatisticsDos.stream().filter(diffStatis -> (!dstStatisName.contains(diffStatis.getIndexName()) && "FULLTEXT".equals(diffStatis.getIndexType()))).collect(Collectors.toSet());
+
+        // 新增索引,新增的索引一般不会是组合索引,除非是组合索引已存在但是换了两者顺序
+        statisticsMap.put(SqlFormatterConst.ADD_INDEX, addIndexs);
+        statisticsMap.put(SqlFormatterConst.ADD_FULLTEXT, addFullText);
 
         return statisticsMap;
     }
@@ -146,13 +155,9 @@ public class SyncServiceImpl implements SyncService {
         List<String> columnSql = Lists.newArrayList();
         Set<Map.Entry<String, Set<ColumnsDo>>> entries = diffColumn.entrySet();
         for (Map.Entry<String, Set<ColumnsDo>> entry : entries) {
-            if (SqlFormatterConst.ADD_COLUMN.equals(entry.getKey())) {
-                List<String> stringList = entry.getValue().stream().map(col -> getColumnFormater(entry.getKey(), col)).collect(Collectors.toList());
-                columnSql.addAll(stringList);
-            } else if (SqlFormatterConst.MODIFY_COLUMN.equals(entry.getKey())) {
-                List<String> stringList = entry.getValue().stream().map(col -> getColumnFormater(entry.getKey(), col)).collect(Collectors.toList());
-                columnSql.addAll(stringList);
-            }
+            List<String> stringList = entry.getValue().stream().map(col -> getColumnFormater(entry.getKey(), col)).collect(Collectors.toList());
+            columnSql.addAll(stringList);
+
         }
         return columnSql;
     }
@@ -168,10 +173,8 @@ public class SyncServiceImpl implements SyncService {
         Set<Map.Entry<String, Set<StatisticsDo>>> entries = diffStatistics.entrySet();
 
         for (Map.Entry<String, Set<StatisticsDo>> entry : entries) {
-            if (SqlFormatterConst.ADD_INDEX.equals(entry.getKey())) {
-                List<String> stringList = entry.getValue().stream().map(statis -> getStaticFormater(entry.getKey(), statis)).collect(Collectors.toList());
-                staticsSql.addAll(stringList);
-            }
+            List<String> stringList = entry.getValue().stream().map(statis -> getStaticFormater(entry.getKey(), statis)).collect(Collectors.toList());
+            staticsSql.addAll(stringList);
         }
 
         return staticsSql;
