@@ -37,6 +37,11 @@ public interface SqlFormatterConst {
     String ADD_INDEX = "ALTER TABLE {schemaName}.`{tableName}` ADD INDEX {indexName}(`{columnName}`);";
 
     /**
+     * 修改索引
+     */
+    String MODIFY_INDEX = "ALTER TABLE {schemaName}.`{tableName}` DROP INDEX {indexName};ALTER TABLE {schemaName}.`{tableName}` ADD INDEX {indexName}(`{columnName}`);";
+
+    /**
      * 添加唯一性索引
      */
     String ADD_UNIQUE_INDEX = "ALTER TABLE {schemaName}.`{tableName}` ADD UNIQUE {indexName}(`{columnName}`);";

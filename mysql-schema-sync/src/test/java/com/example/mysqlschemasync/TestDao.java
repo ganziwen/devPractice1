@@ -56,11 +56,11 @@ public class TestDao {
         columnsDos.forEach(System.out::println);
     }
 
-    @Test
-    public void testStatistics() {
-        Set<StatisticsDo> statisticsDos = DaoFacade.ofMapper(connectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTable("test_table", "tb_user"));
-        statisticsDos.forEach(System.out::println);
-    }
+    // @Test
+    // public void testStatistics() {
+    //     Set<StatisticsDo> statisticsDos = DaoFacade.ofMapper(connectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTable("test_table", "tb_user"));
+    //     statisticsDos.forEach(System.out::println);
+    // }
 
     @Test
     public void testStatisticWithGroupBy() {

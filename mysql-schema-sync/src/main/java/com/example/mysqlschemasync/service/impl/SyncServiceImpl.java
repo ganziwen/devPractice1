@@ -135,10 +135,11 @@ public class SyncServiceImpl implements SyncService {
 
         Set<StatisticsDo> addIndexs = diffStatisticsDos.stream().filter(diffStatis -> (!dstStatisName.contains(diffStatis.getIndexName()) && !"FULLTEXT".equals(diffStatis.getIndexType()))).collect(Collectors.toSet());
         Set<StatisticsDo> addFullText = diffStatisticsDos.stream().filter(diffStatis -> (!dstStatisName.contains(diffStatis.getIndexName()) && "FULLTEXT".equals(diffStatis.getIndexType()))).collect(Collectors.toSet());
-
+        Set<StatisticsDo> modifyIndex = diffStatisticsDos.stream().filter(diffStatis -> (dstStatisName.contains(diffStatis.getIndexName()))).collect(Collectors.toSet());
         // 新增索引,新增的索引一般不会是组合索引,除非是组合索引已存在但是换了两者顺序
         statisticsMap.put(SqlFormatterConst.ADD_INDEX, addIndexs);
         statisticsMap.put(SqlFormatterConst.ADD_FULLTEXT, addFullText);
+        statisticsMap.put(SqlFormatterConst.MODIFY_INDEX, modifyIndex);
 
         return statisticsMap;
     }
