@@ -6,18 +6,13 @@ import com.example.mysqlschemasync.mapper.ColumnsMapper;
 import com.example.mysqlschemasync.mapper.StatisticsMapper;
 import com.example.mysqlschemasync.model.*;
 import com.example.mysqlschemasync.service.SyncService;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import org.apache.ibatis.javassist.compiler.ast.StringL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import sun.text.resources.cldr.ti.FormatData_ti_ER;
 
-import javax.xml.ws.EndpointReference;
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -59,7 +54,7 @@ public class SyncServiceImpl implements SyncService {
 
         // 3. diff 差异. 字段不一致,索引不一致
         HashMap<String, Set<ColumnsDo>> diffColumn = diffColumn(srcColumns, dstColumns);
-        Set<StatisticsDo> diffStatistics = diffStatistics(srcStatistics, dstStatistics);
+        HashMap<String, Set<StatisticsDo>> diffStatistics = diffStatistics(srcStatistics, dstStatistics);
 
         // 调试信息
         diffColumn.get(SqlFormatterConst.MODIFY_COLUMN).forEach(col -> {
@@ -68,18 +63,23 @@ public class SyncServiceImpl implements SyncService {
         diffColumn.get(SqlFormatterConst.ADD_COLUMN).forEach(col -> {
             LOGGER.info("需要进行新增的列:{}\n", col.toString());
         });
-        //
-        // diffStatistics.forEach(statistics -> {
-        //     LOGGER.info("不同的索引信息为:{}\n", statistics.toString());
-        // });
+
+        diffStatistics.get(SqlFormatterConst.ADD_INDEX).forEach(statis -> {
+            LOGGER.info("需要进行新增的索引:{}\n", statis.toString());
+        });
 
 
         //  4. 基于差异, 生成 sql
         List<String> columnSql = getColumnSql(diffColumn);
         columnSql.forEach(col -> {
-            LOGGER.info("拼接的 sql 语句：{}", col);
+            LOGGER.info("拼接的列 sql 语句：{}", col);
         });
-        List<String> statisticsSql = getStatisticsSql(diffStatistics, dstStatistics);
+
+        List<String> statisticsSql = getStatisticsSql(diffStatistics);
+        statisticsSql.forEach(statis -> {
+            LOGGER.info("拼接的索引 sql 语句：{}", statis);
+
+        });
 
         //  5. 执行 sql
         executeSql(columnSql);
@@ -90,6 +90,7 @@ public class SyncServiceImpl implements SyncService {
 
     /**
      * 关于 diff 的部分,是不是不需要重复造轮子?可以看看 https://javers.org/
+     * hashmap 分成两份, column 比较简单就是需要将 add 和 modify 的 sql 变成 key , set(do) 变成 value
      *
      * @param srcColumns
      * @param dstColumns
@@ -113,10 +114,24 @@ public class SyncServiceImpl implements SyncService {
         return columnsMap;
     }
 
+    /**
+     * 结构跟上面一致,区别在于组合索引的话需要进行组合
+     *
+     * @param srcStatistics
+     * @param dstStatistics
+     * @return
+     */
+    private HashMap<String, Set<StatisticsDo>> diffStatistics(Set<StatisticsDo> srcStatistics, Set<StatisticsDo> dstStatistics) {
 
-    private Set<StatisticsDo> diffStatistics(Set<StatisticsDo> srcStatistics, Set<StatisticsDo> dstStatistics) {
+        HashMap<String, Set<StatisticsDo>> statisticsMap = new HashMap<>();
+        Set<StatisticsDo> diffStatisticsDos = Sets.difference(srcStatistics, dstStatistics).immutableCopy();
+        Set<String> dstStatisName = dstStatistics.stream().map(StatisticsDo::getIndexName).collect(Collectors.toSet());
+        Set<StatisticsDo> addIndex = diffStatisticsDos.stream().filter(diffStaits -> !dstStatisName.contains(diffStaits.getIndexName())).collect(Collectors.toSet());
 
-        return Sets.difference(srcStatistics, dstStatistics).immutableCopy();
+        // 新增索引
+        statisticsMap.put(SqlFormatterConst.ADD_INDEX, addIndex);
+
+        return statisticsMap;
     }
 
     /**
@@ -132,15 +147,14 @@ public class SyncServiceImpl implements SyncService {
         Set<Map.Entry<String, Set<ColumnsDo>>> entries = diffColumn.entrySet();
         for (Map.Entry<String, Set<ColumnsDo>> entry : entries) {
             if (SqlFormatterConst.ADD_COLUMN.equals(entry.getKey())) {
-                List<String> stringList = entry.getValue().stream().map(col -> getColumnFormate(entry.getKey(), col)).collect(Collectors.toList());
+                List<String> stringList = entry.getValue().stream().map(col -> getColumnFormater(entry.getKey(), col)).collect(Collectors.toList());
                 columnSql.addAll(stringList);
             } else if (SqlFormatterConst.MODIFY_COLUMN.equals(entry.getKey())) {
-                List<String> stringList = entry.getValue().stream().map(col -> getColumnFormate(entry.getKey(), col)).collect(Collectors.toList());
+                List<String> stringList = entry.getValue().stream().map(col -> getColumnFormater(entry.getKey(), col)).collect(Collectors.toList());
                 columnSql.addAll(stringList);
             }
         }
         return columnSql;
-
     }
 
     /**
@@ -149,15 +163,22 @@ public class SyncServiceImpl implements SyncService {
      * @param diffStatistics
      * @return
      */
-    private List<String> getStatisticsSql(Set<StatisticsDo> diffStatistics, Set<StatisticsDo> Statistics) {
-        return null;
+    private List<String> getStatisticsSql(HashMap<String, Set<StatisticsDo>> diffStatistics) {
+        List<String> staticsSql = new ArrayList<>();
+        Set<Map.Entry<String, Set<StatisticsDo>>> entries = diffStatistics.entrySet();
+
+        for (Map.Entry<String, Set<StatisticsDo>> entry : entries) {
+            if (SqlFormatterConst.ADD_INDEX.equals(entry.getKey())) {
+                List<String> stringList = entry.getValue().stream().map(statis -> getStaticFormater(entry.getKey(), statis)).collect(Collectors.toList());
+                staticsSql.addAll(stringList);
+            }
+        }
+
+        return staticsSql;
     }
 
 
-    public String getColumnFormate(String formatter, ColumnsDo column) {
-        LOGGER.info(formatter);
-        LOGGER.info(column.getColumnDefault());
-
+    public String getColumnFormater(String formatter, ColumnsDo column) {
         return formatter.
                 replace("{schemaName}", column.getTableSchema()).
                 replace("{tableName}", column.getTableName()).
@@ -168,7 +189,17 @@ public class SyncServiceImpl implements SyncService {
                 replace("{columnComment}", column.getColumnComment());
     }
 
+    public String getStaticFormater(String formatter, StatisticsDo statisticsDo) {
+
+        return formatter.
+                replace("{schemaName}", statisticsDo.getTableSchema()).
+                replace("{tableName}", statisticsDo.getTableName()).
+                replace("{columnName}", statisticsDo.getColumnName()).
+                replace("{indexName}", statisticsDo.getIndexName());
+    }
+
     private void executeSql(List<String> sqls) {
+
     }
 
     /**
