@@ -27,38 +27,10 @@ public interface SqlFormatterConst {
     String ADD_COLUMN = String.format(COLUMN, "ADD");
 
     /**
-     * 删除索引
-     */
-    String DROP_INDEX = "ALTER TABLE {schemaName}.`{tableName}` DROP INDEX {indexName};";
-
-    /**
-     * 添加索引
-     */
-    String ADD_INDEX = "ALTER TABLE {schemaName}.`{tableName}` ADD INDEX {indexName}(`{columnName}`);";
-
-    /**
-     * 修改索引
+     * 修改索引,索引可以随意删除重建,线下数据量也不会很大
      */
     String MODIFY_INDEX = "ALTER TABLE {schemaName}.`{tableName}` DROP INDEX {indexName};ALTER TABLE {schemaName}.`{tableName}` ADD INDEX {indexName}(`{columnName}`);";
-
-    /**
-     * 添加唯一性索引
-     */
-    String ADD_UNIQUE_INDEX = "ALTER TABLE {schemaName}.`{tableName}` ADD UNIQUE {indexName}(`{columnName}`);";
-
-    /**
-     * 删除主键
-     */
-    String DROP_PRIMARY_KEY = "ALTER TABLE {schemaName}.`{tableName}` DROP PRIMARY KEY;";
-
-    /**
-     * 新增主键
-     */
-    String ADD_PRIMARY_KEY = "ALTER TABLE {schemaName}.`{tableName}` ADD PRIMARY KEY (`{columnName}`);";
-
-    /**
-     * 新增FULLTEXT
-     */
-    String ADD_FULLTEXT = "ALTER TABLE {schemaName}.`{tableName}` ADD FULLTEXT (`{columnName}`);";
-
+    String MODIFY_PRIMARY_KEY = "ALTER TABLE {schemaName}.`{tableName}` DROP PRIMARY KEY;ALTER TABLE {schemaName}.`{tableName}` ADD PRIMARY KEY (`{columnName}`);";
+    String MODIFY_UNIQUE_INDEX = "ALTER TABLE {schemaName}.`{tableName}` DROP KEY {indexName};ALTER TABLE {schemaName}.`{tableName}` ADD UNIQUE {indexName}(`{columnName}`);";
+    String MODIFY_FULLTEXT = "ALTER {schemaName}.`{tableName}` DROP INDEX {indexName};ALTER TABLE {schemaName}.`{tableName}` ADD FULLTEXT {indexName}(`{columnName}`);";
 }

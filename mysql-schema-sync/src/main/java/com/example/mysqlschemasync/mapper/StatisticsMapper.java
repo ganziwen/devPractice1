@@ -30,6 +30,6 @@ public interface StatisticsMapper extends BaseMapper {
      * @param tableName
      * @return
      */
-    @Select("select any_value(TABLE_SCHEMA)  as TABLE_SCHEMA,any_value(TABLE_NAME) as TABLE_NAME,any_value(INDEX_NAME) as INDEX_NAME,any_value(SEQ_IN_INDEX) as SEQ_IN_INDEX,group_concat(COLUMN_NAME order by SEQ_IN_INDEX asc separator ',') as COLUMN_NAME,any_value(INDEX_TYPE) as INDEX_TYPE from information_schema.STATISTICS where 1=1 and table_schema = #{tableSchema} and  TABLE_NAME = #{tableName} group by INDEX_NAME;")
+    @Select("select any_value(TABLE_SCHEMA)  as TABLE_SCHEMA,any_value(TABLE_NAME) as TABLE_NAME,any_value(NON_UNIQUE) as NON_UNIQUE,any_value(INDEX_NAME) as INDEX_NAME,any_value(SEQ_IN_INDEX) as SEQ_IN_INDEX,group_concat(COLUMN_NAME order by SEQ_IN_INDEX asc separator ',') as COLUMN_NAME,any_value(INDEX_TYPE) as INDEX_TYPE from information_schema.STATISTICS where 1=1 and table_schema = #{tableSchema} and  TABLE_NAME = #{tableName} group by INDEX_NAME;")
     Set<StatisticsDo> selectByTableGroupBy(@Param("tableSchema") String tableSchema, @Param("tableName") String tableName);
 }

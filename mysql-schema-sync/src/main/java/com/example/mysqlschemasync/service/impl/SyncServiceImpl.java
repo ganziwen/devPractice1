@@ -55,23 +55,7 @@ public class SyncServiceImpl implements SyncService {
         // 3. diff 差异. 字段不一致,索引不一致
         HashMap<String, Set<ColumnsDo>> diffColumn = diffColumn(srcColumns, dstColumns);
         HashMap<String, Set<StatisticsDo>> diffStatistics = diffStatistics(srcStatistics, dstStatistics);
-
-        // 调试信息
-        diffColumn.get(SqlFormatterConst.MODIFY_COLUMN).forEach(col -> {
-            LOGGER.info("需要进行修改的列:{}\n", col.toString());
-        });
-        diffColumn.get(SqlFormatterConst.ADD_COLUMN).forEach(col -> {
-            LOGGER.info("需要进行新增的列:{}\n", col.toString());
-        });
-
-        diffStatistics.get(SqlFormatterConst.ADD_INDEX).forEach(statis -> {
-            LOGGER.info("需要进行新增的 index 索引:{}\n", statis.toString());
-        });
-        diffStatistics.get(SqlFormatterConst.ADD_FULLTEXT).forEach(statis -> {
-            LOGGER.info("需要进行新增的 FULLTEXT 索引:{}\n", statis.toString());
-        });
-
-
+        
         //  4. 基于差异, 生成 sql
         List<String> columnSql = getColumnSql(diffColumn);
         List<String> statisticsSql = getStatisticsSql(diffStatistics);
@@ -129,16 +113,16 @@ public class SyncServiceImpl implements SyncService {
 
         HashMap<String, Set<StatisticsDo>> statisticsMap = new HashMap<>();
         Set<StatisticsDo> diffStatisticsDos = Sets.difference(srcStatistics, dstStatistics).immutableCopy();
-        Set<String> dstStatisName = dstStatistics.stream().map(StatisticsDo::getIndexName).collect(Collectors.toSet());
-        // 差异的索引名称被包含在 dst 内,说明是需要 drop 的 index,但是 drop 也分为 primyKey 和 index .然后需要进行新增
-        Set<StatisticsDo> dropIndexs = diffStatisticsDos.stream().filter(diffStatis -> dstStatisName.contains(diffStatis.getIndexName())).collect(Collectors.toSet());
 
-        Set<StatisticsDo> addIndexs = diffStatisticsDos.stream().filter(diffStatis -> (!dstStatisName.contains(diffStatis.getIndexName()) && !"FULLTEXT".equals(diffStatis.getIndexType()))).collect(Collectors.toSet());
-        Set<StatisticsDo> addFullText = diffStatisticsDos.stream().filter(diffStatis -> (!dstStatisName.contains(diffStatis.getIndexName()) && "FULLTEXT".equals(diffStatis.getIndexType()))).collect(Collectors.toSet());
-        Set<StatisticsDo> modifyIndex = diffStatisticsDos.stream().filter(diffStatis -> (dstStatisName.contains(diffStatis.getIndexName()))).collect(Collectors.toSet());
-        // 新增索引,新增的索引一般不会是组合索引,除非是组合索引已存在但是换了两者顺序
-        statisticsMap.put(SqlFormatterConst.ADD_INDEX, addIndexs);
-        statisticsMap.put(SqlFormatterConst.ADD_FULLTEXT, addFullText);
+        Set<StatisticsDo> modifyFullText = diffStatisticsDos.stream().filter(diffStatis -> ("FULLTEXT".equals(diffStatis.getIndexType()))).collect(Collectors.toSet());
+        Set<StatisticsDo> modifyPrimaryKey = diffStatisticsDos.stream().filter(diffStatis -> (0L == (diffStatis.getNonUnique()) && "PRIMARY".equals(diffStatis.getIndexName()))).collect(Collectors.toSet());
+        Set<StatisticsDo> modifyUniqueKey = diffStatisticsDos.stream().filter(diffStatis -> (0L == (diffStatis.getNonUnique()) && !"PRIMARY".equals(diffStatis.getIndexName()))).collect(Collectors.toSet());
+        Set<StatisticsDo> modifyIndex = diffStatisticsDos.stream().filter(diffStatis -> (1L == (diffStatis.getNonUnique()) && (!"FULLTEXT".equals(diffStatis.getIndexType())))).collect(Collectors.toSet());
+
+
+        statisticsMap.put(SqlFormatterConst.MODIFY_PRIMARY_KEY, modifyPrimaryKey);
+        statisticsMap.put(SqlFormatterConst.MODIFY_UNIQUE_INDEX, modifyUniqueKey);
+        statisticsMap.put(SqlFormatterConst.MODIFY_FULLTEXT, modifyFullText);
         statisticsMap.put(SqlFormatterConst.MODIFY_INDEX, modifyIndex);
 
         return statisticsMap;
