@@ -6,6 +6,7 @@ import com.example.mysqlschemasync.mapper.SchemaMapper;
 import com.example.mysqlschemasync.model.ConnectInfo;
 import com.example.mysqlschemasync.model.SchemataDo;
 import lombok.NoArgsConstructor;
+import lombok.val;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
@@ -31,6 +32,22 @@ public class DaoFacade {
         try (SqlSession sqlSession = LocalSqlSessionFactory.of().getSqlSession(connectInfo)) {
             T mapper = sqlSession.getMapper(mapperClazz);
             return function.apply(mapper);
+        } catch (Exception e) {
+            throw new IllegalStateException("exec mapper failed", e);
+        }
+    }
+
+    /**
+     * 执行 sql
+     *
+     * @param connectInfo
+     * @param sql
+     * @return
+     */
+    public static void execSql(ConnectInfo connectInfo, String sql) {
+
+        try (SqlSession sqlSession = LocalSqlSessionFactory.of().getSqlSession(connectInfo)) {
+            sqlSession.getConnection().prepareStatement(sql).execute();
         } catch (Exception e) {
             throw new IllegalStateException("exec mapper failed", e);
         }

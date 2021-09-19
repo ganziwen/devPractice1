@@ -55,7 +55,7 @@ public class SyncServiceImpl implements SyncService {
         // 3. diff 差异. 字段不一致,索引不一致
         HashMap<String, Set<ColumnsDo>> diffColumn = diffColumn(srcColumns, dstColumns);
         HashMap<String, Set<StatisticsDo>> diffStatistics = diffStatistics(srcStatistics, dstStatistics);
-        
+
         //  4. 基于差异, 生成 sql
         List<String> columnSql = getColumnSql(diffColumn);
         List<String> statisticsSql = getStatisticsSql(diffStatistics);
@@ -70,8 +70,8 @@ public class SyncServiceImpl implements SyncService {
             LOGGER.info("拼接的索引 sql 语句：{}", statis);
         });
         //  5. 执行 sql
-        executeSql(columnSql);
-        executeSql(statisticsSql);
+        executeSql(dstConnectInfo, columnSql);
+        executeSql(dstConnectInfo, statisticsSql);
 
     }
 
@@ -140,7 +140,7 @@ public class SyncServiceImpl implements SyncService {
         List<String> columnSql = Lists.newArrayList();
         Set<Map.Entry<String, Set<ColumnsDo>>> entries = diffColumn.entrySet();
         for (Map.Entry<String, Set<ColumnsDo>> entry : entries) {
-            List<String> stringList = entry.getValue().stream().map(col -> getColumnFormater(entry.getKey(), col)).collect(Collectors.toList());
+            List<String> stringList = entry.getValue().stream().map(col -> getSqlFormatter(entry.getKey(), col)).collect(Collectors.toList());
             columnSql.addAll(stringList);
 
         }
@@ -158,7 +158,7 @@ public class SyncServiceImpl implements SyncService {
         Set<Map.Entry<String, Set<StatisticsDo>>> entries = diffStatistics.entrySet();
 
         for (Map.Entry<String, Set<StatisticsDo>> entry : entries) {
-            List<String> stringList = entry.getValue().stream().map(statis -> getStaticFormater(entry.getKey(), statis)).collect(Collectors.toList());
+            List<String> stringList = entry.getValue().stream().map(statis -> getSqlFormatter(entry.getKey(), statis)).collect(Collectors.toList());
             staticsSql.addAll(stringList);
         }
 
@@ -166,7 +166,7 @@ public class SyncServiceImpl implements SyncService {
     }
 
 
-    public String getColumnFormater(String formatter, ColumnsDo column) {
+    public String getSqlFormatter(String formatter, ColumnsDo column) {
         return formatter.
                 replace("{schemaName}", column.getTableSchema()).
                 replace("{tableName}", column.getTableName()).
@@ -177,8 +177,7 @@ public class SyncServiceImpl implements SyncService {
                 replace("{columnComment}", column.getColumnComment());
     }
 
-    public String getStaticFormater(String formatter, StatisticsDo statisticsDo) {
-
+    public String getSqlFormatter(String formatter, StatisticsDo statisticsDo) {
         return formatter.
                 replace("{schemaName}", statisticsDo.getTableSchema()).
                 replace("{tableName}", statisticsDo.getTableName()).
@@ -186,7 +185,10 @@ public class SyncServiceImpl implements SyncService {
                 replace("{indexName}", statisticsDo.getIndexName());
     }
 
-    private void executeSql(List<String> sqls) {
+    private void executeSql(ConnectInfo connectInfo, List<String> sqls) {
+        for (String sql : sqls) {
+            DaoFacade.execSql(connectInfo, sql);
+        }
 
     }
 

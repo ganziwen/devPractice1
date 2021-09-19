@@ -30,7 +30,7 @@ public class TestDao {
     @Before
     public void init() {
         connectInfo = new ConnectInfo();
-        connectInfo.setUrl("jdbc:mysql://www.xiaowenshu.cn:3388");
+        connectInfo.setUrl("jdbc:mysql://www.xiaowenshu.cn:3399");
         connectInfo.setUserName("root");
         connectInfo.setPassWord("123456");
     }
@@ -66,5 +66,11 @@ public class TestDao {
     public void testStatisticWithGroupBy() {
         Set<StatisticsDo> statisticsDos = DaoFacade.ofMapper(connectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTableGroupBy("test_table", "tb_user"));
         statisticsDos.forEach(System.out::println);
+    }
+
+    @Test
+    public void testSqlUpdate() {
+        DaoFacade.execSql(connectInfo, "alter table test_table.tb_user modify corp varchar(64) default '' not null comment '公司地址';");
+
     }
 }
