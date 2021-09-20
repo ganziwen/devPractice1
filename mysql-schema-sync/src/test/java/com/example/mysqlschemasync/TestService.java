@@ -47,4 +47,5 @@ public class TestService {
         syncTableRequest.setDstConnectInfo(dstConnectInfo);
         syncService.doSyncTable(syncTableRequest);
     }
+
 }

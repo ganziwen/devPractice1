@@ -44,33 +44,60 @@ public class SyncServiceImpl implements SyncService {
         String dbName = syncInfo.getDbName();
         String tableName = syncInfo.getTableName();
 
+        syncColumn(srcConnectInfo, dstConnectInfo, dbName, tableName);
+        syncStatistics(srcConnectInfo, dstConnectInfo, dbName, tableName);
+    }
+
+    public void syncColumn(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, String dbName, String tableName) {
         // 1. 去 src 找到对应的 实例.数据库.表 获取字段+索引(获取索引和列的字段可以用 druid 进行获取，到时看看能不能优化)
         Set<ColumnsDo> srcColumns = DaoFacade.ofMapper(srcConnectInfo, ColumnsMapper.class, columnsMapper -> columnsMapper.selectByTable(dbName, tableName));
-        Set<StatisticsDo> srcStatistics = DaoFacade.ofMapper(srcConnectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTableGroupBy(dbName, tableName));
-
         // 2. 去 dst 找到对应的 实例.数据库.表 获取字段+索引
         Set<ColumnsDo> dstColumns = DaoFacade.ofMapper(dstConnectInfo, ColumnsMapper.class, columnsMapper -> columnsMapper.selectByTable(dbName, tableName));
-        Set<StatisticsDo> dstStatistics = DaoFacade.ofMapper(dstConnectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTableGroupBy(dbName, tableName));
-
         // 3. diff 差异. 字段不一致,索引不一致
         HashMap<String, Set<ColumnsDo>> diffColumn = diffColumn(srcColumns, dstColumns);
-        HashMap<String, Set<StatisticsDo>> diffStatistics = diffStatistics(srcStatistics, dstStatistics);
-
         //  4. 基于差异, 生成 sql
         List<String> columnSql = getColumnSql(diffColumn);
-        List<String> statisticsSql = getStatisticsSql(diffStatistics);
 
         // 打印调试信息
         columnSql.forEach(col -> {
             LOGGER.info("拼接的列 sql 语句：{}", col);
         });
-        LOGGER.info("====分割线====");
 
+        //  5. 执行 sql
+        // executeSql(dstConnectInfo, columnSql);
+
+    }
+
+    public void syncStatistics(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, String dbName, String tableName) {
+
+        Set<StatisticsDo> srcStatistics = DaoFacade.ofMapper(srcConnectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTableGroupBy(dbName, tableName));
+        Set<StatisticsDo> dstStatistics = DaoFacade.ofMapper(dstConnectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTableGroupBy(dbName, tableName));
+        HashMap<String, Set<StatisticsDo>> diffStatistics = diffStatistics(srcStatistics, dstStatistics);
+        HashMap<String, Set<StatisticsDo>> diffStatistics2 = diffStatisticsWithGroupBy(srcStatistics, dstStatistics);
+        List<String> statisticsSql = getStatisticsSql(diffStatistics);
+        List<String> statisticsSql2 = getStatisticsSql(diffStatistics2);
+        statisticsSql.forEach(statis -> {
+            LOGGER.info("拼接的索引 sql 语句方式1：{}", statis);
+        });
+
+        statisticsSql2.forEach(statis -> {
+            LOGGER.info("拼接的索引 sql 语句方式2：{}", statis);
+        });
+
+        // executeSql(dstConnectInfo, statisticsSql);
+
+    }
+
+    public void syncStatisticsWithGroupBy(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, String dbName, String tableName) {
+
+        Set<StatisticsDo> srcStatistics = DaoFacade.ofMapper(srcConnectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTable(dbName, tableName));
+        Set<StatisticsDo> dstStatistics = DaoFacade.ofMapper(dstConnectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTable(dbName, tableName));
+        HashMap<String, Set<StatisticsDo>> diffStatistics = diffStatistics(srcStatistics, dstStatistics);
+        List<String> statisticsSql = getStatisticsSql(diffStatistics);
         statisticsSql.forEach(statis -> {
             LOGGER.info("拼接的索引 sql 语句：{}", statis);
         });
-        //  5. 执行 sql
-        executeSql(dstConnectInfo, columnSql);
+
         executeSql(dstConnectInfo, statisticsSql);
 
     }
@@ -104,6 +131,7 @@ public class SyncServiceImpl implements SyncService {
 
     /**
      * 结构跟上面一致,区别在于组合索引的话需要进行组合
+     * 其实有另一种解决方案就是利用 stream 的 groupby,有时间研究一下
      *
      * @param srcStatistics
      * @param dstStatistics
@@ -127,6 +155,68 @@ public class SyncServiceImpl implements SyncService {
 
         return statisticsMap;
     }
+
+    private HashMap<String, Set<StatisticsDo>> diffStatisticsWithGroupBy(Set<StatisticsDo> srcStatistics, Set<StatisticsDo> dstStatistics) {
+
+        HashMap<String, Set<StatisticsDo>> statisticsMap = new HashMap<>();
+        Set<StatisticsDo> diffStatisticsDos = Sets.difference(getStatisDos(srcStatistics), getStatisDos(dstStatistics)).immutableCopy();
+
+        Set<StatisticsDo> modifyFullText = diffStatisticsDos.stream().filter(diffStatis -> ("FULLTEXT".equals(diffStatis.getIndexType()))).collect(Collectors.toSet());
+        Set<StatisticsDo> modifyPrimaryKey = diffStatisticsDos.stream().filter(diffStatis -> (0L == (diffStatis.getNonUnique()) && "PRIMARY".equals(diffStatis.getIndexName()))).collect(Collectors.toSet());
+        Set<StatisticsDo> modifyUniqueKey = diffStatisticsDos.stream().filter(diffStatis -> (0L == (diffStatis.getNonUnique()) && !"PRIMARY".equals(diffStatis.getIndexName()))).collect(Collectors.toSet());
+        Set<StatisticsDo> modifyIndex = diffStatisticsDos.stream().filter(diffStatis -> (1L == (diffStatis.getNonUnique()) && (!"FULLTEXT".equals(diffStatis.getIndexType())))).collect(Collectors.toSet());
+
+
+        statisticsMap.put(SqlFormatterConst.MODIFY_PRIMARY_KEY, modifyPrimaryKey);
+        statisticsMap.put(SqlFormatterConst.MODIFY_UNIQUE_INDEX, modifyUniqueKey);
+        statisticsMap.put(SqlFormatterConst.MODIFY_FULLTEXT, modifyFullText);
+        statisticsMap.put(SqlFormatterConst.MODIFY_INDEX, modifyIndex);
+
+        return statisticsMap;
+    }
+
+    private Set<StatisticsDo> getStatisDos(Set<StatisticsDo> Statistics) {
+        Set<StatisticsDo> collect = Statistics.stream().
+                // peek(str -> System.out.println("初始的索引" + str.getIndexName() + ":" + str.toString())).
+                        collect(Collectors.groupingBy(StatisticsDo::getIndexName)).
+                        entrySet().
+                        stream().
+                // peek(streamsres -> System.out.println("每一个单独的索引进行entry" + streamsres)).
+                        map(getSingleColumn -> {
+                    List<String> columns = new ArrayList<>();
+                    List<Long> seq = new ArrayList<>();
+
+                    getSingleColumn.getValue().stream().sorted(Comparator.comparingInt(o -> o.getSeqInIndex().intValue())).forEach(st -> {
+                        columns.add(st.getColumnName());
+                        seq.add(st.getSeqInIndex());
+                    });
+                    getSingleColumn.getValue().get(0).setColumnName(String.join(",", columns));
+                    getSingleColumn.getValue().get(0).setSeqInIndex(seq.get(seq.size() - 1));
+                    return getSingleColumn.getValue().get(0);
+                }).collect(Collectors.toSet());
+        return collect;
+    }
+
+
+    private HashMap<String, Set<StatisticsDo>> diffStatisticsGroupBy(Set<StatisticsDo> srcStatistics, Set<StatisticsDo> dstStatistics) {
+
+        HashMap<String, Set<StatisticsDo>> statisticsMap = new HashMap<>();
+        // 这里有可能会出现组合索引怎么个解决办法？其实从源头就应该解决这个问题,判断重复就得将组合的给进行diff
+        Set<StatisticsDo> diffStatisticsDos = Sets.difference(srcStatistics, dstStatistics).immutableCopy();
+
+        Set<StatisticsDo> modifyFullText = diffStatisticsDos.stream().filter(diffStatis -> ("FULLTEXT".equals(diffStatis.getIndexType()))).collect(Collectors.toSet());
+        Set<StatisticsDo> modifyPrimaryKey = diffStatisticsDos.stream().filter(diffStatis -> (0L == (diffStatis.getNonUnique()) && "PRIMARY".equals(diffStatis.getIndexName()))).collect(Collectors.toSet());
+        Set<StatisticsDo> modifyUniqueKey = diffStatisticsDos.stream().filter(diffStatis -> (0L == (diffStatis.getNonUnique()) && !"PRIMARY".equals(diffStatis.getIndexName()))).collect(Collectors.toSet());
+        Set<StatisticsDo> modifyIndex = diffStatisticsDos.stream().filter(diffStatis -> (1L == (diffStatis.getNonUnique()) && (!"FULLTEXT".equals(diffStatis.getIndexType())))).collect(Collectors.toSet());
+
+        statisticsMap.put(SqlFormatterConst.MODIFY_PRIMARY_KEY, modifyPrimaryKey);
+        statisticsMap.put(SqlFormatterConst.MODIFY_UNIQUE_INDEX, modifyUniqueKey);
+        statisticsMap.put(SqlFormatterConst.MODIFY_FULLTEXT, modifyFullText);
+        statisticsMap.put(SqlFormatterConst.MODIFY_INDEX, modifyIndex);
+
+        return statisticsMap;
+    }
+
 
     /**
      * 根据有差异的列以及目标列,生成列的相关 sql
@@ -182,7 +272,8 @@ public class SyncServiceImpl implements SyncService {
                 replace("{schemaName}", statisticsDo.getTableSchema()).
                 replace("{tableName}", statisticsDo.getTableName()).
                 replace("{columnName}", statisticsDo.getColumnName()).
-                replace("{indexName}", statisticsDo.getIndexName());
+                replace("{indexName}", statisticsDo.getIndexName()).
+                replace(",", "`,`");
     }
 
     private void executeSql(ConnectInfo connectInfo, List<String> sqls) {
