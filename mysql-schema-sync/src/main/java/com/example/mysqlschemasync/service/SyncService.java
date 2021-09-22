@@ -32,7 +32,7 @@ public interface SyncService<T> {
      *
      * @param syncInfo
      */
-    void doSyncDatabse(SyncDatabaseRequest syncInfo);
+    void doSyncDatabase(SyncDatabaseRequest syncInfo);
 
     /**
      * 同步表级别

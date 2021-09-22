@@ -82,7 +82,7 @@ public class SyncController {
 
         try {
             // 处理业务
-            syncService.doSyncDatabse(syncDatabaseRequest);
+            syncService.doSyncDatabase(syncDatabaseRequest);
             return RetMsg.buildSuccessMsg("test doSyncDatabase success");
         } catch (Exception e) {
             logger.error("do Sync failed.", e);

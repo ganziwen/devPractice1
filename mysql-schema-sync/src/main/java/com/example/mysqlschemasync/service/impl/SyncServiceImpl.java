@@ -31,7 +31,7 @@ public class SyncServiceImpl implements SyncService {
     }
 
     @Override
-    public void doSyncDatabse(SyncDatabaseRequest syncInfo) {
+    public void doSyncDatabase(SyncDatabaseRequest syncInfo) {
 
     }
 
