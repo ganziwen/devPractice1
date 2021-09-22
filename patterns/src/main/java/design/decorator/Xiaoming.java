@@ -4,6 +4,7 @@ package design.decorator;
  * @author steven01.gan
  * @version 1.0
  * @date 2021/9/18-14:48
+ * 被装饰对象
  */
 public class Xiaoming implements Person {
 
