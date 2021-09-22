@@ -1,6 +1,7 @@
 package design.decorator;
 
 import org.junit.Test;
+import org.omg.CORBA.portable.ValueOutputStream;
 
 /**
  * @author steven01.gan
@@ -14,5 +15,13 @@ public class decoratorTest {
         System.out.println("买了个帽子,花了 1000 元");
         System.out.println("买了件衣服,花了 800 元");
         System.out.println("买了条裤子,花了 600 元");
+    }
+
+    @Test
+    public void testShowDecorate() {
+        Person xiaoming = new Xiaoming();
+        xiaoming = new Shirt(xiaoming);
+        xiaoming = new Pants(xiaoming);
+        xiaoming.show();
     }
 }
