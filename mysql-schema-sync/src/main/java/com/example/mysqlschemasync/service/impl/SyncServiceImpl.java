@@ -88,17 +88,25 @@ public class SyncServiceImpl implements SyncService {
 
     }
 
+    /**
+     * 利用 stream 的聚合 diff 之后进行 sql 返回,得到最终的执行方法
+     *
+     * @param srcConnectInfo
+     * @param dstConnectInfo
+     * @param dbName
+     * @param tableName
+     */
     public void syncStatisticsWithGroupBy(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, String dbName, String tableName) {
 
         Set<StatisticsDo> srcStatistics = DaoFacade.ofMapper(srcConnectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTable(dbName, tableName));
         Set<StatisticsDo> dstStatistics = DaoFacade.ofMapper(dstConnectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTable(dbName, tableName));
-        HashMap<String, Set<StatisticsDo>> diffStatistics = diffStatistics(srcStatistics, dstStatistics);
+        HashMap<String, Set<StatisticsDo>> diffStatistics = diffStatisticsWithGroupBy(srcStatistics, dstStatistics);
         List<String> statisticsSql = getStatisticsSql(diffStatistics);
         statisticsSql.forEach(statis -> {
             LOGGER.info("拼接的索引 sql 语句：{}", statis);
         });
 
-        executeSql(dstConnectInfo, statisticsSql);
+        // executeSql(dstConnectInfo, statisticsSql);
 
     }
 
@@ -156,6 +164,13 @@ public class SyncServiceImpl implements SyncService {
         return statisticsMap;
     }
 
+    /**
+     * 利用 stream 的聚合方式再进行 diff
+     *
+     * @param srcStatistics
+     * @param dstStatistics
+     * @return
+     */
     private HashMap<String, Set<StatisticsDo>> diffStatisticsWithGroupBy(Set<StatisticsDo> srcStatistics, Set<StatisticsDo> dstStatistics) {
 
         HashMap<String, Set<StatisticsDo>> statisticsMap = new HashMap<>();
@@ -175,12 +190,18 @@ public class SyncServiceImpl implements SyncService {
         return statisticsMap;
     }
 
+    /**
+     * 利用 stream 的 groupBy 方式将索引进行聚合处理
+     *
+     * @param Statistics
+     * @return
+     */
     private Set<StatisticsDo> getStatisDos(Set<StatisticsDo> Statistics) {
         Set<StatisticsDo> collect = Statistics.stream().
                 // peek(str -> System.out.println("初始的索引" + str.getIndexName() + ":" + str.toString())).
                         collect(Collectors.groupingBy(StatisticsDo::getIndexName)).
-                        entrySet().
-                        stream().
+                entrySet().
+                stream().
                 // peek(streamsres -> System.out.println("每一个单独的索引进行entry" + streamsres)).
                         map(getSingleColumn -> {
                     List<String> columns = new ArrayList<>();
@@ -255,7 +276,13 @@ public class SyncServiceImpl implements SyncService {
         return staticsSql;
     }
 
-
+    /**
+     * sql 格式化的操作(行)
+     *
+     * @param formatter
+     * @param column
+     * @return
+     */
     public String getSqlFormatter(String formatter, ColumnsDo column) {
         return formatter.
                 replace("{schemaName}", column.getTableSchema()).
@@ -267,6 +294,13 @@ public class SyncServiceImpl implements SyncService {
                 replace("{columnComment}", column.getColumnComment());
     }
 
+    /**
+     * sql 格式化的操作(索引)
+     *
+     * @param formatter
+     * @param statisticsDo
+     * @return
+     */
     public String getSqlFormatter(String formatter, StatisticsDo statisticsDo) {
         return formatter.
                 replace("{schemaName}", statisticsDo.getTableSchema()).
