@@ -20,4 +20,6 @@ public interface SchemaMapper extends BaseMapper {
 
     @Select("select SCHEMA_NAME,DEFAULT_CHARACTER_SET_NAME from information_schema.SCHEMATA where SCHEMA_NAME = #{schemaName}")
     Set<SchemataDo> selectSchameByName(@Param("schemaName") String schemaName);
+
+
 }

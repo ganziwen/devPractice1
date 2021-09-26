@@ -39,13 +39,22 @@ public class TestService {
     }
 
     @Test
-    public void testSyncServiceImpl() {
+    public void testSyncTableServiceImpl() {
         SyncTableRequest syncTableRequest = new SyncTableRequest();
         syncTableRequest.setSrcConnectInfo(srcConnectInfo);
         syncTableRequest.setDbName("test_table");
         syncTableRequest.setTableName("tb_user");
         syncTableRequest.setDstConnectInfo(dstConnectInfo);
         syncService.doSyncTable(syncTableRequest);
+    }
+
+    @Test
+    public void testSyncDataBaseServiceImpl() {
+        SyncTableRequest syncTableRequest = new SyncTableRequest();
+        syncTableRequest.setSrcConnectInfo(srcConnectInfo);
+        syncTableRequest.setDstConnectInfo(dstConnectInfo);
+        syncTableRequest.setDbName("test_table");
+        syncService.doSyncDatabase(syncTableRequest);
     }
 
 }

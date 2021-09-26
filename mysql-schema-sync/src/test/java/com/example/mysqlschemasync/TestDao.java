@@ -53,6 +53,12 @@ public class TestDao {
     }
 
     @Test
+    public void testShowTables() {
+        Set<ShowTableDO> tablesDos = DaoFacade.ofMapper(connectInfo, TablesMapper.class, TablesMapper -> TablesMapper.showTables("test_table", "tb_user"));
+        tablesDos.forEach(System.out::println);
+    }
+
+    @Test
     public void testColumn() {
         Set<ColumnsDo> columnsDos = DaoFacade.ofMapper(connectInfo, ColumnsMapper.class, columnsMapper -> columnsMapper.selectByTable("test_table", "tb_user"));
         columnsDos.forEach(System.out::println);
@@ -105,7 +111,5 @@ public class TestDao {
                 }).collect(Collectors.toSet());
 
         collect.forEach(System.out::println);
-
-
     }
 }

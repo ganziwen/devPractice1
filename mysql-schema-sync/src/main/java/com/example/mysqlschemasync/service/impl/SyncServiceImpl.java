@@ -3,7 +3,9 @@ package com.example.mysqlschemasync.service.impl;
 import com.example.mysqlschemasync.constants.SqlFormatterConst;
 import com.example.mysqlschemasync.dao.DaoFacade;
 import com.example.mysqlschemasync.mapper.ColumnsMapper;
+import com.example.mysqlschemasync.mapper.SchemaMapper;
 import com.example.mysqlschemasync.mapper.StatisticsMapper;
+import com.example.mysqlschemasync.mapper.TablesMapper;
 import com.example.mysqlschemasync.model.*;
 import com.example.mysqlschemasync.service.SyncService;
 import com.google.common.collect.Lists;
@@ -32,7 +34,18 @@ public class SyncServiceImpl implements SyncService {
 
     @Override
     public void doSyncDatabase(SyncDatabaseRequest syncInfo) {
-
+        // 信息获取,后面会删除的
+        ConnectInfo srcConnectInfo = syncInfo.getSrcConnectInfo();
+        ConnectInfo dstConnectInfo = syncInfo.getDstConnectInfo();
+        String dbName = syncInfo.getDbName();
+        // 同步的是数据库,一个库下面会有很多表.获取 src 下的所有表,获取 dst 的所有表
+        // 如果 src 有, dst 没有->新增表(直接show出来直接执行即可)
+        // 如果 src 有, dst 也有但是结构不同步->doSyncTable
+        Set<TablesDo> srcTablesDos = DaoFacade.ofMapper(srcConnectInfo, TablesMapper.class, tablesMapper -> tablesMapper.selectSchameByDataBaseName(dbName));
+        Set<TablesDo> dstTablesDos = DaoFacade.ofMapper(dstConnectInfo, TablesMapper.class, tablesMapper -> tablesMapper.selectSchameByDataBaseName(dbName));
+        Set<TablesDo> diffTablesDos = Sets.difference(srcTablesDos, dstTablesDos).immutableCopy();
+        // 这样只能找出 src 有 dst 没有的
+        final Set<TablesDo> collect = diffTablesDos.stream().peek(dos -> System.out.println(dos.toString())).collect(Collectors.toSet());
     }
 
 
@@ -68,6 +81,14 @@ public class SyncServiceImpl implements SyncService {
 
     }
 
+    /**
+     * 多余的索引未删除
+     *
+     * @param srcConnectInfo
+     * @param dstConnectInfo
+     * @param dbName
+     * @param tableName
+     */
     public void syncStatistics(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, String dbName, String tableName) {
 
         Set<StatisticsDo> srcStatistics = DaoFacade.ofMapper(srcConnectInfo, StatisticsMapper.class, statisticsMapper -> statisticsMapper.selectByTableGroupBy(dbName, tableName));
