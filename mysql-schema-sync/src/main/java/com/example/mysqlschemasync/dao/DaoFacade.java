@@ -2,13 +2,12 @@ package com.example.mysqlschemasync.dao;
 
 import com.example.mysqlschemasync.factory.LocalSqlSessionFactory;
 import com.example.mysqlschemasync.mapper.BaseMapper;
-import com.example.mysqlschemasync.mapper.SchemaMapper;
 import com.example.mysqlschemasync.model.ConnectInfo;
-import com.example.mysqlschemasync.model.SchemataDo;
 import lombok.NoArgsConstructor;
-import lombok.val;
 import org.apache.ibatis.session.SqlSession;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.function.Function;
 
@@ -48,6 +47,34 @@ public class DaoFacade {
 
         try (SqlSession sqlSession = LocalSqlSessionFactory.of().getSqlSession(connectInfo)) {
             sqlSession.getConnection().prepareStatement(sql).execute();
+        } catch (Exception e) {
+            throw new IllegalStateException("exec mapper failed", e);
+        }
+    }
+
+    /**
+     * 执行 sql,避免产生一堆连接池
+     *
+     * @param connectInfo
+     * @param sqlList
+     */
+    public static void execSql(ConnectInfo connectInfo, List<String> sqlList) {
+
+        // try (SqlSession sqlSession = LocalSqlSessionFactory.of().getSqlSession(connectInfo); Connection connection = sqlSession.getConnection();) {
+        //     for (String sql : sqlList) {
+        //         try (PreparedStatement statement = connection.prepareStatement(sql);) {
+        //             statement.execute();
+        //         }
+        //     }
+        // } catch (Exception e) {
+        //     throw new IllegalStateException("exec mapper failed", e);
+        // }
+        try (Connection connection = LocalSqlSessionFactory.of().getSqlSession(connectInfo).getConnection();) {
+            for (String sql : sqlList) {
+                try (PreparedStatement statement = connection.prepareStatement(sql);) {
+                    statement.execute();
+                }
+            }
         } catch (Exception e) {
             throw new IllegalStateException("exec mapper failed", e);
         }

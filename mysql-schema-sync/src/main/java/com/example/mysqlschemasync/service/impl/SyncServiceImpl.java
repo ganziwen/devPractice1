@@ -30,10 +30,21 @@ public class SyncServiceImpl implements SyncService {
 
     @Override
     public void doSyncInstance(SyncInstaceRequest syncInfo) {
+        LOGGER.info("开始同步实例");
+        // 信息获取,后面会删除的
+        ConnectInfo srcConnectInfo = syncInfo.getSrcConnectInfo();
+        ConnectInfo dstConnectInfo = syncInfo.getDstConnectInfo();
+        // 需要注意的是,有些库是不能同步的:'information_schema', 'mysql', 'performance_schema', 'sys'
+        ArrayList<String> ingoreSchemaList = Lists.newArrayList("information_schema", "mysql", "performance_schema", "sys");
+        Set<SchemataDo> srcSchemataDos = DaoFacade.ofMapper(srcConnectInfo, SchemaMapper.class, schemaMapper -> schemaMapper.selectAllSchame().stream().filter(schema -> !ingoreSchemaList.contains(schema)).collect(Collectors.toSet()));
+        Set<SchemataDo> dstSchemataDos = DaoFacade.ofMapper(dstConnectInfo, SchemaMapper.class, schemaMapper -> schemaMapper.selectAllSchame().stream().filter(schema -> !ingoreSchemaList.contains(schema)).collect(Collectors.toSet()));
+        Set<SchemataDo> diffSchemataDos = Sets.difference(srcSchemataDos, dstSchemataDos).immutableCopy();
+
     }
 
     @Override
     public void doSyncDatabase(SyncDatabaseRequest syncInfo) {
+        LOGGER.info("开始同步数据库");
         // 信息获取,后面会删除的
         ConnectInfo srcConnectInfo = syncInfo.getSrcConnectInfo();
         ConnectInfo dstConnectInfo = syncInfo.getDstConnectInfo();
@@ -43,20 +54,24 @@ public class SyncServiceImpl implements SyncService {
         // 如果 src 有, dst 也有但是结构不同步->doSyncTable
         Set<TablesDo> srcTablesDos = DaoFacade.ofMapper(srcConnectInfo, TablesMapper.class, tablesMapper -> tablesMapper.selectSchameByDataBaseName(dbName));
         Set<TablesDo> dstTablesDos = DaoFacade.ofMapper(dstConnectInfo, TablesMapper.class, tablesMapper -> tablesMapper.selectSchameByDataBaseName(dbName));
-        Set<TablesDo> diffTablesDos = Sets.difference(srcTablesDos, dstTablesDos).immutableCopy();
-        // 这样只能找出 src 有 dst 没有的
-        final Set<TablesDo> collect = diffTablesDos.stream().peek(dos -> System.out.println(dos.toString())).collect(Collectors.toSet());
+        // 这些是需要新建的表
+        Set<TablesDo> createTables = Sets.difference(srcTablesDos, dstTablesDos).immutableCopy();
+        // 这些是需要进行 diff 的表
+        Sets.SetView<TablesDo> prepareDiffTables = Sets.intersection(srcTablesDos, dstTablesDos);
+        final Set<TablesDo> collect1 = createTables.stream().peek(dos -> System.out.println(dos.toString())).collect(Collectors.toSet());
+        final Set<TablesDo> collect2 = prepareDiffTables.stream().peek(dos -> System.out.println(dos.toString())).collect(Collectors.toSet());
+
     }
 
 
     @Override
     public void doSyncTable(SyncTableRequest syncInfo) {
+        LOGGER.info("开始同步表");
         // 信息获取,后面会删除的
         ConnectInfo srcConnectInfo = syncInfo.getSrcConnectInfo();
         ConnectInfo dstConnectInfo = syncInfo.getDstConnectInfo();
         String dbName = syncInfo.getDbName();
         String tableName = syncInfo.getTableName();
-
         syncColumn(srcConnectInfo, dstConnectInfo, dbName, tableName);
         syncStatistics(srcConnectInfo, dstConnectInfo, dbName, tableName);
     }
