@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 import java.util.function.Function;
 
@@ -37,7 +38,7 @@ public class DaoFacade {
     }
 
     /**
-     * 执行 sql
+     * 执行单条 sql
      *
      * @param connectInfo
      * @param sql
@@ -77,6 +78,28 @@ public class DaoFacade {
             }
         } catch (Exception e) {
             throw new IllegalStateException("exec mapper failed", e);
+        }
+    }
+
+    /**
+     * 建表语句的 sql 获取
+     *
+     * @param connectInfo
+     * @param schemaName
+     * @param tableName
+     * @return
+     */
+    public static String showTable(ConnectInfo connectInfo, String schemaName, String tableName) {
+        try (Connection connection = LocalSqlSessionFactory.of().getSqlSession(connectInfo).getConnection()) {
+            String sql = String.format("show create table `%s`.`%s`;", schemaName, tableName);
+            ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("Create Table");
+            } else {
+                throw new IllegalStateException("show create table failed");
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException("show create table failed", e);
         }
     }
 }

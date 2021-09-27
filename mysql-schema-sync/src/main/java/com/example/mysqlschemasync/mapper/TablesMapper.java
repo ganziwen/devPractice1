@@ -1,13 +1,9 @@
 package com.example.mysqlschemasync.mapper;
 
-import com.example.mysqlschemasync.model.SchemataDo;
-import com.example.mysqlschemasync.model.ShowTableDO;
 import com.example.mysqlschemasync.model.TablesDo;
-import lombok.Data;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -26,8 +22,5 @@ public interface TablesMapper extends BaseMapper {
 
     @Select("select TABLE_SCHEMA,TABLE_NAME,TABLE_TYPE,TABLE_COMMENT from information_schema.TABLES where TABLE_SCHEMA = #{schemaName}")
     Set<TablesDo> selectSchameByDataBaseName(@Param("schemaName") String schemaName);
-
-    @Select("show create table `#{schemaName}`.`#{tableName}`;")
-    Set<ShowTableDO> showTables(@Param("schemaName") String schemaName, @Param("tableName") String tableName);
 }
 

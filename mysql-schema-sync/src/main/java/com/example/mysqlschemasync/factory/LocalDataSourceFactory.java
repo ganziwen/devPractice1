@@ -3,10 +3,8 @@ package com.example.mysqlschemasync.factory;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.example.mysqlschemasync.model.ConnectInfo;
 import com.mysql.cj.jdbc.Driver;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 
 import javax.sql.DataSource;
-import java.util.Date;
 
 /**
  * @author Ganziwen
