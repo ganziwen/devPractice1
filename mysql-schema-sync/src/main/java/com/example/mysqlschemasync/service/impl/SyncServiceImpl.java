@@ -60,7 +60,25 @@ public class SyncServiceImpl implements SyncService {
         Sets.SetView<TablesDo> prepareDiffTables = Sets.intersection(srcTablesDos, dstTablesDos);
         final Set<TablesDo> collect1 = createTables.stream().peek(dos -> System.out.println(dos.toString())).collect(Collectors.toSet());
         final Set<TablesDo> collect2 = prepareDiffTables.stream().peek(dos -> System.out.println(dos.toString())).collect(Collectors.toSet());
+        // 其实这里可以再优化一下,根据 schema 再进行转 map, 然后根据 map 的 key 去 use 就不用频繁 use.
+        List<String> createTablesList = createTables.stream().map(sql -> String.format("USE `%s`;\n%s;", sql.getTableSchema(), DaoFacade.showTable(srcConnectInfo, sql.getTableSchema(), sql.getTableName()))).collect(Collectors.toList());
+        createTablesList.forEach(System.out::println);
+    }
 
+    private void createTables(SyncDatabaseRequest syncInfo) {
+        // 信息获取,后面会删除的
+        ConnectInfo srcConnectInfo = syncInfo.getSrcConnectInfo();
+        ConnectInfo dstConnectInfo = syncInfo.getDstConnectInfo();
+        String dbName = syncInfo.getDbName();
+        // 同步的是数据库,一个库下面会有很多表.获取 src 下的所有表,获取 dst 的所有表
+        // 如果 src 有, dst 没有->新增表(直接show出来直接执行即可)
+        // 如果 src 有, dst 也有但是结构不同步->doSyncTable
+        Set<TablesDo> srcTablesDos = DaoFacade.ofMapper(srcConnectInfo, TablesMapper.class, tablesMapper -> tablesMapper.selectSchameByDataBaseName(dbName));
+        Set<TablesDo> dstTablesDos = DaoFacade.ofMapper(dstConnectInfo, TablesMapper.class, tablesMapper -> tablesMapper.selectSchameByDataBaseName(dbName));
+        // 这些是需要新建的表
+        Set<TablesDo> createTables = Sets.difference(srcTablesDos, dstTablesDos).immutableCopy();
+        List<String> createTablesList = createTables.stream().map(sql -> String.format("USE `%s`;%s;", sql.getTableSchema(), DaoFacade.showTable(srcConnectInfo, sql.getTableSchema(), sql.getTableName()))).collect(Collectors.toList());
+        createTablesList.forEach(System.out::println);
     }
 
 
@@ -92,7 +110,7 @@ public class SyncServiceImpl implements SyncService {
         });
 
         //  5. 执行 sql
-        // executeSql(dstConnectInfo, columnSql);
+        executeSql(dstConnectInfo, columnSql);
 
     }
 

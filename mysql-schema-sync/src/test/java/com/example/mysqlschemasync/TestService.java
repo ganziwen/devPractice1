@@ -3,7 +3,6 @@ package com.example.mysqlschemasync;
 import com.example.mysqlschemasync.model.ConnectInfo;
 import com.example.mysqlschemasync.model.SyncTableRequest;
 import com.example.mysqlschemasync.service.SyncService;
-import com.example.mysqlschemasync.service.impl.SyncServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,6 +49,15 @@ public class TestService {
 
     @Test
     public void testSyncDataBaseServiceImpl() {
+        SyncTableRequest syncTableRequest = new SyncTableRequest();
+        syncTableRequest.setSrcConnectInfo(srcConnectInfo);
+        syncTableRequest.setDstConnectInfo(dstConnectInfo);
+        syncTableRequest.setDbName("test_table");
+        syncService.doSyncDatabase(syncTableRequest);
+    }
+
+    @Test
+    public void testCreateTables() {
         SyncTableRequest syncTableRequest = new SyncTableRequest();
         syncTableRequest.setSrcConnectInfo(srcConnectInfo);
         syncTableRequest.setDstConnectInfo(dstConnectInfo);
