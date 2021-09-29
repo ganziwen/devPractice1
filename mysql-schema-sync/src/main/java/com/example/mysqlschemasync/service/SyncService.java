@@ -2,7 +2,7 @@ package com.example.mysqlschemasync.service;
 
 import com.example.mysqlschemasync.model.SyncDatabaseRequest;
 import com.example.mysqlschemasync.model.SyncInfo;
-import com.example.mysqlschemasync.model.SyncInstaceRequest;
+import com.example.mysqlschemasync.model.SyncInstanceRequest;
 import com.example.mysqlschemasync.model.SyncTableRequest;
 
 /**
@@ -25,7 +25,7 @@ public interface SyncService<T> {
      *
      * @param syncInfo
      */
-    void doSyncInstance(SyncInstaceRequest syncInfo);
+    void doSyncInstance(SyncInstanceRequest syncInfo);
 
     /**
      * 同步库级别

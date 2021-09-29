@@ -13,6 +13,7 @@ import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,15 +30,27 @@ public class SyncServiceImpl implements SyncService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SyncServiceImpl.class);
 
     @Override
-    public void doSyncInstance(SyncInstaceRequest syncInfo) {
-        LOGGER.info(String.format("开始同步实例:%s", syncInfo.getDstConnectInfo().toString()));
+    public void doSyncInstance(SyncInstanceRequest syncInfo) {
+        LOGGER.info(String.format("开始同步到实例:%s", syncInfo.getDstConnectInfo().getUrl().toString()));
         // 信息获取,后面会删除的
         ConnectInfo srcConnectInfo = syncInfo.getSrcConnectInfo();
         ConnectInfo dstConnectInfo = syncInfo.getDstConnectInfo();
+        List<String> excludeDbNames = syncInfo.getExcludeDbNames();
+        Set<SchemataDo> srcSchemataDos = DaoFacade.ofMapper(srcConnectInfo, SchemaMapper.class, SchemaMapper::selectAllSchame);
+        Set<SchemataDo> dstSchemataDos = DaoFacade.ofMapper(dstConnectInfo, SchemaMapper.class, SchemaMapper::selectAllSchame);
+
         // 需要注意的是,有些库是不能同步的:'information_schema', 'mysql', 'performance_schema', 'sys'
-        ArrayList<String> ignoredSchemaList = Lists.newArrayList("information_schema", "mysql", "performance_schema", "sys");
-        Set<SchemataDo> srcSchemataDos = DaoFacade.ofMapper(srcConnectInfo, SchemaMapper.class, schemaMapper -> schemaMapper.selectAllSchame().stream().filter(schema -> !ignoredSchemaList.contains(schema.getSchemaName())).collect(Collectors.toSet()));
-        Set<SchemataDo> dstSchemataDos = DaoFacade.ofMapper(dstConnectInfo, SchemaMapper.class, schemaMapper -> schemaMapper.selectAllSchame().stream().filter(schema -> !ignoredSchemaList.contains(schema.getSchemaName())).collect(Collectors.toSet()));
+        ArrayList<String> excludeSchemaList = Lists.newArrayList("information_schema", "mysql", "performance_schema", "sys");
+        if (!CollectionUtils.isEmpty(excludeDbNames)) {
+            excludeSchemaList.addAll(excludeDbNames);
+            srcSchemataDos = srcSchemataDos.stream().filter(schemataDo -> !excludeSchemaList.contains(schemataDo.getSchemaName())).collect(Collectors.toSet());
+            dstSchemataDos = srcSchemataDos.stream().filter(schemataDo -> !excludeSchemaList.contains(schemataDo.getSchemaName())).collect(Collectors.toSet());
+
+        } else {
+            srcSchemataDos = srcSchemataDos.stream().filter(schemataDo -> !excludeSchemaList.contains(schemataDo.getSchemaName())).collect(Collectors.toSet());
+            dstSchemataDos = srcSchemataDos.stream().filter(schemataDo -> !excludeSchemaList.contains(schemataDo.getSchemaName())).collect(Collectors.toSet());
+        }
+
         // 这里是需要新增的数据库
         Set<SchemataDo> diffSchemataDos = Sets.difference(srcSchemataDos, dstSchemataDos).immutableCopy();
         // 先直接把库给建立了,只是建库但是不建表
@@ -51,24 +64,32 @@ public class SyncServiceImpl implements SyncService {
 
     // CREATE DATABASE 数据库名;
     private void createSchemas(ConnectInfo dstConnectInfo, Set<SchemataDo> diffSchemataDos) {
-        diffSchemataDos.forEach(schema -> {
-            LOGGER.info(String.format("开始建库:%s", schema.getSchemaName()));
-            String createSchemaSql = String.format("CREATE DATABASE %s;", schema.getSchemaName());
-            DaoFacade.execSql(dstConnectInfo, createSchemaSql);
-        });
+        diffSchemataDos
+                .forEach(schema -> {
+                    LOGGER.info(String.format("开始建库:%s", schema.getSchemaName()));
+                    String createSchemaSql = String.format("CREATE DATABASE %s;", schema.getSchemaName());
+                    DaoFacade.execSql(dstConnectInfo, createSchemaSql);
+                });
     }
 
     private void diffSchemas(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, Set<SchemataDo> diffSchemas) {
-        diffSchemas.forEach(schema -> {
-            LOGGER.info(String.format("开始diff库:%s", schema.getSchemaName()));
-            SyncDatabaseRequest syncDatabaseRequest = new SyncDatabaseRequest();
-            syncDatabaseRequest.setSrcConnectInfo(srcConnectInfo);
-            syncDatabaseRequest.setDstConnectInfo(dstConnectInfo);
-            syncDatabaseRequest.setDbName(schema.getSchemaName());
-            doSyncDatabase(syncDatabaseRequest);
-        });
+        diffSchemas.
+                forEach(schema -> {
+                    LOGGER.info(String.format("开始diff库:%s", schema.getSchemaName()));
+                    SyncDatabaseRequest syncDatabaseRequest = new SyncDatabaseRequest();
+                    syncDatabaseRequest.setSrcConnectInfo(srcConnectInfo);
+                    syncDatabaseRequest.setDstConnectInfo(dstConnectInfo);
+                    syncDatabaseRequest.setDbName(schema.getSchemaName());
+                    doSyncDatabase(syncDatabaseRequest);
+                });
     }
 
+
+    /**
+     * 同步数据库
+     *
+     * @param syncInfo
+     */
     @Override
     public void doSyncDatabase(SyncDatabaseRequest syncInfo) {
         LOGGER.info("开始同步数据库");
@@ -76,50 +97,70 @@ public class SyncServiceImpl implements SyncService {
         ConnectInfo srcConnectInfo = syncInfo.getSrcConnectInfo();
         ConnectInfo dstConnectInfo = syncInfo.getDstConnectInfo();
         String dbName = syncInfo.getDbName();
+        List<String> excludeTables = syncInfo.getExcludeTableName();
         // 同步的是数据库,一个库下面会有很多表.获取 src 下的所有表,获取 dst 的所有表
         // 如果 src 有, dst 没有->新增表(直接show出来直接执行即可)
         // 如果 src 有, dst 也有但是结构不同步->doSyncTable
         Set<TablesDo> srcTablesDos = DaoFacade.ofMapper(srcConnectInfo, TablesMapper.class, tablesMapper -> tablesMapper.selectSchameByDataBaseName(dbName));
         Set<TablesDo> dstTablesDos = DaoFacade.ofMapper(dstConnectInfo, TablesMapper.class, tablesMapper -> tablesMapper.selectSchameByDataBaseName(dbName));
+
+        if (!CollectionUtils.isEmpty(excludeTables)) {
+            srcTablesDos = srcTablesDos.stream().filter(tablesDo -> !excludeTables.contains(tablesDo.getTableName())).collect(Collectors.toSet());
+            dstTablesDos = srcTablesDos.stream().filter(tablesDo -> !excludeTables.contains(tablesDo.getTableName())).collect(Collectors.toSet());
+        }
+
         // 这些是需要新建的表
         Set<TablesDo> createTables = Sets.difference(srcTablesDos, dstTablesDos).immutableCopy();
+
         // 执行新增表逻辑
-        createTables(srcConnectInfo, dstConnectInfo, createTables);
+        createTables(srcConnectInfo, dstConnectInfo, createTables, excludeTables);
 
         // 这些是需要进行 diff 的表,其实就是再去 diff 一下 table
         Set<TablesDo> diffTable = Sets.intersection(srcTablesDos, dstTablesDos).immutableCopy();
-        diffTables(srcConnectInfo, dstConnectInfo, diffTable);
+
+        diffTables(srcConnectInfo, dstConnectInfo, diffTable, excludeTables);
+
+
     }
 
 
     /**
-     * 根据 show create table 语句建表
+     * 根据 show create table 语句建
      *
      * @param srcConnectInfo
      * @param dstConnectInfo
      * @param createTables
      */
-    private void createTables(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, Set<TablesDo> createTables) {
-        List<String> createTablesList = createTables.stream().map(sql -> String.format("USE `%s`;\n%s;", sql.getTableSchema(), DaoFacade.showTable(srcConnectInfo, sql.getTableSchema(), sql.getTableName()))).collect(Collectors.toList());
+    private void createTables(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, Set<TablesDo> createTables, List<String> excludeTables) {
+        List<String> createTablesList = createTables.stream().
+                map(sql -> String.format("USE `%s`;\n%s;", sql.getTableSchema(), DaoFacade.showTable(srcConnectInfo, sql.getTableSchema(), sql.getTableName()))).
+                collect(Collectors.toList());
 
         createTablesList.forEach(create -> {
             LOGGER.info(String.format("建表语句：%s", create));
         });
-        // DaoFacade.execSql(dstConnectInfo, createTablesList);
+        DaoFacade.execSql(dstConnectInfo, createTablesList);
     }
 
-    private void diffTables(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, Set<TablesDo> diffTables) {
-        diffTables.forEach(table -> {
-            LOGGER.info(String.format("开始diff表:%s", table.getTableName()));
-            SyncTableRequest syncTableRequest = new SyncTableRequest();
-            syncTableRequest.setSrcConnectInfo(srcConnectInfo);
-            syncTableRequest.setDstConnectInfo(dstConnectInfo);
-            syncTableRequest.setDbName(table.getTableSchema());
-            syncTableRequest.setTableName(table.getTableName());
-            doSyncTable(syncTableRequest);
-        });
+    private void diffTables(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, Set<TablesDo> diffTables, List<String> excludeTables) {
+        diffTables.stream()
+                .forEach(table -> {
+                    LOGGER.info(String.format("开始diff表:%s", table.getTableName()));
+                    SyncTableRequest syncTableRequest = new SyncTableRequest();
+                    syncTableRequest.setSrcConnectInfo(srcConnectInfo);
+                    syncTableRequest.setDstConnectInfo(dstConnectInfo);
+                    syncTableRequest.setDbName(table.getTableSchema());
+                    syncTableRequest.setTableName(table.getTableName());
+                    doSyncTable(syncTableRequest);
+                });
     }
 
+
+    /**
+     * 同步表结构
+     *
+     * @param syncInfo
+     */
     @Override
     public void doSyncTable(SyncTableRequest syncInfo) {
         LOGGER.info("开始同步表");
@@ -128,8 +169,10 @@ public class SyncServiceImpl implements SyncService {
         ConnectInfo dstConnectInfo = syncInfo.getDstConnectInfo();
         String dbName = syncInfo.getDbName();
         String tableName = syncInfo.getTableName();
+
         syncColumn(srcConnectInfo, dstConnectInfo, dbName, tableName);
         syncStatistics(srcConnectInfo, dstConnectInfo, dbName, tableName);
+
     }
 
     public void syncColumn(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, String dbName, String tableName) {
@@ -403,10 +446,7 @@ public class SyncServiceImpl implements SyncService {
     }
 
     private void executeSql(ConnectInfo connectInfo, List<String> sqls) {
-        for (String sql : sqls) {
-            DaoFacade.execSql(connectInfo, sql);
-        }
-
+        DaoFacade.execSql(connectInfo, sqls);
     }
 
     /**

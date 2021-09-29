@@ -4,6 +4,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author Ganziwen
@@ -14,7 +15,9 @@ import javax.validation.Valid;
  */
 @Data
 @Valid
-public class SyncDatabaseRequest extends SyncInstaceRequest {
+public class SyncDatabaseRequest extends SyncInstanceRequest {
     @NotBlank(message = "dbName can't be blank")
     private String dbName;
+
+    private List<String> excludeTableName;
 }

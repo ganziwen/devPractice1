@@ -51,16 +51,16 @@ public class SyncController {
     /**
      * 同步实例
      *
-     * @param syncInstaceRequest
+     * @param syncInstanceRequest
      * @return
      */
     @RequestMapping(value = "instance", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public RetMsg<String> doSyncInstance(@Valid @RequestBody SyncInstaceRequest syncInstaceRequest) {
-        logger.info("do sync start. syncInfo = {}", syncInstaceRequest);
+    public RetMsg<String> doSyncInstance(@Valid @RequestBody SyncInstanceRequest syncInstanceRequest) {
+        logger.info("do sync start. syncInfo = {}", syncInstanceRequest);
 
         try {
             // 处理业务
-            syncService.doSyncInstance(syncInstaceRequest);
+            syncService.doSyncInstance(syncInstanceRequest);
             return RetMsg.buildSuccessMsg("test doSyncInstance success");
         } catch (Exception e) {
             logger.error("do Sync failed.", e);

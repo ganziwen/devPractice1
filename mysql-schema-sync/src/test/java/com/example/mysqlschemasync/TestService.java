@@ -1,7 +1,7 @@
 package com.example.mysqlschemasync;
 
 import com.example.mysqlschemasync.model.ConnectInfo;
-import com.example.mysqlschemasync.model.SyncInstaceRequest;
+import com.example.mysqlschemasync.model.SyncInstanceRequest;
 import com.example.mysqlschemasync.model.SyncTableRequest;
 import com.example.mysqlschemasync.service.SyncService;
 import org.junit.Before;
@@ -61,9 +61,9 @@ public class TestService {
     @Test
     public void testInstance() {
 
-        SyncInstaceRequest syncInstaceRequest = new SyncInstaceRequest();
-        syncInstaceRequest.setSrcConnectInfo(srcConnectInfo);
-        syncInstaceRequest.setDstConnectInfo(dstConnectInfo);
-        syncService.doSyncInstance(syncInstaceRequest);
+        SyncInstanceRequest syncInstanceRequest = new SyncInstanceRequest();
+        syncInstanceRequest.setSrcConnectInfo(srcConnectInfo);
+        syncInstanceRequest.setDstConnectInfo(dstConnectInfo);
+        syncService.doSyncInstance(syncInstanceRequest);
     }
 }

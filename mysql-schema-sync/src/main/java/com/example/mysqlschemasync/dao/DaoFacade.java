@@ -5,6 +5,8 @@ import com.example.mysqlschemasync.mapper.BaseMapper;
 import com.example.mysqlschemasync.model.ConnectInfo;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,6 +23,8 @@ import java.util.function.Function;
  */
 @NoArgsConstructor
 public class DaoFacade {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DaoFacade.class);
+
     public static <R, T extends BaseMapper> R ofMapper(ConnectInfo connectInfo, Class<T> mapperClazz, Function<T, R> function) {
         // 其实就是做了这一步操作
         // SqlSession sqlSession1 = LocalSqlSessionFactory.of().getSqlSession(connectInfo);
@@ -47,14 +51,15 @@ public class DaoFacade {
     public static void execSql(ConnectInfo connectInfo, String sql) {
 
         try (SqlSession sqlSession = LocalSqlSessionFactory.of().getSqlSession(connectInfo)) {
-            sqlSession.getConnection().prepareStatement(sql).execute();
+            LOGGER.info(String.format("执行%s", sql));
+            // sqlSession.getConnection().prepareStatement(sql).execute();
         } catch (Exception e) {
             throw new IllegalStateException("exec mapper failed", e);
         }
     }
 
     /**
-     * 执行 sql,避免产生一堆连接池
+     * 执行批量 sql,避免产生一堆连接池
      *
      * @param connectInfo
      * @param sqlList
@@ -73,7 +78,8 @@ public class DaoFacade {
         try (Connection connection = LocalSqlSessionFactory.of().getSqlSession(connectInfo).getConnection();) {
             for (String sql : sqlList) {
                 try (PreparedStatement statement = connection.prepareStatement(sql);) {
-                    statement.execute();
+                    LOGGER.info(String.format("执行%s", sql));
+                    // statement.execute();
                 }
             }
         } catch (Exception e) {
