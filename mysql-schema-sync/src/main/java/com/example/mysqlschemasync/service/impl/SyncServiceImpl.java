@@ -30,7 +30,7 @@ public class SyncServiceImpl implements SyncService {
 
     @Override
     public void doSyncInstance(SyncInstaceRequest syncInfo) {
-        LOGGER.info("开始同步实例");
+        LOGGER.info(String.format("开始同步实例:%s", syncInfo.getDstConnectInfo().toString()));
         // 信息获取,后面会删除的
         ConnectInfo srcConnectInfo = syncInfo.getSrcConnectInfo();
         ConnectInfo dstConnectInfo = syncInfo.getDstConnectInfo();
@@ -51,8 +51,8 @@ public class SyncServiceImpl implements SyncService {
 
     // CREATE DATABASE 数据库名;
     private void createSchemas(ConnectInfo dstConnectInfo, Set<SchemataDo> diffSchemataDos) {
-        LOGGER.info("开始建表");
         diffSchemataDos.forEach(schema -> {
+            LOGGER.info(String.format("开始建库:%s", schema.getSchemaName()));
             String createSchemaSql = String.format("CREATE DATABASE %s;", schema.getSchemaName());
             DaoFacade.execSql(dstConnectInfo, createSchemaSql);
         });
@@ -60,6 +60,7 @@ public class SyncServiceImpl implements SyncService {
 
     private void diffSchemas(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, Set<SchemataDo> diffSchemas) {
         diffSchemas.forEach(schema -> {
+            LOGGER.info(String.format("开始diff库:%s", schema.getSchemaName()));
             SyncDatabaseRequest syncDatabaseRequest = new SyncDatabaseRequest();
             syncDatabaseRequest.setSrcConnectInfo(srcConnectInfo);
             syncDatabaseRequest.setDstConnectInfo(dstConnectInfo);
@@ -100,12 +101,16 @@ public class SyncServiceImpl implements SyncService {
      */
     private void createTables(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, Set<TablesDo> createTables) {
         List<String> createTablesList = createTables.stream().map(sql -> String.format("USE `%s`;\n%s;", sql.getTableSchema(), DaoFacade.showTable(srcConnectInfo, sql.getTableSchema(), sql.getTableName()))).collect(Collectors.toList());
-        createTablesList.forEach(System.out::println);
+
+        createTablesList.forEach(create -> {
+            LOGGER.info(String.format("建表语句：%s", create));
+        });
         // DaoFacade.execSql(dstConnectInfo, createTablesList);
     }
 
     private void diffTables(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, Set<TablesDo> diffTables) {
         diffTables.forEach(table -> {
+            LOGGER.info(String.format("开始diff表:%s", table.getTableName()));
             SyncTableRequest syncTableRequest = new SyncTableRequest();
             syncTableRequest.setSrcConnectInfo(srcConnectInfo);
             syncTableRequest.setDstConnectInfo(dstConnectInfo);
