@@ -1,6 +1,7 @@
 package com.example.mysqlschemasync;
 
 import com.example.mysqlschemasync.model.ConnectInfo;
+import com.example.mysqlschemasync.model.SyncInstaceRequest;
 import com.example.mysqlschemasync.model.SyncTableRequest;
 import com.example.mysqlschemasync.service.SyncService;
 import org.junit.Before;
@@ -27,18 +28,18 @@ public class TestService {
     @Before
     public void init() {
         srcConnectInfo = new ConnectInfo();
-        srcConnectInfo.setUrl("jdbc:mysql://www.xiaowenshu.cn:3399");
+        srcConnectInfo.setUrl("jdbc:mysql://www.xiaowenshu.cn:3399?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC");
         srcConnectInfo.setUserName("root");
         srcConnectInfo.setPassWord("123456");
 
         dstConnectInfo = new ConnectInfo();
-        dstConnectInfo.setUrl("jdbc:mysql://www.xiaowenshu.cn:3388");
+        dstConnectInfo.setUrl("jdbc:mysql://www.xiaowenshu.cn:3388?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC");
         dstConnectInfo.setUserName("root");
         dstConnectInfo.setPassWord("123456");
     }
 
     @Test
-    public void testSyncTableServiceImpl() {
+    public void testSyncTable() {
         SyncTableRequest syncTableRequest = new SyncTableRequest();
         syncTableRequest.setSrcConnectInfo(srcConnectInfo);
         syncTableRequest.setDbName("test_table");
@@ -47,8 +48,9 @@ public class TestService {
         syncService.doSyncTable(syncTableRequest);
     }
 
+
     @Test
-    public void testSyncDataBaseServiceImpl() {
+    public void testSyncDatabase() {
         SyncTableRequest syncTableRequest = new SyncTableRequest();
         syncTableRequest.setSrcConnectInfo(srcConnectInfo);
         syncTableRequest.setDstConnectInfo(dstConnectInfo);
@@ -57,12 +59,11 @@ public class TestService {
     }
 
     @Test
-    public void testCreateTables() {
-        SyncTableRequest syncTableRequest = new SyncTableRequest();
-        syncTableRequest.setSrcConnectInfo(srcConnectInfo);
-        syncTableRequest.setDstConnectInfo(dstConnectInfo);
-        syncTableRequest.setDbName("test_table");
-        syncService.doSyncDatabase(syncTableRequest);
-    }
+    public void testInstance() {
 
+        SyncInstaceRequest syncInstaceRequest = new SyncInstaceRequest();
+        syncInstaceRequest.setSrcConnectInfo(srcConnectInfo);
+        syncInstaceRequest.setDstConnectInfo(dstConnectInfo);
+        syncService.doSyncInstance(syncInstaceRequest);
+    }
 }

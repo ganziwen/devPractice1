@@ -35,11 +35,37 @@ public class SyncServiceImpl implements SyncService {
         ConnectInfo srcConnectInfo = syncInfo.getSrcConnectInfo();
         ConnectInfo dstConnectInfo = syncInfo.getDstConnectInfo();
         // 需要注意的是,有些库是不能同步的:'information_schema', 'mysql', 'performance_schema', 'sys'
-        ArrayList<String> ingoreSchemaList = Lists.newArrayList("information_schema", "mysql", "performance_schema", "sys");
-        Set<SchemataDo> srcSchemataDos = DaoFacade.ofMapper(srcConnectInfo, SchemaMapper.class, schemaMapper -> schemaMapper.selectAllSchame().stream().filter(schema -> !ingoreSchemaList.contains(schema)).collect(Collectors.toSet()));
-        Set<SchemataDo> dstSchemataDos = DaoFacade.ofMapper(dstConnectInfo, SchemaMapper.class, schemaMapper -> schemaMapper.selectAllSchame().stream().filter(schema -> !ingoreSchemaList.contains(schema)).collect(Collectors.toSet()));
+        ArrayList<String> ignoredSchemaList = Lists.newArrayList("information_schema", "mysql", "performance_schema", "sys");
+        Set<SchemataDo> srcSchemataDos = DaoFacade.ofMapper(srcConnectInfo, SchemaMapper.class, schemaMapper -> schemaMapper.selectAllSchame().stream().filter(schema -> !ignoredSchemaList.contains(schema.getSchemaName())).collect(Collectors.toSet()));
+        Set<SchemataDo> dstSchemataDos = DaoFacade.ofMapper(dstConnectInfo, SchemaMapper.class, schemaMapper -> schemaMapper.selectAllSchame().stream().filter(schema -> !ignoredSchemaList.contains(schema.getSchemaName())).collect(Collectors.toSet()));
+        // 这里是需要新增的数据库
         Set<SchemataDo> diffSchemataDos = Sets.difference(srcSchemataDos, dstSchemataDos).immutableCopy();
+        // 先直接把库给建立了,只是建库但是不建表
+        createSchemas(dstConnectInfo, diffSchemataDos);
+        Set<SchemataDo> diffSchemas = Sets.intersection(srcSchemataDos, dstSchemataDos).immutableCopy();
+        diffSchemas.forEach(schema -> System.out.println(schema.getSchemaName()));
+        diffSchemas(srcConnectInfo, dstConnectInfo, diffSchemas);
 
+    }
+
+
+    // CREATE DATABASE 数据库名;
+    private void createSchemas(ConnectInfo dstConnectInfo, Set<SchemataDo> diffSchemataDos) {
+        LOGGER.info("开始建表");
+        diffSchemataDos.forEach(schema -> {
+            String createSchemaSql = String.format("CREATE DATABASE %s;", schema.getSchemaName());
+            DaoFacade.execSql(dstConnectInfo, createSchemaSql);
+        });
+    }
+
+    private void diffSchemas(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, Set<SchemataDo> diffSchemas) {
+        diffSchemas.forEach(schema -> {
+            SyncDatabaseRequest syncDatabaseRequest = new SyncDatabaseRequest();
+            syncDatabaseRequest.setSrcConnectInfo(srcConnectInfo);
+            syncDatabaseRequest.setDstConnectInfo(dstConnectInfo);
+            syncDatabaseRequest.setDbName(schema.getSchemaName());
+            doSyncDatabase(syncDatabaseRequest);
+        });
     }
 
     @Override
@@ -56,31 +82,38 @@ public class SyncServiceImpl implements SyncService {
         Set<TablesDo> dstTablesDos = DaoFacade.ofMapper(dstConnectInfo, TablesMapper.class, tablesMapper -> tablesMapper.selectSchameByDataBaseName(dbName));
         // 这些是需要新建的表
         Set<TablesDo> createTables = Sets.difference(srcTablesDos, dstTablesDos).immutableCopy();
-        // 这些是需要进行 diff 的表
-        Sets.SetView<TablesDo> prepareDiffTables = Sets.intersection(srcTablesDos, dstTablesDos);
-        final Set<TablesDo> collect1 = createTables.stream().peek(dos -> System.out.println(dos.toString())).collect(Collectors.toSet());
-        final Set<TablesDo> collect2 = prepareDiffTables.stream().peek(dos -> System.out.println(dos.toString())).collect(Collectors.toSet());
-        // 其实这里可以再优化一下,根据 schema 再进行转 map, 然后根据 map 的 key 去 use 就不用频繁 use.
+        // 执行新增表逻辑
+        createTables(srcConnectInfo, dstConnectInfo, createTables);
+
+        // 这些是需要进行 diff 的表,其实就是再去 diff 一下 table
+        Set<TablesDo> diffTable = Sets.intersection(srcTablesDos, dstTablesDos).immutableCopy();
+        diffTables(srcConnectInfo, dstConnectInfo, diffTable);
+    }
+
+
+    /**
+     * 根据 show create table 语句建表
+     *
+     * @param srcConnectInfo
+     * @param dstConnectInfo
+     * @param createTables
+     */
+    private void createTables(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, Set<TablesDo> createTables) {
         List<String> createTablesList = createTables.stream().map(sql -> String.format("USE `%s`;\n%s;", sql.getTableSchema(), DaoFacade.showTable(srcConnectInfo, sql.getTableSchema(), sql.getTableName()))).collect(Collectors.toList());
         createTablesList.forEach(System.out::println);
+        // DaoFacade.execSql(dstConnectInfo, createTablesList);
     }
 
-    private void createTables(SyncDatabaseRequest syncInfo) {
-        // 信息获取,后面会删除的
-        ConnectInfo srcConnectInfo = syncInfo.getSrcConnectInfo();
-        ConnectInfo dstConnectInfo = syncInfo.getDstConnectInfo();
-        String dbName = syncInfo.getDbName();
-        // 同步的是数据库,一个库下面会有很多表.获取 src 下的所有表,获取 dst 的所有表
-        // 如果 src 有, dst 没有->新增表(直接show出来直接执行即可)
-        // 如果 src 有, dst 也有但是结构不同步->doSyncTable
-        Set<TablesDo> srcTablesDos = DaoFacade.ofMapper(srcConnectInfo, TablesMapper.class, tablesMapper -> tablesMapper.selectSchameByDataBaseName(dbName));
-        Set<TablesDo> dstTablesDos = DaoFacade.ofMapper(dstConnectInfo, TablesMapper.class, tablesMapper -> tablesMapper.selectSchameByDataBaseName(dbName));
-        // 这些是需要新建的表
-        Set<TablesDo> createTables = Sets.difference(srcTablesDos, dstTablesDos).immutableCopy();
-        List<String> createTablesList = createTables.stream().map(sql -> String.format("USE `%s`;%s;", sql.getTableSchema(), DaoFacade.showTable(srcConnectInfo, sql.getTableSchema(), sql.getTableName()))).collect(Collectors.toList());
-        createTablesList.forEach(System.out::println);
+    private void diffTables(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, Set<TablesDo> diffTables) {
+        diffTables.forEach(table -> {
+            SyncTableRequest syncTableRequest = new SyncTableRequest();
+            syncTableRequest.setSrcConnectInfo(srcConnectInfo);
+            syncTableRequest.setDstConnectInfo(dstConnectInfo);
+            syncTableRequest.setDbName(table.getTableSchema());
+            syncTableRequest.setTableName(table.getTableName());
+            doSyncTable(syncTableRequest);
+        });
     }
-
 
     @Override
     public void doSyncTable(SyncTableRequest syncInfo) {
@@ -110,7 +143,7 @@ public class SyncServiceImpl implements SyncService {
         });
 
         //  5. 执行 sql
-        executeSql(dstConnectInfo, columnSql);
+        // executeSql(dstConnectInfo, columnSql);
 
     }
 

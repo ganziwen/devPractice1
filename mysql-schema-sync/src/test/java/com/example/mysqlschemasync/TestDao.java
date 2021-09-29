@@ -32,7 +32,7 @@ public class TestDao {
     @Before
     public void init() {
         connectInfo = new ConnectInfo();
-        connectInfo.setUrl("jdbc:mysql://www.xiaowenshu.cn:3399");
+        connectInfo.setUrl("jdbc:mysql://www.xiaowenshu.cn:3399?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC");
         connectInfo.setUserName("root");
         connectInfo.setPassWord("123456");
     }
