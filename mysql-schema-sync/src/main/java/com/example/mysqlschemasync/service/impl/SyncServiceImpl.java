@@ -37,7 +37,7 @@ public class SyncServiceImpl implements SyncService {
         ConnectInfo dstConnectInfo = syncInfo.getDstConnectInfo();
         List<String> excludeDbNames = syncInfo.getExcludeDbNames();
 
-        // 需要注意的是,有些库是不能同步的:'information_schema', 'mysql', 'performance_schema', 'sys'
+        // 需要注意的是,有些库是不能同步的:'information_schema', 'mysql', 'performance_schema', 'sys';还有就是自定义的排除掉的表路径是怎样的
         ArrayList<String> excludeSchemaList = Lists.newArrayList("information_schema", "mysql", "performance_schema", "sys");
 
         Set<SchemataDo> srcSchemataDos = DaoFacade.ofMapper(srcConnectInfo, SchemaMapper.class, SchemaMapper::selectAllSchame).stream()
@@ -53,7 +53,7 @@ public class SyncServiceImpl implements SyncService {
         // 这里是需要新增的数据库
         Set<SchemataDo> diffSchemataDos = Sets.difference(srcSchemataDos, dstSchemataDos).immutableCopy();
         // 先直接把库给建立了,只是建库但是不建表
-        createSchemas(srcConnectInfo,dstConnectInfo, diffSchemataDos);
+        createSchemas(srcConnectInfo, dstConnectInfo, diffSchemataDos);
         Set<SchemataDo> diffSchemas = Sets.intersection(srcSchemataDos, dstSchemataDos).immutableCopy();
         diffSchemas.forEach(schema -> System.out.println(schema.getSchemaName()));
         diffSchemas(srcConnectInfo, dstConnectInfo, diffSchemas);
@@ -62,7 +62,7 @@ public class SyncServiceImpl implements SyncService {
 
 
     // CREATE DATABASE 数据库名;
-    private void createSchemas(ConnectInfo srcConnectInfo,ConnectInfo dstConnectInfo, Set<SchemataDo> diffSchemataDos) {
+    private void createSchemas(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, Set<SchemataDo> diffSchemataDos) {
         diffSchemataDos
                 .forEach(schema -> {
                     LOGGER.info(String.format("开始建库:%s", schema.getSchemaName()));
@@ -174,6 +174,11 @@ public class SyncServiceImpl implements SyncService {
         syncColumn(srcConnectInfo, dstConnectInfo, dbName, tableName);
         syncStatistics(srcConnectInfo, dstConnectInfo, dbName, tableName);
 
+    }
+
+    @Override
+    public void healthCheck() {
+        LOGGER.info("健康检查通过!");
     }
 
     public void syncColumn(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, String dbName, String tableName) {

@@ -1,6 +1,5 @@
 package com.example.mysqlschemasync.component;
 
-import com.example.mysqlschemasync.model.SyncTableRequest;
 import com.example.mysqlschemasync.service.SyncService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -18,6 +17,7 @@ public class SchemaSyncTask {
 
     @Scheduled(cron = "*/30 * * * * *")
     public void doSync() {
-        syncService.doSyncTable(new SyncTableRequest());
+        syncService.healthCheck();
+        // syncService.doSyncTable(new SyncTableRequest());
     }
 }

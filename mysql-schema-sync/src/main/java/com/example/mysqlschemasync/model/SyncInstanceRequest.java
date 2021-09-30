@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Ganziwen
@@ -29,4 +30,9 @@ public class SyncInstanceRequest {
     private ConnectInfo dstConnectInfo;
 
     private List<String> excludeDbNames;
+
+    /**
+     * 可排除的库和表
+     */
+    private Map<String, List<String>> excludeDbAndTables;
 }

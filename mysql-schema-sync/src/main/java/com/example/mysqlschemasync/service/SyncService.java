@@ -40,4 +40,9 @@ public interface SyncService<T> {
      * @param syncInfo
      */
     void doSyncTable(SyncTableRequest syncInfo);
+
+    /**
+     * 健康检查
+     */
+    void healthCheck();
 }
