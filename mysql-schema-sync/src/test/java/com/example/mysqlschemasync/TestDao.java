@@ -85,7 +85,7 @@ public class TestDao {
 
     @Test
     public void testShowTables() {
-        final String showTable = DaoFacade.showTable(connectInfo, "test_table", "tb_user");
+        final String showTable = DaoFacade.showCreate(connectInfo, "test_table", "tb_user");
         System.out.println("showTable = " + showTable);
     }
 

@@ -8,12 +8,12 @@ import com.example.mysqlschemasync.mapper.StatisticsMapper;
 import com.example.mysqlschemasync.mapper.TablesMapper;
 import com.example.mysqlschemasync.model.*;
 import com.example.mysqlschemasync.service.SyncService;
+import com.example.mysqlschemasync.util.ListUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,25 +36,24 @@ public class SyncServiceImpl implements SyncService {
         ConnectInfo srcConnectInfo = syncInfo.getSrcConnectInfo();
         ConnectInfo dstConnectInfo = syncInfo.getDstConnectInfo();
         List<String> excludeDbNames = syncInfo.getExcludeDbNames();
-        Set<SchemataDo> srcSchemataDos = DaoFacade.ofMapper(srcConnectInfo, SchemaMapper.class, SchemaMapper::selectAllSchame);
-        Set<SchemataDo> dstSchemataDos = DaoFacade.ofMapper(dstConnectInfo, SchemaMapper.class, SchemaMapper::selectAllSchame);
 
         // 需要注意的是,有些库是不能同步的:'information_schema', 'mysql', 'performance_schema', 'sys'
         ArrayList<String> excludeSchemaList = Lists.newArrayList("information_schema", "mysql", "performance_schema", "sys");
-        if (!CollectionUtils.isEmpty(excludeDbNames)) {
-            excludeSchemaList.addAll(excludeDbNames);
-            srcSchemataDos = srcSchemataDos.stream().filter(schemataDo -> !excludeSchemaList.contains(schemataDo.getSchemaName())).collect(Collectors.toSet());
-            dstSchemataDos = srcSchemataDos.stream().filter(schemataDo -> !excludeSchemaList.contains(schemataDo.getSchemaName())).collect(Collectors.toSet());
 
-        } else {
-            srcSchemataDos = srcSchemataDos.stream().filter(schemataDo -> !excludeSchemaList.contains(schemataDo.getSchemaName())).collect(Collectors.toSet());
-            dstSchemataDos = srcSchemataDos.stream().filter(schemataDo -> !excludeSchemaList.contains(schemataDo.getSchemaName())).collect(Collectors.toSet());
-        }
+        Set<SchemataDo> srcSchemataDos = DaoFacade.ofMapper(srcConnectInfo, SchemaMapper.class, SchemaMapper::selectAllSchame).stream()
+                .filter(schema -> !ListUtils.isContains(excludeSchemaList, schema.getSchemaName()))
+                .filter(schema -> !ListUtils.isContains(excludeDbNames, schema.getSchemaName()))
+                .collect(Collectors.toSet());
+        Set<SchemataDo> dstSchemataDos = DaoFacade.ofMapper(dstConnectInfo, SchemaMapper.class, SchemaMapper::selectAllSchame).stream()
+                .filter(schema -> !ListUtils.isContains(excludeSchemaList, schema.getSchemaName()))
+                .filter(schema -> !ListUtils.isContains(excludeDbNames, schema.getSchemaName()))
+                .collect(Collectors.toSet());
+
 
         // 这里是需要新增的数据库
         Set<SchemataDo> diffSchemataDos = Sets.difference(srcSchemataDos, dstSchemataDos).immutableCopy();
         // 先直接把库给建立了,只是建库但是不建表
-        createSchemas(dstConnectInfo, diffSchemataDos);
+        createSchemas(srcConnectInfo,dstConnectInfo, diffSchemataDos);
         Set<SchemataDo> diffSchemas = Sets.intersection(srcSchemataDos, dstSchemataDos).immutableCopy();
         diffSchemas.forEach(schema -> System.out.println(schema.getSchemaName()));
         diffSchemas(srcConnectInfo, dstConnectInfo, diffSchemas);
@@ -63,11 +62,12 @@ public class SyncServiceImpl implements SyncService {
 
 
     // CREATE DATABASE 数据库名;
-    private void createSchemas(ConnectInfo dstConnectInfo, Set<SchemataDo> diffSchemataDos) {
+    private void createSchemas(ConnectInfo srcConnectInfo,ConnectInfo dstConnectInfo, Set<SchemataDo> diffSchemataDos) {
         diffSchemataDos
                 .forEach(schema -> {
                     LOGGER.info(String.format("开始建库:%s", schema.getSchemaName()));
-                    String createSchemaSql = String.format("CREATE DATABASE %s;", schema.getSchemaName());
+                    // String createSchemaSql = String.format("CREATE DATABASE %s;", schema.getSchemaName());
+                    String createSchemaSql = DaoFacade.showCreate(srcConnectInfo, schema.getSchemaName());
                     DaoFacade.execSql(dstConnectInfo, createSchemaSql);
                 });
     }
@@ -98,16 +98,17 @@ public class SyncServiceImpl implements SyncService {
         ConnectInfo dstConnectInfo = syncInfo.getDstConnectInfo();
         String dbName = syncInfo.getDbName();
         List<String> excludeTables = syncInfo.getExcludeTableName();
+        // List<String> includeTables = syncInfo.getIncludeTableName();
         // 同步的是数据库,一个库下面会有很多表.获取 src 下的所有表,获取 dst 的所有表
         // 如果 src 有, dst 没有->新增表(直接show出来直接执行即可)
         // 如果 src 有, dst 也有但是结构不同步->doSyncTable
-        Set<TablesDo> srcTablesDos = DaoFacade.ofMapper(srcConnectInfo, TablesMapper.class, tablesMapper -> tablesMapper.selectSchameByDataBaseName(dbName));
-        Set<TablesDo> dstTablesDos = DaoFacade.ofMapper(dstConnectInfo, TablesMapper.class, tablesMapper -> tablesMapper.selectSchameByDataBaseName(dbName));
+        Set<TablesDo> srcTablesDos = DaoFacade.ofMapper(srcConnectInfo, TablesMapper.class, tablesMapper -> tablesMapper.selectSchameByDataBaseName(dbName)).stream()
+                .filter(tablesDo -> !ListUtils.isContains(excludeTables, tablesDo.getTableName()))
+                .collect(Collectors.toSet());
+        Set<TablesDo> dstTablesDos = DaoFacade.ofMapper(dstConnectInfo, TablesMapper.class, tablesMapper -> tablesMapper.selectSchameByDataBaseName(dbName)).stream()
+                .filter(tablesDo -> !ListUtils.isContains(excludeTables, tablesDo.getTableName()))
+                .collect(Collectors.toSet());
 
-        if (!CollectionUtils.isEmpty(excludeTables)) {
-            srcTablesDos = srcTablesDos.stream().filter(tablesDo -> !excludeTables.contains(tablesDo.getTableName())).collect(Collectors.toSet());
-            dstTablesDos = srcTablesDos.stream().filter(tablesDo -> !excludeTables.contains(tablesDo.getTableName())).collect(Collectors.toSet());
-        }
 
         // 这些是需要新建的表
         Set<TablesDo> createTables = Sets.difference(srcTablesDos, dstTablesDos).immutableCopy();
@@ -133,7 +134,7 @@ public class SyncServiceImpl implements SyncService {
      */
     private void createTables(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, Set<TablesDo> createTables, List<String> excludeTables) {
         List<String> createTablesList = createTables.stream().
-                map(sql -> String.format("USE `%s`;\n%s;", sql.getTableSchema(), DaoFacade.showTable(srcConnectInfo, sql.getTableSchema(), sql.getTableName()))).
+                map(sql -> String.format("USE `%s`;\n%s;", sql.getTableSchema(), DaoFacade.showCreate(srcConnectInfo, sql.getTableSchema(), sql.getTableName()))).
                 collect(Collectors.toList());
 
         createTablesList.forEach(create -> {

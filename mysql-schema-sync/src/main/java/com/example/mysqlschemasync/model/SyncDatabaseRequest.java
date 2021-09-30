@@ -20,4 +20,5 @@ public class SyncDatabaseRequest extends SyncInstanceRequest {
     private String dbName;
 
     private List<String> excludeTableName;
+    // private List<String> includeTableName;
 }

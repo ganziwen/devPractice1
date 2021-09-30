@@ -95,7 +95,35 @@ public class DaoFacade {
      * @param tableName
      * @return
      */
-    public static String showTable(ConnectInfo connectInfo, String schemaName, String tableName) {
+    // public static String showTable(ConnectInfo connectInfo, String schemaName, String tableName) {
+    //     try (Connection connection = LocalSqlSessionFactory.of().getSqlSession(connectInfo).getConnection()) {
+    //         String sql = String.format("show create table `%s`.`%s`;", schemaName, tableName);
+    //         ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
+    //         if (resultSet.next()) {
+    //             return resultSet.getString("Create Table");
+    //         } else {
+    //             throw new IllegalStateException("show create table failed");
+    //         }
+    //     } catch (Exception e) {
+    //         throw new IllegalStateException("show create table failed", e);
+    //     }
+    // }
+
+    public static String showCreate(ConnectInfo connectInfo, String schemaName) {
+        try (Connection connection = LocalSqlSessionFactory.of().getSqlSession(connectInfo).getConnection()) {
+            String sql = String.format("show create database `%s`;", schemaName);
+            ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("Create Database");
+            } else {
+                throw new IllegalStateException("show create database failed");
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException("show create database failed", e);
+        }
+    }
+
+    public static String showCreate(ConnectInfo connectInfo, String schemaName, String tableName) {
         try (Connection connection = LocalSqlSessionFactory.of().getSqlSession(connectInfo).getConnection()) {
             String sql = String.format("show create table `%s`.`%s`;", schemaName, tableName);
             ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
@@ -108,4 +136,6 @@ public class DaoFacade {
             throw new IllegalStateException("show create table failed", e);
         }
     }
+
+
 }
