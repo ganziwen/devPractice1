@@ -12,4 +12,14 @@
     <artifactId>sync-framework</artifactId>
 
 
+    <dependencies>
+
+        <!--        sercice依赖了 common 和 framework-->
+        <dependency>
+            <artifactId>sync-common</artifactId>
+            <groupId>com.course</groupId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
 </project>
