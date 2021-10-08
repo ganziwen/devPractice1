@@ -1,6 +1,5 @@
 package mybaties.xml;
 
-import com.google.common.collect.Lists;
 import mybaties.xml.bean.TbUser1;
 import mybaties.xml.mapper.TbUserMapper1;
 import org.apache.ibatis.io.Resources;

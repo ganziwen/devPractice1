@@ -13,8 +13,9 @@
         <module>java8</module>
         <module>patterns</module>
         <module>spring</module>
-        <module>MyBatiesXml</module>
-        <module>MyBatiesAnnotation</module>
+        <module>mybatis-annotation</module>
+        <module>mybatis-with-springboot</module>
+        <module>mybatis-xml</module>
         <module>mysql-schema-sync</module>
     </modules>
 

@@ -8,22 +8,19 @@ import framework.enums.DiffType;
 /**
  * @author Ganziwen
  * @version 1.0
- * @ClassName DiffInstanceHandler
+ * @ClassName DiffTableHandler
  * @Description
- * @date 2021/10/6 14:06
+ * @date 2021/10/6 14:35
  */
-public class DiffInstanceHandler extends AbstractHandler<DiffResponse, DiffContext> {
+public class DiffTableHandler extends AbstractHandler<DiffResponse, DiffContext> {
+
     @Override
     protected boolean preHandle(DiffContext diffContext) {
-        return diffContext.getDiffType().equals(DiffType.INSTANCE);
+        return diffContext.getDiffType().equals(DiffType.TABLE);
     }
 
     @Override
     protected DiffResponse onHandle(DiffContext diffContext) {
-        diffContext.getSrcConnectInfo();
-        diffContext.getDstConnectInfo();
         return null;
-
     }
 }
-
