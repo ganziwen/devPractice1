@@ -9,25 +9,27 @@ import java.util.Objects;
  * @Description
  * @date 2021/10/6 13:56
  */
-public abstract class AbstractHandler<Response, Context> {
-    private AbstractHandler<Response, Context> nextHandler;
+public abstract class AbstractHandler<Context> {
+    private AbstractHandler<Context> nextHandler;
 
     protected abstract boolean preHandle(Context context);
 
-    protected abstract Response onHandle(Context context);
+    protected abstract void onHandle(Context context);
 
-    public Response doHandle(Context context) {
+    public void doHandle(Context context) {
         if (preHandle(context)) {
-            return onHandle(context);
+            onHandle(context);
+            return;
 
         }
         if (!Objects.isNull(this.nextHandler)) {
-            return this.nextHandler.doHandle(context);
+            this.nextHandler.doHandle(context);
+            return;
         }
         throw new IllegalArgumentException("unknown handler to handle");
     }
 
-    public void setNextHandler(AbstractHandler<Response, Context> nextHandler) {
+    public void setNextHandler(AbstractHandler<Context> nextHandler) {
         this.nextHandler = nextHandler;
     }
 

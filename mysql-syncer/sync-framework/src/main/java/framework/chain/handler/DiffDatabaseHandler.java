@@ -12,7 +12,7 @@ import framework.enums.DiffType;
  * @Description
  * @date 2021/10/6 14:34
  */
-public class DiffDatabaseHandler extends AbstractHandler<DiffResponse, DiffContext> {
+public class DiffDatabaseHandler extends AbstractHandler< DiffContext> {
 
     @Override
     protected boolean preHandle(DiffContext diffContext) {
@@ -20,7 +20,7 @@ public class DiffDatabaseHandler extends AbstractHandler<DiffResponse, DiffConte
     }
 
     @Override
-    protected DiffResponse onHandle(DiffContext diffContext) {
-        return null;
+    protected void onHandle(DiffContext diffContext) {
+
     }
 }

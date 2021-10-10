@@ -1,21 +1,17 @@
-package framework.chain;
+package framework.observe;
 
 import common.model.ConnectInfo;
-import framework.enums.DiffType;
-import lombok.Builder;
 import lombok.Data;
 
 /**
  * @author Ganziwen
  * @version 1.0
- * @ClassName DiffContext
+ * @ClassName Context
  * @Description
- * @date 2021/10/6 14:06
+ * @date 2021/10/10 11:37
  */
 @Data
-@Builder
-public class DiffContext {
-    DiffType diffType;
+public class Context {
     private ConnectInfo srcConnectInfo;
     private ConnectInfo dstConnectInfo;
 }
