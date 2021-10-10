@@ -11,7 +11,7 @@ import service.SyncService;
  * @author Ganziwen
  * @version 1.0
  * @ClassName Synctroller
- * @Description
+ * @Description 进行同步
  * @date 2021/10/3 11:21
  */
 @RestController

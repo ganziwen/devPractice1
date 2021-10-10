@@ -1,4 +1,4 @@
-package framework.chain.handler;
+package framework.chain.handler.diff;
 
 import framework.chain.AbstractHandler;
 import framework.chain.DiffContext;

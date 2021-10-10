@@ -2,9 +2,11 @@ package com.example.mysqlschemasync.factory;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.example.mysqlschemasync.model.ConnectInfo;
+import com.google.common.collect.Maps;
 import com.mysql.cj.jdbc.Driver;
 
 import javax.sql.DataSource;
+import java.util.Map;
 
 /**
  * @author Ganziwen
@@ -14,8 +16,10 @@ import javax.sql.DataSource;
  * @date 2021/8/29 17:59
  */
 public class LocalDataSourceFactory {
-    private LocalDataSourceFactory() {
+    private final Map<String, DataSource> dataSourceMap;
 
+    private LocalDataSourceFactory() {
+        this.dataSourceMap = Maps.newConcurrentMap();
     }
 
     private static class ClassHolder {
@@ -35,6 +39,11 @@ public class LocalDataSourceFactory {
      * @return
      */
     public DataSource getDataSource(ConnectInfo connectInfo) {
+        String sourceKey = getDataSourceKey(connectInfo);
+        if (this.dataSourceMap.containsKey(sourceKey)) {
+            return this.dataSourceMap.get(sourceKey);
+        }
+
         DruidDataSource druidDataSource = new DruidDataSource();
 
         druidDataSource.setUrl(connectInfo.getUrl());
@@ -55,6 +64,12 @@ public class LocalDataSourceFactory {
         druidDataSource.setMaxOpenPreparedStatements(20);
         druidDataSource.setAsyncInit(true);
 
+        this.dataSourceMap.put(sourceKey, druidDataSource);
+
         return druidDataSource;
+    }
+
+    private String getDataSourceKey(ConnectInfo connectInfo) {
+        return connectInfo.toString();
     }
 }

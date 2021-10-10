@@ -1,5 +1,7 @@
 package framework.observe;
 
+import com.fasterxml.jackson.databind.deser.std.ObjectArrayDeserializer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,10 @@ public class ObserverManager {
     }
 
     public void update(Context context) {
-        this.observeList.forEach(observe -> observe.update(context));
+        this.observeList.forEach(observe -> {
+            if (observe.preUpdate(context)) {
+                observe.update(context);
+            }
+        });
     }
 }

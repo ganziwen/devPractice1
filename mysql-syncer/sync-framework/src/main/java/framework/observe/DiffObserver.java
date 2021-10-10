@@ -2,6 +2,7 @@ package framework.observe;
 
 import framework.chain.ChainManager;
 import framework.chain.DiffContext;
+import framework.enums.CommandType;
 
 /**
  * @author Ganziwen
@@ -12,6 +13,11 @@ import framework.chain.DiffContext;
  */
 
 public class DiffObserver implements IObserve<Context> {
+
+    @Override
+    public boolean preUpdate(Context context) {
+        return CommandType.DIFF.equals(context.getCommandType()) || CommandType.DIFF_AND_SYNC.equals(context.getCommandType());
+    }
 
     @Override
     public void update(Context context) {

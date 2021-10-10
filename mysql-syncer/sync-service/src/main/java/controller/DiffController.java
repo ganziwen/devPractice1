@@ -12,7 +12,7 @@ import service.DiffService;
  * @author Ganziwen
  * @version 1.0
  * @ClassName DiffController
- * @Description
+ * @Description 只进行 diff 不一定需要同步,diff 完有可能要进行报警或者异步处理等
  * @date 2021/10/3 11:20
  */
 @RestController

@@ -1,10 +1,11 @@
 package framework.chain;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
-import framework.chain.handler.DiffDatabaseHandler;
-import framework.chain.handler.DiffInstanceHandler;
-import framework.chain.handler.DiffTableHandler;
-import org.yaml.snakeyaml.nodes.CollectionNode;
+import framework.chain.handler.diff.DiffDatabaseHandler;
+import framework.chain.handler.diff.DiffInstanceHandler;
+import framework.chain.handler.diff.DiffTableHandler;
+import framework.chain.handler.sync.SyncDatabaseHandler;
+import framework.chain.handler.sync.SyncInstanceHandler;
+import framework.chain.handler.sync.SyncTableHandler;
 
 /**
  * @author Ganziwen
@@ -15,10 +16,21 @@ import org.yaml.snakeyaml.nodes.CollectionNode;
  */
 public final class ChainManager {
     private AbstractHandler<DiffContext> diffHandler;
+    private AbstractHandler<SyncContext> syncHandler;
 
 
     private ChainManager() {
         this.diffHandler = initDiffHandlerChain();
+        this.syncHandler = initSyncHandlerChain();
+    }
+
+    private AbstractHandler<SyncContext> initSyncHandlerChain() {
+        SyncInstanceHandler syncInstanceHandler = new SyncInstanceHandler();
+        SyncDatabaseHandler syncDatabaseHandler = new SyncDatabaseHandler();
+        SyncTableHandler syncTableHandler = new SyncTableHandler();
+        syncInstanceHandler.setNextHandler(syncDatabaseHandler);
+        syncDatabaseHandler.setNextHandler(syncTableHandler);
+        return syncInstanceHandler;
     }
 
     private AbstractHandler<DiffContext> initDiffHandlerChain() {
@@ -28,7 +40,7 @@ public final class ChainManager {
 
         diffInstanceHandler.setNextHandler(diffDatabaseHandler);
         diffDatabaseHandler.setNextHandler(diffTableHandler);
-        return null;
+        return diffInstanceHandler;
     }
 
     private static class ClassHolder {
@@ -41,6 +53,10 @@ public final class ChainManager {
 
     public void diff(DiffContext diffContext) {
         this.diffHandler.doHandle(diffContext);
+    }
+
+    public void sync(SyncContext syncContext) {
+        this.syncHandler.doHandle(syncContext);
     }
 }
 

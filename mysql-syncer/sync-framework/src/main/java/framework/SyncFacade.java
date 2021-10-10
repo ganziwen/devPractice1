@@ -7,7 +7,7 @@ import framework.observe.ObserverManager;
  * @author Ganziwen
  * @version 1.0
  * @ClassName SyncFacade
- * @Description
+ * @Description 给到 service 调用的入口
  * @date 2021/10/10 11:46
  */
 public final class SyncFacade {

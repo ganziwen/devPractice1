@@ -1,20 +1,22 @@
-package framework.observe;
+package framework.chain;
 
 import common.model.ConnectInfo;
-import framework.enums.CommandType;
+import framework.enums.DiffType;
+import lombok.Builder;
 import lombok.Data;
 
 /**
  * @author Ganziwen
  * @version 1.0
- * @ClassName Context
+ * @ClassName SyncContext
  * @Description
- * @date 2021/10/10 11:37
+ * @date 2021/10/10 16:08
  */
 @Data
-public class Context{
+@Builder
+public class SyncContext {
     private ConnectInfo srcConnectInfo;
     private ConnectInfo dstConnectInfo;
-    private CommandType commandType;
+    private String database;
 
 }
