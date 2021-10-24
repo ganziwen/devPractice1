@@ -28,7 +28,7 @@ public class TopicOperations {
 
     @Before
     public void genNewClient() {
-        AdminClient adminClient = BuildAdminClient.createAdminClient();
+        this.adminClient = BuildAdminClient.createAdminClient();
     }
 
     @After
