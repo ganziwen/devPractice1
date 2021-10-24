@@ -3,17 +3,16 @@ package course.kafka.admin;
 import com.google.common.collect.Maps;
 import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.common.KafkaFuture;
-import org.apache.kafka.common.PartitionInfo;
 import org.apache.kafka.common.config.ConfigResource;
+import org.apache.kafka.common.config.ConfigResource.Type;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 
-import javax.lang.model.SourceVersion;
-import javax.sound.midi.VoiceStatus;
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 /**
  * @author Ganziwen
@@ -78,10 +77,19 @@ public class TopicOperations {
      */
     @Test
     public void testRemoveTopics() throws ExecutionException, InterruptedException {
-        // 为啥提供的 api 是可以删除多个,而不是一个一个删除,并且没有提供一个一个删除的接口
+        /*
+         * 为啥提供的 api 是可以删除多个,而不是一个一个删除,并且没有提供一个一个删除的接口?
+         * 是因为它增删改查特别快,限制 kafka 的是带宽而不是处理量,删除单个 Topic 相当于你去北京买一瓶矿泉水回来,可以但是没有必要
+         * 也就是你得传进来一个列表进行批量操作,原来需要调 100 次现在只需要调用一次即可
+         */
+
         DeleteTopicsResult deleteTopicsResult = adminClient.deleteTopics(Collections.singletonList(TOPIC_NAME));
 
-        // 第一种
+        /*
+         * 第一种,返回的都是 KafkaFeature ,再去 get ,这是干啥用的
+         * get 是个阻塞方法,假设我们不去调用 get 方法,那么完了就是完了,什么时候拿到结果我也不关心也不管
+         * 但是 get 在这的话是一定要拿到结果的,没拿到结果是不会往下执行
+         */
         deleteTopicsResult.all().get();
 
         // 第二种
@@ -135,5 +143,20 @@ public class TopicOperations {
 
         CreatePartitionsResult partitions = adminClient.createPartitions(newPartitions);
         partitions.all().get();
+    }
+
+    /**
+     * 修改 Topic 的配置
+     */
+    public void testUpdateTopicConfig() {
+        Map<ConfigResource, Config> configMap = Maps.newHashMap();
+        ConfigResource configResource = new ConfigResource(Type.TOPIC, TOPIC_NAME);
+        final Config config = new Config(Collections.singletonList(new ConfigEntry("preallocate", "true")));
+        configMap.put(configResource, config);
+        // 修改 Topic 配置,用的老 api ,过时但是好用
+        adminClient.alterConfigs(configMap);
+
+        // 新 api ,但是不是很好用
+        // adminClient.incrementalAlterConfigs();
     }
 }

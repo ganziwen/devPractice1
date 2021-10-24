@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Ganziwen
  * @version 1.0
  * @ClassName BuildAdminClient
- * @Description 创建 AdminClient ,创建时指定相应配置,目前最简化出 kafka broker 地址即可,bootstrap.servers=www.xiaowenshu.cn:9092
+ * @Description 创建 AdminClient ,创建时指定相应配置,目前最简化出 kafka broker 地址即可.相当于配置 bootstrap.servers=www.xiaowenshu.cn:9092
  * @date 2021/10/23 11:48
  */
 public class BuildAdminClient {
