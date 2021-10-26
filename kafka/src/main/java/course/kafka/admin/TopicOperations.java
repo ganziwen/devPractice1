@@ -134,6 +134,7 @@ public class TopicOperations {
     /**
      * 修改 topic 的分区数量,注意只能加不能减少
      */
+    @Test
     public void testUpdateTopicPartition() throws ExecutionException, InterruptedException {
 
         // 构建修改 Topic 的请求
@@ -148,6 +149,7 @@ public class TopicOperations {
     /**
      * 修改 Topic 的配置
      */
+    @Test
     public void testUpdateTopicConfig() {
         Map<ConfigResource, Config> configMap = Maps.newHashMap();
         ConfigResource configResource = new ConfigResource(Type.TOPIC, TOPIC_NAME);
