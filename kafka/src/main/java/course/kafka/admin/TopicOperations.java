@@ -5,8 +5,8 @@ import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.common.KafkaFuture;
 import org.apache.kafka.common.config.ConfigResource;
 import org.apache.kafka.common.config.ConfigResource.Type;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -23,15 +23,15 @@ import java.util.concurrent.ExecutionException;
  */
 public class TopicOperations {
 
-    private static final String TOPIC_NAME = "hello-mykafka";
+    private static final String TOPIC_NAME = "myKafkaTest";
     private AdminClient adminClient;
 
-    @Before
+    @BeforeEach
     public void genNewClient() {
         this.adminClient = BuildAdminClient.createAdminClient();
     }
 
-    @After
+    @AfterEach
     public void closeClient() {
         // 资源关闭
         adminClient.close();

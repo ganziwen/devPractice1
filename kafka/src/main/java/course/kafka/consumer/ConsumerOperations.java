@@ -5,8 +5,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -22,15 +22,16 @@ import java.util.Properties;
  * @date 2021/10/26 16:34
  */
 public class ConsumerOperations {
-    private static final String TOPIC_NAME = "hello-mykafka";
+    private static final String TOPIC_NAME = "mykafka";
+    private static final String HOST = "www.xiaowenshu.cn:9092";
     private KafkaConsumer<String, String> kafkaConsumer;
     private Properties properties;
 
-    @Before
+    @BeforeEach
     public void genConsumer() {
         // consumer 的配置信息封装
         this.properties = new Properties();
-        properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "www.xiaowenshu:9092");
+        properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, HOST);
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "test");
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
@@ -43,7 +44,7 @@ public class ConsumerOperations {
 
     }
 
-    @After
+    @AfterEach
     public void closeConsumer() {
         this.kafkaConsumer.close();
 

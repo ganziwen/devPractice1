@@ -2,8 +2,8 @@ package course.kafka.producer;
 
 import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Properties;
@@ -16,17 +16,19 @@ import java.util.concurrent.ExecutionException;
  * @Description Producer 相关操作
  * @date 2021/10/24 17:00
  */
-public class ProducerOperations {
-    private static final String TOPIC_NAME = "hello-mykafka";
-    private KafkaProducer<String, String> producer;
-    private Properties properties;
+public class ProducerOperationsTest {
+    private static final String TOPIC_NAME = "mykafka";
+    private static final String HOST = "www.xiaowenshu.cn:9092";
+    public Properties properties;
+    public KafkaProducer<String, String> producer;
 
-    @Before
-    public void generateProducer() {
+
+    @BeforeEach
+    public void setUp() {
         // 构建 kafka producer 的配置参数
         this.properties = new Properties();
         // 定义 server 的地址以及端口
-        this.properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "www.xiaowenshu.cn:9092");
+        this.properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, HOST);
         /*
          * ack 参数是为了保证发送请求的可靠性
          * acks = all 的情况下,意味着 leader 节点会等待所有同步中的副本确认之后再确认这条记录是否发送完成.只要至少有一个同步副本存在,记录就不会丢失.
@@ -52,9 +54,9 @@ public class ProducerOperations {
     /**
      * 最后都需要关闭掉 Producer
      */
-    @After
-    public void closeProducer() {
-        producer.close();
+    @AfterEach
+    public void tearDown() {
+        this.producer.close();
     }
 
     /**
@@ -67,7 +69,8 @@ public class ProducerOperations {
         ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC_NAME, "input_key", "input_msg");
 
         // 消息发送
-        producer.send(record);
+        // this.producerMap
+        this.producer.send(record);
     }
 
     /**
@@ -106,7 +109,7 @@ public class ProducerOperations {
             producer.send(record, new Callback() {
                 @Override
                 public void onCompletion(RecordMetadata recordMetadata, Exception e) {
-                    System.out.printf("send msg topic = %s,partition = %s,offset = %s", recordMetadata.topic(), recordMetadata.partition(), recordMetadata.offset());
+                    System.out.printf("send msg: topic = %s,partition = %s,offset = %s\n", recordMetadata.topic(), recordMetadata.partition(), recordMetadata.offset());
                 }
             });
         }
@@ -125,7 +128,7 @@ public class ProducerOperations {
             producer.send(record, new Callback() {
                 @Override
                 public void onCompletion(RecordMetadata recordMetadata, Exception e) {
-                    System.out.printf("send msg topic = %s,partition = %s,offset = %s", recordMetadata.topic(), recordMetadata.partition(), recordMetadata.offset());
+                    System.out.printf("send msg: topic = %s,partition = %s,offset = %s\n", recordMetadata.topic(), recordMetadata.partition(), recordMetadata.offset());
                 }
             });
         }
