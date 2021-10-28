@@ -1,4 +1,4 @@
-kafka 部署链接:https://blog.70ci.com/post/736.html
+kafka [部署链接](https://blog.70ci.com/post/736.html)
 
 1. 启动 `zookeeper`
 
