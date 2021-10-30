@@ -87,10 +87,14 @@ public class ConsumerOperations {
                 System.out.println("record.toString() = " + record.toString());
             }
             /*
-             * 手动提交,这里表示的是告诉 broker ,这个消息已经正确处理
+             * 手动提交:这里表示的是告诉 broker ,这个消息已经正确处理
              * 如果业务处理有问题,需要这条消息被继续处理,即被其他 consumer 处理
              * 那么此时就不需要调用下面这段代码,即未做提交,broker 未收到 ack ,就会认为没有被处理,也就是 offset 也不会往后移动,所以这条消息还可以被继续处理和消费
              * 这后面一般是跟着实际的业务场景:收到了消息,需要处理的内容封装完成之后,存入 Mysql
+             * 入库时发生失败,Mysql 抖动或者是网络,冲突等问题.需要重试
+             * 此时我们判断入库失败,int effectRows = 0; 这个时候就不调用 consumer.commitAsync()
+             * int effectRows = orderTable.insert(OrderDo)
+             * if(effectRows > 0){kafkaConsumer.commitAsync();}
              */
             kafkaConsumer.commitAsync();
 
