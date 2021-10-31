@@ -72,7 +72,7 @@ public class ConsumerOperations {
     }
 
     /**
-     * 手动提交,实际上用的比较多.course.kafka.consumer.ConsumerOperations#testConsumerForCommit()
+     * 手动提交,实际上用的比较多.
      */
     @Test
     public void testConsumerForCommit() {
