@@ -27,13 +27,11 @@
             <version>2.6.11</version>
         </dependency>
 
-
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>4.1.32.Final</version>
         </dependency>
-
 
         <!-- https://mvnrepository.com/artifact/org.apache.zookeeper/zookeeper -->
         <dependency>
@@ -41,12 +39,14 @@
             <artifactId>zookeeper</artifactId>
             <version>3.7.0</version>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.apache.curator/curator-framework -->
         <dependency>
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-framework</artifactId>
             <version>5.2.0</version>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.apache.curator/curator-recipes -->
         <dependency>
             <groupId>org.apache.curator</groupId>
@@ -68,7 +68,6 @@
             <artifactId>logback-core</artifactId>
             <version>1.2.6</version>
         </dependency>
-
 
     </dependencies>
 

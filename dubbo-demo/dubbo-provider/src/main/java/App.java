@@ -10,6 +10,7 @@ import java.io.IOException;
 public class App {
     public static void main(String[] args) throws IOException {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("provider.xml");
+        // 启动 provider
         applicationContext.start();
         System.in.read();
     }
