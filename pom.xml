@@ -18,6 +18,7 @@
         <module>mybatis-xml</module>
         <module>mysql-schema-sync</module>
         <module>kafka</module>
+        <module>dubbo-demo</module>
     </modules>
 
     <properties>
