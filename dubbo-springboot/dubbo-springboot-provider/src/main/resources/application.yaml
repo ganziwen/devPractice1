@@ -8,8 +8,10 @@ dubbo:
   application:
     name: dubbo-springboot-provider
   registry:
-    address: www.xiaowenshu.cn:2181
-    protocol: zookeeper
+    address: zookeeper://www.xiaowenshu.cn:2181
+#    protocol: zookeeper
   protocol:
     name: dubbo-springboot
-    port: 20881
+    port: 20880
+  provider:
+    timeout: 1000

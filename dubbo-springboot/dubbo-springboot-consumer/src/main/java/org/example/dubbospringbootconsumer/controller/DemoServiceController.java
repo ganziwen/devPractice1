@@ -1,6 +1,6 @@
 package org.example.dubbospringbootconsumer.controller;
 
-import jdk.nashorn.internal.ir.annotations.Reference;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.example.dubbospringbootprovider.DemoService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class DemoServiceController {
-    @Reference
+    @DubboReference
     private DemoService demoService;
 
     @RequestMapping("/hello")
