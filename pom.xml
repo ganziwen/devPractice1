@@ -19,6 +19,7 @@
         <module>mysql-schema-sync</module>
         <module>kafka</module>
         <module>dubbo-demo</module>
+        <module>dubbo-springboot</module>
     </modules>
 
     <properties>

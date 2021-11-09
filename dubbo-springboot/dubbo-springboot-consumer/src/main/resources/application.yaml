@@ -1,0 +1,15 @@
+#spring:
+#  application:
+#    name: dubbo-springboot-consumer
+server:
+  port: 8092
+
+dubbo:
+  application:
+    name: dubbo-springboot-consumer
+  registry:
+    address: www.xiaowenshu.cn:2181
+    protocol: zookeeper
+#  protocol:
+#    name: dubbo-springboot
+#    port: 20881
