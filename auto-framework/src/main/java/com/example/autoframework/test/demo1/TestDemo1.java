@@ -1,9 +1,6 @@
 package com.example.autoframework.test.demo1;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,6 +16,7 @@ public class TestDemo1 {
     @Tag("normal")
     @Tag("P0")
     @Timeout(1000)
+    @RepeatedTest(3)
     public void testNormal() {
         assertThat(1).isEqualTo(1);
     }
