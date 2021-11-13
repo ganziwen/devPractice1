@@ -7,7 +7,7 @@ import org.junit.jupiter.api.*;
  * @version 1.0
  * @date 2021/11/11-17:43
  */
-public class TestJunitCase {
+public class Junit5Demo {
 
     @BeforeAll
     public static void beforeAll() {
