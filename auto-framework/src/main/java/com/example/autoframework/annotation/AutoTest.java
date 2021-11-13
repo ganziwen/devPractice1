@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
  * @date 2021/11/13 10:37
  */
 
-@Target({ElementType.ANNOTATION_TYPE,ElementType.METHOD})
+@Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @ExtendWith(CaseFormatExtension.class)
 @Test

@@ -12,8 +12,8 @@ import java.lang.annotation.Target;
  * @Description
  * @date 2021/11/13 10:37
  */
-@Target({ElementType.ANNOTATION_TYPE,ElementType.METHOD})
+@Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DingTalkAlarm {
-    String token() default "";
+    String token();
 }

@@ -37,15 +37,16 @@ public class TestDemo1 {
 
 
     @AutoTest
-    @CaseTitle("说清楚这个case是干啥的") // 给 case 加标题便于后续查找和区分，必填
-    @CaseDesc(desc = "那个需求", owner = "用例归属")
-    @CaseDesc(desc = "那个需求", owner = "用例归属")
-    @DingTalkAlarm(token = "xxxx") // 用于报警处理
-    @CheckPoints({"这是第一个检查点", "这是第二个检查点"})// 为 case 检查点，必填
+    @CaseTitle("测试用例") // 给 case 加标题便于后续查找和区分，必填
+    @CaseDesc(desc = "111", owner = "441")
+    @DingTalkAlarm(token = "testToken") // 用于报警处理
+    @CheckPoint("检查点")// 为 case 检查点，必填
+    @CheckPoint("3232")// 为 case 检查点，必填
     @CaseTag(key = "project", val = "meituan")// 为 case 添加标签后方便后续运行时做筛选，必填
-    @CaseTag(key = "model", val = "pay")// 为 case 添加标签后方便后续运行时做筛选，必填
-    @CaseTag(key = "level", val = "nomal")// 为 case 添加标签后方便后续运行时做筛选，必填
+    // @CaseTag(key = "model", val = "pay")// 为 case 添加标签后方便后续运行时做筛选，必填
+    // @CaseTag(key = "level", val = "nomal")// 为 case 添加标签后方便后续运行时做筛选，必填
     public void test1() {
+        System.out.println("TestDemo1.test1");
         /*
          * 预期的 case 编写样式
          * 1. 要扩展出自己的标识
@@ -53,5 +54,4 @@ public class TestDemo1 {
          * 3. 有必填项，也有非必填，那必填项该如何控制必填呢？不管是否为必填项，必要的参数是需要做校验处理的
          */
     }
-
 }

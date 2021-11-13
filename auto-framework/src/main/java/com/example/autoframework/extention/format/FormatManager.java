@@ -21,7 +21,7 @@ public enum FormatManager {
         // 注册所有消息变更的观察者
         this.observers = Lists.newArrayList(
                 new CaseTagFormatObserver(),
-                new CheckPointsFormatObserver(),
+                new CheckPointFormatObserver(),
                 new DingTalkAlarmFormatObserver(),
                 new CaseDescFormatObserver(),
                 new CaseTitleFormatObserver(),
