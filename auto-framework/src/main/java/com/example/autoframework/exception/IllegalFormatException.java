@@ -7,7 +7,7 @@ package com.example.autoframework.exception;
  * @Description
  * @date 2021/11/13 11:44
  */
-public class IllegalFormatException extends RuntimeException {
+public class IllegalFormatException extends BaseException {
 
     public IllegalFormatException() {
         super("IllegalFormatException");

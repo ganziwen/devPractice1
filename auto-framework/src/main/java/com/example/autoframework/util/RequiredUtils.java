@@ -9,7 +9,7 @@ import java.util.Objects;
  * @author Ganziwen
  * @version 1.0
  * @ClassName RequiredUtils
- * @Description
+ * @Description 校验工具类, 注解内无法直接使用 hibrnate
  * @date 2021/11/13 11:34
  */
 public class RequiredUtils {
@@ -31,5 +31,4 @@ public class RequiredUtils {
         }
         return obj;
     }
-
 }

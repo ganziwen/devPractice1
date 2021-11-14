@@ -7,7 +7,7 @@ package com.example.autoframework.exception;
  * @Description
  * @date 2021/11/13 11:41
  */
-public class RequiredException extends RuntimeException {
+public class RequiredException extends BaseException {
 
 
     public RequiredException() {
