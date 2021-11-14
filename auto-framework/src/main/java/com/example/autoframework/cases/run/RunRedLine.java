@@ -11,9 +11,17 @@ import com.example.autoframework.annotation.CaseSelector;
  */
 public class RunRedLine {
 
+    // TODO 29min 有问题
     // 指定某个包下面，满足 key 和 value 的测试用例
     @CaseSelector(scanPackage = "com.example.autoframework.cases.pay", key = "level", val = "normal")
     public void runPayLine() {
+
+    }
+
+
+    // 指定某个包下面，满足 key 和 value 的测试用例
+    @CaseSelector(scanPackage = "com.example.autoframework.cases.accout", team = "test_team", group = "test_group")
+    public void runAccount() {
 
     }
 }

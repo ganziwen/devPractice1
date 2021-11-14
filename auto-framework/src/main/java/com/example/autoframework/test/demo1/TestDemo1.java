@@ -43,9 +43,13 @@ public class TestDemo1 {
     @CheckPoint("检查点")// 为 case 检查点，必填
     @CheckPoint("3232")// 为 case 检查点，必填
     @CaseTag(key = "project", val = "meituan")// 为 case 添加标签后方便后续运行时做筛选，必填
-    // @CaseTag(key = "model", val = "pay")// 为 case 添加标签后方便后续运行时做筛选，必填
+    // @CaseTag(project = "project_name", module = "pay")// 为 case 添加标签后方便后续运行时做筛选，必填
+    // @CaseTag(team = "vip", group = "create")// 为 case 添加标签后方便后续运行时做筛选，必填
     // @CaseTag(key = "level", val = "nomal")// 为 case 添加标签后方便后续运行时做筛选，必填
+    // @CaseProject(project = "", module = "")
+    // @CaseGroup(team = "", group = "") // 分组
     public void test1() {
+
         System.out.println("TestDemo1.test1");
         /*
          * 预期的 case 编写样式

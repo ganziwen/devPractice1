@@ -3,9 +3,8 @@ package com.example.autoframework.extention.engine;
 import com.example.autoframework.annotation.CaseSelector;
 import com.example.autoframework.annotation.CaseTag;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.FilterResult;
-import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.launcher.PostDiscoveryFilter;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -17,35 +16,57 @@ import java.util.Arrays;
  * @Description 筛选 caseTag
  * @date 2021/11/14 16:42
  */
-public class CaseTagDiscoveryFilter implements PostDiscoveryFilter {
+public class CaseTagDiscoveryFilter extends AbstractDiscoveryFilter {
 
-
-    private CaseSelector caseSelector;
-
-    public CaseTagDiscoveryFilter(CaseSelector caseSelector) {
-        this.caseSelector = caseSelector;
+    public CaseTagDiscoveryFilter(CaseSelector selector) {
+        super(selector);
     }
 
-    /**
-     * 筛选 caseTag
-     *
-     * @param testDescriptor
-     * @return
-     */
     @Override
-    public FilterResult apply(TestDescriptor testDescriptor) {
+    protected boolean preFilter(CaseSelector selector) {
 
-        if (testDescriptor instanceof TestMethodTestDescriptor) {
-            TestMethodTestDescriptor descriptor = (TestMethodTestDescriptor) testDescriptor;
-            Method testMethod = descriptor.getTestMethod();
-            CaseTag[] caseTags = testMethod.getAnnotationsByType(CaseTag.class);
-            long selectTagCount = Arrays.stream(caseTags).filter(tag ->
-                    tag.key().equals(caseSelector.key()) && tag.val().equals(caseSelector.val())
-            ).count();
-            if (selectTagCount > 0) {
-                return FilterResult.includedIf(true);
-            }
-        }
-        return FilterResult.includedIf(false);
+        return StringUtils.isNotBlank(selector.key()) && StringUtils.isNotBlank(selector.val());
+
     }
+
+    @Override
+    protected FilterResult onApply(TestMethodTestDescriptor descriptor) {
+        Method testMethod = descriptor.getTestMethod();
+        CaseTag[] caseTags = testMethod.getAnnotationsByType(CaseTag.class);
+        long selectTagCount = Arrays.stream(caseTags).filter(tag ->
+                tag.key().equals(selector.key()) && tag.val().equals(selector.val())
+        ).count();
+
+        return selectTagCount > 0 ? FilterResult.includedIf(true) : FilterResult.includedIf(false);
+    }
+
+    // private CaseSelector caseSelector;
+    //
+    // public CaseTagDiscoveryFilter(CaseSelector caseSelector) {
+    //     this.caseSelector = caseSelector;
+    // }
+    //
+    // /**
+    //  * 筛选 caseTag
+    //  *
+    //  * @param testDescriptor
+    //  * @return
+    //  */
+    // @Override
+    // public FilterResult apply(TestDescriptor testDescriptor) {
+    //
+    //     if (testDescriptor instanceof TestMethodTestDescriptor) {
+    //         TestMethodTestDescriptor descriptor = (TestMethodTestDescriptor) testDescriptor;
+    //         Method testMethod = descriptor.getTestMethod();
+    //         CaseTag[] caseTags = testMethod.getAnnotationsByType(CaseTag.class);
+    //         long selectTagCount = Arrays.stream(caseTags).filter(tag ->
+    //                 tag.key().equals(caseSelector.key()) && tag.val().equals(caseSelector.val())
+    //         ).count();
+    //         if (selectTagCount > 0) {
+    //             // 命中 tag 规则之后，就 include 进去
+    //             return FilterResult.includedIf(true);
+    //         }
+    //     }
+    //     return FilterResult.includedIf(false);
+    // }
 }

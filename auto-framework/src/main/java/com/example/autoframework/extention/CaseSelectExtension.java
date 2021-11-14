@@ -1,6 +1,7 @@
 package com.example.autoframework.extention;
 
 import com.example.autoframework.annotation.CaseSelector;
+import com.example.autoframework.extention.engine.CaseGroupDiscoveryFilter;
 import com.example.autoframework.extention.engine.CaseTagDiscoveryFilter;
 import com.example.autoframework.util.RequiredUtils;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
@@ -28,8 +29,8 @@ public class CaseSelectExtension implements BeforeTestExecutionCallback {
 
         LauncherDiscoveryRequest launcherDiscoveryRequest = LauncherDiscoveryRequestBuilder
                 .request()
-                .selectors(DiscoverySelectors.selectPackage(caseSelector.scanPackage()))
-                .filters(new CaseTagDiscoveryFilter(caseSelector))
+                .selectors(DiscoverySelectors.selectPackage(caseSelector.scanPackage())) // 这里是基于包来选择，其实还可以基于文件等，但是基本我们使用包居多
+                .filters(new CaseTagDiscoveryFilter(caseSelector), new CaseGroupDiscoveryFilter(caseSelector)) // 筛选完包之后筛选 tag
                 .build();
         LauncherFactory.create().execute(launcherDiscoveryRequest);
 

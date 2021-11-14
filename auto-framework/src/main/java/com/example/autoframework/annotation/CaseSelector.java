@@ -28,4 +28,8 @@ public @interface CaseSelector {
     String key() default "";
 
     String val() default "";
+
+    String team() default "";
+
+    String group() default "";
 }
