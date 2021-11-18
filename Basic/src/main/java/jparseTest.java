@@ -1,10 +1,7 @@
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLStatement;
-import com.alibaba.druid.sql.ast.statement.*;
-import com.alibaba.druid.sql.dialect.mysql.parser.MySqlStatementParser;
-import com.alibaba.druid.sql.parser.SQLCreateTableParser;
-import com.alibaba.druid.sql.parser.SQLStatementParser;
-import org.junit.Test;
+import com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement;
+import org.junit.jupiter.api.Test;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.List;
