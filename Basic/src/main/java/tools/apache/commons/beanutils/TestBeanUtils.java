@@ -25,6 +25,9 @@ public class TestBeanUtils {
         String username = BeanUtils.getProperty(users, "username");
         System.out.println("username = " + username);
         System.out.println("users= " + users.toString());
+        // 描述属性的长度和是否为空
+        System.out.println("BeanUtils.describe(username) = " + BeanUtils.describe(username));
+
     }
 
     @DisplayName("map和bean的互相转换")
@@ -49,6 +52,14 @@ public class TestBeanUtils {
         users.setPassword("user-pwd");
         // 将后面的复制到前面
         BeanUtils.copyProperties(empolyee, users);
+
+        System.out.println("users = " + users.toString());
         System.out.println("empolyee = " + empolyee.toString());
+        users.setUsername("user-name-modify");
+        users.setPassword("user-pwd-modify");
+        System.out.println("users = " + users.toString());
+        System.out.println("empolyee = " + empolyee.toString());
+
+
     }
 }
