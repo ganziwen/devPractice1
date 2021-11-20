@@ -22,57 +22,60 @@ public class CaseGroupDiscoveryFilter extends AbstractDiscoveryFilter {
 
     @Override
     protected boolean preFilter(CaseSelector selector) {
-        return StringUtils.isNotBlank(selector.team()) && StringUtils.isNotBlank(selector.group());
+        return StringUtils.isNotBlank(selector.team().trim()) && StringUtils.isNotBlank(selector.group().trim());
     }
 
     @Override
     protected FilterResult onApply(TestMethodTestDescriptor descriptor) {
         Method testMethod = descriptor.getTestMethod();
-        if (!testMethod.isAnnotationPresent(CaseGroup.class)) {
+        // 没设置 group
+        boolean isCaseGroupSet = testMethod.isAnnotationPresent(CaseGroup.class);
+        if (!isCaseGroupSet) {
             return FilterResult.includedIf(false);
-        } else {
-            CaseGroup caseGroup = testMethod.getAnnotation(CaseGroup.class);
-            if (selector.team().equals(caseGroup.team()) && selector.group().equals(caseGroup.group())) {
-                return FilterResult.includedIf(true);
-            }
-            return FilterResult.includedIf(false);
-
         }
+        // 设置了 group
+        CaseGroup caseGroup = testMethod.getAnnotation(CaseGroup.class);
+        if (selector.team().trim().equals(caseGroup.team().trim()) && selector.group().trim().equals(caseGroup.group().trim())) {
+            return FilterResult.includedIf(true);
+        }
+        return FilterResult.includedIf(false);
 
     }
-    // private CaseSelector caseSelector;
-    //
-    // public CaseGroupDiscoveryFilter(CaseSelector caseSelector) {
-    //     this.caseSelector = caseSelector;
-    // }
-    //
-    // /**
-    //  * 筛选 caseTag
-    //  *
-    //  * @param testDescriptor
-    //  * @return
-    //  */
-    // @Override
-    // public FilterResult apply(TestDescriptor testDescriptor) {
-    //
-    //     if (testDescriptor instanceof TestMethodTestDescriptor) {
-    //         TestMethodTestDescriptor descriptor = (TestMethodTestDescriptor) testDescriptor;
-    //         Method testMethod = descriptor.getTestMethod();
-    //         if (!testMethod.isAnnotationPresent(CaseGroup.class)) {
-    //             return FilterResult.includedIf(true);
-    //
-    //         } else {
-    //             CaseGroup[] caseGroups = testMethod.getAnnotationsByType(CaseGroup.class);
-    //             long selectTagCount = Arrays.stream(caseGroups).filter(group ->
-    //                     group.team().equals(caseSelector.team()) && group.group().equals(caseSelector.group())
-    //             ).count();
-    //             if (selectTagCount > 0) {
-    //                 // 命中 tag 规则之后，就 include 进去
-    //                 return FilterResult.includedIf(true);
-    //             }
-    //         }
-    //
-    //     }
-    //     return FilterResult.includedIf(false);
-    // }
+
 }
+// private CaseSelector caseSelector;
+//
+// public CaseGroupDiscoveryFilter(CaseSelector caseSelector) {
+//     this.caseSelector = caseSelector;
+// }
+//
+// /**
+//  * 筛选 caseTag
+//  *
+//  * @param testDescriptor
+//  * @return
+//  */
+// @Override
+// public FilterResult apply(TestDescriptor testDescriptor) {
+//
+//     if (testDescriptor instanceof TestMethodTestDescriptor) {
+//         TestMethodTestDescriptor descriptor = (TestMethodTestDescriptor) testDescriptor;
+//         Method testMethod = descriptor.getTestMethod();
+//         if (!testMethod.isAnnotationPresent(CaseGroup.class)) {
+//             return FilterResult.includedIf(true);
+//
+//         } else {
+//             CaseGroup[] caseGroups = testMethod.getAnnotationsByType(CaseGroup.class);
+//             long selectTagCount = Arrays.stream(caseGroups).filter(group ->
+//                     group.team().equals(caseSelector.team()) && group.group().equals(caseSelector.group())
+//             ).count();
+//             if (selectTagCount > 0) {
+//                 // 命中 tag 规则之后，就 include 进去
+//                 return FilterResult.includedIf(true);
+//             }
+//         }
+//
+//     }
+//     return FilterResult.includedIf(false);
+// }
+

@@ -25,7 +25,7 @@ public class CaseTagDiscoveryFilter extends AbstractDiscoveryFilter {
     @Override
     protected boolean preFilter(CaseSelector selector) {
 
-        return StringUtils.isNotBlank(selector.key()) && StringUtils.isNotBlank(selector.val());
+        return StringUtils.isNotBlank(selector.key().trim()) && StringUtils.isNotBlank(selector.val().trim());
 
     }
 
@@ -34,8 +34,9 @@ public class CaseTagDiscoveryFilter extends AbstractDiscoveryFilter {
         Method testMethod = descriptor.getTestMethod();
         CaseTag[] caseTags = testMethod.getAnnotationsByType(CaseTag.class);
         long selectTagCount = Arrays.stream(caseTags).filter(tag ->
-                tag.key().equals(selector.key()) && tag.val().equals(selector.val())
+                tag.key().trim().equals(selector.key().trim()) && tag.val().trim().equals(selector.val().trim())
         ).count();
+        System.out.println("selectTagCount = " + selectTagCount);
 
         return selectTagCount > 0 ? FilterResult.includedIf(true) : FilterResult.includedIf(false);
     }

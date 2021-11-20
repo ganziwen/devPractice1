@@ -13,7 +13,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 // @Repeatable(CaseTags.class)
 public @interface CaseGroup {
-    String team();
+    String team() default "";
 
-    String group();
+    String group() default "";
 }

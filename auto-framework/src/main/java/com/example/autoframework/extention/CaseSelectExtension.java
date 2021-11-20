@@ -1,8 +1,7 @@
 package com.example.autoframework.extention;
 
 import com.example.autoframework.annotation.CaseSelector;
-import com.example.autoframework.extention.engine.CaseGroupDiscoveryFilter;
-import com.example.autoframework.extention.engine.CaseTagDiscoveryFilter;
+import com.example.autoframework.extention.engine.CaseDiscoveryFilter;
 import com.example.autoframework.util.RequiredUtils;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -24,13 +23,19 @@ public class CaseSelectExtension implements BeforeTestExecutionCallback {
     @Override
     public void beforeTestExecution(ExtensionContext extensionContext) throws Exception {
         Method testMethod = extensionContext.getRequiredTestMethod();
+        // 创建一个 caseSelector
         CaseSelector caseSelector = invalidSelector(testMethod.getAnnotation(CaseSelector.class));
 
 
+        // TODO: 2021/11/20 这里加入了 group 的过滤器就跑不过了，需要看下是什么问题导致的
         LauncherDiscoveryRequest launcherDiscoveryRequest = LauncherDiscoveryRequestBuilder
                 .request()
-                .selectors(DiscoverySelectors.selectPackage(caseSelector.scanPackage())) // 这里是基于包来选择，其实还可以基于文件等，但是基本我们使用包居多
-                .filters(new CaseTagDiscoveryFilter(caseSelector), new CaseGroupDiscoveryFilter(caseSelector)) // 筛选完包之后筛选 tag
+                // 这里是基于包来选择，其实还可以基于文件等，但是基本我们使用包居多
+                .selectors(DiscoverySelectors.selectPackage(caseSelector.scanPackage()))
+                .filters(new CaseDiscoveryFilter(caseSelector))
+                // 筛选完包之后筛选 tag,这里可以加入多过滤器，比如加入 tag 的再加入 group 的
+                // .filters(new CaseTagDiscoveryFilter(caseSelector), new CaseGroupDiscoveryFilter(caseSelector))
+                // .filters(new CaseGroupDiscoveryFilter(caseSelector))
                 .build();
         LauncherFactory.create().execute(launcherDiscoveryRequest);
 

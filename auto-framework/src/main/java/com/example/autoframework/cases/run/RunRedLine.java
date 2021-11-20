@@ -24,4 +24,10 @@ public class RunRedLine {
     public void runAccount() {
 
     }
+
+    // 指定某个包下面，满足 key 和 value 的测试用例
+    @CaseSelector(scanPackage = "com.example.autoframework.cases.accout", team = "test_team", group = "test_group", key = "level", val = "redline")
+    public void runAccount2() {
+
+    }
 }

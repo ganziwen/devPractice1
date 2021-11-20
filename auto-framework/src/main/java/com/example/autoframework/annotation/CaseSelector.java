@@ -17,9 +17,12 @@ import java.lang.annotation.Target;
  * @date 2021/11/13 10:37
  */
 
+// TODO: 2021/11/20 有时间研究一下看能不能直接聚合几个注解
 @Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @ExtendWith(CaseSelectExtension.class)
+// @CaseGroup
+// @CaseTag(key = "", val = "")
 @Test
 public @interface CaseSelector {
 
@@ -29,7 +32,10 @@ public @interface CaseSelector {
 
     String val() default "";
 
+    // 其实只用 key 和 val 即可，这是新扩展的功能
     String team() default "";
 
     String group() default "";
+
+
 }

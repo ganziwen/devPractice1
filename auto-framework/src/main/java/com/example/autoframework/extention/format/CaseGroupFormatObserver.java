@@ -17,11 +17,12 @@ public class CaseGroupFormatObserver implements FormatObserver {
     public void format(Method method) {
         // 反射
         boolean annotationPresent = method.isAnnotationPresent(CaseGroup.class);
-        if (annotationPresent) {
-            CaseGroup annotation = method.getAnnotation(CaseGroup.class);
-            RequiredUtils.requireNotNullOrEmpty(annotation.group().trim(), "@CaseGroup 'group' should not be null or empty");
-            RequiredUtils.requireNotNullOrEmpty(annotation.team().trim(), "@CaseGroup 'team' should not be null or empty");
-
+        if (!annotationPresent) {
+            return;
         }
+
+        CaseGroup annotation = method.getAnnotation(CaseGroup.class);
+        RequiredUtils.requireNotNullOrEmpty(annotation.group().trim(), "@CaseGroup 'group' should not be null or empty");
+        RequiredUtils.requireNotNullOrEmpty(annotation.team().trim(), "@CaseGroup 'team' should not be null or empty");
     }
 }
