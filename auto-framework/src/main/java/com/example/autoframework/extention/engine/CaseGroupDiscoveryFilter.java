@@ -28,8 +28,8 @@ public class CaseGroupDiscoveryFilter extends AbstractDiscoveryFilter {
     @Override
     protected FilterResult onApply(TestMethodTestDescriptor descriptor) {
         Method testMethod = descriptor.getTestMethod();
-        // 没设置 group
         boolean isCaseGroupSet = testMethod.isAnnotationPresent(CaseGroup.class);
+        // 没设置 group,则不将该方法纳入 case 内
         if (!isCaseGroupSet) {
             return FilterResult.includedIf(false);
         }

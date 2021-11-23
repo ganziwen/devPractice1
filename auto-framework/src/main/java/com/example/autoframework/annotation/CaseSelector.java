@@ -1,6 +1,6 @@
 package com.example.autoframework.annotation;
 
-import com.example.autoframework.extention.CaseSelectExtension;
+import com.example.autoframework.extention.CaseEngineExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -20,7 +20,9 @@ import java.lang.annotation.Target;
 // TODO: 2021/11/20 有时间研究一下看能不能直接聚合几个注解
 @Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(CaseSelectExtension.class)
+// @ExtendWith(CaseSelectExtension.class)
+@ExtendWith(CaseEngineExtension.class)
+
 // @CaseGroup
 // @CaseTag(key = "", val = "")
 @Test

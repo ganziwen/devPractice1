@@ -36,7 +36,7 @@ public class CaseTagDiscoveryFilter extends AbstractDiscoveryFilter {
         long selectTagCount = Arrays.stream(caseTags).filter(tag ->
                 tag.key().trim().equals(selector.key().trim()) && tag.val().trim().equals(selector.val().trim())
         ).count();
-        System.out.println("selectTagCount = " + selectTagCount);
+        // System.out.println("selectTagCount = " + selectTagCount);
 
         return selectTagCount > 0 ? FilterResult.includedIf(true) : FilterResult.includedIf(false);
     }

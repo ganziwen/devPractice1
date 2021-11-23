@@ -21,20 +21,28 @@ public abstract class AbstractDiscoveryFilter implements PostDiscoveryFilter {
         this.selector = selector;
     }
 
+    /**
+     * 判断每一个测试方法是否有 tag 和 group 的标签,不为空返回为 true
+     */
     protected abstract boolean preFilter(CaseSelector selector);
 
+    /**
+     * 直接处理
+     */
     protected abstract FilterResult onApply(TestMethodTestDescriptor descriptor);
 
     @Override
     public FilterResult apply(TestDescriptor testDescriptor) {
-        if (!preFilter(this.selector)) {
-            FilterResult.includedIf(true);
-        }
-
         if (!(testDescriptor instanceof TestMethodTestDescriptor)) {
             return FilterResult.includedIf(false);
-
         }
-        return onApply((TestMethodTestDescriptor) testDescriptor);
+        // 当标签不存在
+        if (!preFilter(this.selector)) {
+            return FilterResult.includedIf(true);
+        } else {
+            // 这部分是具体的标签筛选逻辑
+            return onApply((TestMethodTestDescriptor) testDescriptor);
+        }
+
     }
 }

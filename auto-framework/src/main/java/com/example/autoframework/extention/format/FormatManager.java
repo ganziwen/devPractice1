@@ -17,6 +17,7 @@ public enum FormatManager {
     INSTANCE;
     private final List<FormatObserver> observers;
 
+    // 将所有的 formate 进行注册
     FormatManager() {
         // 注册所有消息变更的观察者
         this.observers = Lists.newArrayList(
@@ -29,7 +30,9 @@ public enum FormatManager {
         );
     }
 
-    // 回调消息到达，触发所有观察者来处理消息
+    /**
+     * 回调消息到达，触发所有观察者来处理消息
+     */
     public void doFormatcheck(Method method) {
         for (FormatObserver observer : observers) {
             observer.format(method);
