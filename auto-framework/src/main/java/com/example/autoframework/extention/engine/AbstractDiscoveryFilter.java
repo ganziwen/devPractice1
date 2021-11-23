@@ -33,6 +33,7 @@ public abstract class AbstractDiscoveryFilter implements PostDiscoveryFilter {
 
     @Override
     public FilterResult apply(TestDescriptor testDescriptor) {
+        // 这步判断是做啥的不理解
         if (!(testDescriptor instanceof TestMethodTestDescriptor)) {
             return FilterResult.includedIf(false);
         }
