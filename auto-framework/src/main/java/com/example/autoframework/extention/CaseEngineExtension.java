@@ -29,19 +29,18 @@ public class CaseEngineExtension implements BeforeTestExecutionCallback {
         // 创建一个 caseSelector
         CaseSelector caseSelector = invalidSelector(testMethod.getAnnotation(CaseSelector.class));
 
-
-        // TODO: 2021/11/20 这里加入了 group 的过滤器就跑不过了，需要看下是什么问题导致的
+        // 构造发现请求的实体
         LauncherDiscoveryRequest launcherDiscoveryRequest = LauncherDiscoveryRequestBuilder
                 .request()
-                // 这里是基于包来选择，其实还可以基于文件等，但是基本我们使用包居多
+                // 选择器：这里是基于包名字来选择，其实还可以基于文件等，但是基本我们使用包居多
                 .selectors(DiscoverySelectors.selectPackage(caseSelector.scanPackage()))
                 // .filters(new CaseDiscoveryFilter(caseSelector))
-                // 筛选完包之后筛选 tag,这里可以加入多过滤器，比如加入 tag 的再加入 group 的
+                // 过滤器：筛选完包之后筛选 tag,这里可以加入多过滤器，比如加入 tag 的再加入 group 的
                 .filters(new CaseTagDiscoveryFilter(caseSelector))
                 .filters(new CaseGroupDiscoveryFilter(caseSelector))
                 .build();
 
-
+        // 信息结果收集的监听器
         SummaryGeneratingListener listener = new SummaryGeneratingListener();
 
         // listener 可以统计到用例的执行信息，可以拿来统计报告

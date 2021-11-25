@@ -33,6 +33,5 @@ public class CheckPointFormatObserver implements FormatObserver {
             RequiredUtils.requireNotNullOrEmpty(checkPoint.value().trim(), "@checkPint value should not be null or empty");
         }
 
-
     }
 }

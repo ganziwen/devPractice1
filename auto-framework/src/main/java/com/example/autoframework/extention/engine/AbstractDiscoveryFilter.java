@@ -27,18 +27,20 @@ public abstract class AbstractDiscoveryFilter implements PostDiscoveryFilter {
     protected abstract boolean preFilter(CaseSelector selector);
 
     /**
-     * 直接处理
+     * 直接处理，传进去的是每个用例的描述信息
      */
     protected abstract FilterResult onApply(TestMethodTestDescriptor descriptor);
 
+    // 这里的逻辑需要着重理解一下，用来判断是否符合过滤条件的
     @Override
     public FilterResult apply(TestDescriptor testDescriptor) {
-        // 这步判断是做啥的不理解
+        // 这步判断是做啥的不理解。判断传入的方法是不是测试方法，不是测试方法就不进行处理
         if (!(testDescriptor instanceof TestMethodTestDescriptor)) {
             return FilterResult.includedIf(false);
         }
         // 当标签不存在
         if (!preFilter(this.selector)) {
+            // 这里是放行
             return FilterResult.includedIf(true);
         } else {
             // 这部分是具体的标签筛选逻辑

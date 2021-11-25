@@ -32,13 +32,12 @@ public class CaseGroupDiscoveryFilter extends AbstractDiscoveryFilter {
         // 没设置 group,则不将该方法纳入 case 内
         if (!isCaseGroupSet) {
             return FilterResult.includedIf(false);
+        } else {
+            // 设置了 group
+            CaseGroup caseGroup = testMethod.getAnnotation(CaseGroup.class);
+            // 三目运算控制返回
+            return selector.team().trim().equals(caseGroup.team().trim()) && selector.group().trim().equals(caseGroup.group().trim()) ? FilterResult.includedIf(true) : FilterResult.includedIf(false);
         }
-        // 设置了 group
-        CaseGroup caseGroup = testMethod.getAnnotation(CaseGroup.class);
-        if (selector.team().trim().equals(caseGroup.team().trim()) && selector.group().trim().equals(caseGroup.group().trim())) {
-            return FilterResult.includedIf(true);
-        }
-        return FilterResult.includedIf(false);
 
     }
 

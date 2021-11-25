@@ -32,13 +32,17 @@ public class CaseTagDiscoveryFilter extends AbstractDiscoveryFilter {
     @Override
     protected FilterResult onApply(TestMethodTestDescriptor descriptor) {
         Method testMethod = descriptor.getTestMethod();
-        CaseTag[] caseTags = testMethod.getAnnotationsByType(CaseTag.class);
-        long selectTagCount = Arrays.stream(caseTags).filter(tag ->
-                tag.key().trim().equals(selector.key().trim()) && tag.val().trim().equals(selector.val().trim())
-        ).count();
-        // System.out.println("selectTagCount = " + selectTagCount);
+        if (testMethod.isAnnotationPresent(CaseTag.class)) {
 
-        return selectTagCount > 0 ? FilterResult.includedIf(true) : FilterResult.includedIf(false);
+            CaseTag[] caseTags = testMethod.getAnnotationsByType(CaseTag.class);
+            long selectTagCount = Arrays.stream(caseTags).filter(tag ->
+                    tag.key().trim().equals(selector.key().trim()) && tag.val().trim().equals(selector.val().trim())
+            ).count();
+
+            return selectTagCount > 0 ? FilterResult.includedIf(true) : FilterResult.includedIf(false);
+        } else {
+            return FilterResult.includedIf(false);
+        }
     }
 
     // private CaseSelector caseSelector;
