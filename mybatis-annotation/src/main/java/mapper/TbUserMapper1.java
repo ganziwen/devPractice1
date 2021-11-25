@@ -62,7 +62,7 @@ public interface TbUserMapper1 {
 
 
     /**
-     * 多参数形式，需要注意的是,selectByUser1 内的参数名称无关紧要,重要的是 @Param("userId") 内的名称要与 Seclet 内的 #{userId} 参数名对应
+     * 多参数形式,需要注意的是,selectByUser1 内的参数名称无关紧要,重要的是 @Param("userId") 内的名称要与 Seclet 内的 #{userId} 参数名对应
      *
      * @param userId
      * @param userName

@@ -52,7 +52,7 @@ public class Demo1 {
                         Thread.sleep(1000);
 
                     } catch (InterruptedException e) {
-                        System.out.println("干嘛呢，破了相了");
+                        System.out.println("干嘛呢,破了相了");
                         break;
                     }
                 }

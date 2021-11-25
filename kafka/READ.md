@@ -44,7 +44,7 @@ bin/kafka-topics.sh --list --zookeeper zookeeper:2181  //查看我们的topic列
 bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test01
 ```
 
-6. 再去创建一个消费者接收消息，也可以另起一个连接去接收消息
+6. 再去创建一个消费者接收消息,也可以另起一个连接去接收消息
 
 ```shell
 bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test01 --from-beginning

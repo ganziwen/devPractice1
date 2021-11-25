@@ -53,7 +53,7 @@ public class StringFunc {
         String string6 = string.substring(1, 5);
 
         // String 的静态方法
-        String stringDormate = "第一个参数是%s，第二个参数是%s";
+        String stringDormate = "第一个参数是%s,第二个参数是%s";
         String string7 = String.format(string, stringDormate);
 
         // 字符串转小写,转大写

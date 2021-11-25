@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
  * @author steven01.gan
  * @version 1.0
  * @date 2021/11/17-10:28
- * empty 是判断字符串的长度是否 > 0,blank 是判断 strim 后的长度是否大于 0 ，这样就很好理解了
+ * empty 是判断字符串的长度是否 > 0,blank 是判断 strim 后的长度是否大于 0 ,这样就很好理解了
  */
 public class TestLang {
 

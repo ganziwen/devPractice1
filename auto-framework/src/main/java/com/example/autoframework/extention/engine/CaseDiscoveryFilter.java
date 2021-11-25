@@ -39,9 +39,9 @@ public class CaseDiscoveryFilter implements PostDiscoveryFilter {
             TestMethodTestDescriptor descriptor = (TestMethodTestDescriptor) testDescriptor;
             Method testMethod = descriptor.getTestMethod();
 
-            // 单个用例上的 tag ，可能会有多个，命中的可能也是多个(但是注解上只有一个，所以这里可以先绕过)
+            // 单个用例上的 tag ,可能会有多个,命中的可能也是多个(但是注解上只有一个,所以这里可以先绕过)
             CaseTag[] caseTags = testMethod.getAnnotationsByType(CaseTag.class);
-            // 单个用例上的 group ，数量是 0-1 个
+            // 单个用例上的 group ,数量是 0-1 个
             CaseGroup[] caseGroups = testMethod.getAnnotationsByType(CaseGroup.class);
 
 
@@ -55,7 +55,7 @@ public class CaseDiscoveryFilter implements PostDiscoveryFilter {
                     caseGroup.team().equals(caseSelector.team()) && caseGroup.group().equals(caseSelector.group())
             ).count();
 
-            // 根据标签是否空白区反选匹配到的 count 数量，这部分比较冗余看看怎么优化一下
+            // 根据标签是否空白区反选匹配到的 count 数量,这部分比较冗余看看怎么优化一下
             if (StringUtils.isNotBlank(caseSelector.key()) && StringUtils.isNotBlank(caseSelector.team())) {
                 if (selectTagCount == 1 && caseGroupsCount == 1) {
                     return FilterResult.includedIf(true);

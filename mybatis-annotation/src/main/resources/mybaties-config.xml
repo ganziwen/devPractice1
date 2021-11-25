@@ -24,7 +24,7 @@
     <mappers>
         <!--        <mapper resource="mapper/TbUserMapper.xml"/>-->
         <!--        <mapper class="mapper.TbUserMapper1"/>-->
-        <!--可以使用上面的 class 方式指定单个 mapper 类，也可以用下面的方式制定一个 mapper 包名-->
+        <!--可以使用上面的 class 方式指定单个 mapper 类,也可以用下面的方式制定一个 mapper 包名-->
         <package name="mapper"/>
     </mappers>
 </configuration>

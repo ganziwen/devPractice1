@@ -27,7 +27,7 @@ public class MethodReference {
         int res1 = comparator1.compare(1024, 2048);
         System.out.println("res1 = " + res1);
 
-        // lambda 表达式，加入静态方法引用
+        // lambda 表达式,加入静态方法引用
         Comparator<Integer> comparator2 = Integer::compare;
         int res2 = comparator2.compare(1024, 2048);
         System.out.println("res2 = " + res2);

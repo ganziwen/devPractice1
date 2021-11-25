@@ -10,7 +10,7 @@ spring:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
-# 配置日志级别 ，可以打印 sql
+# 配置日志级别 ,可以打印 sql
 logging:
   level:
     com.example.mybatieswithspringboot.mapper: debug

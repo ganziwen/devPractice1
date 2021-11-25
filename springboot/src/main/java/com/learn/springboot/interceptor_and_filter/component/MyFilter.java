@@ -36,7 +36,7 @@ public class MyFilter implements Filter {
         // 通过 servlet 可以获取 url 等信息
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         request.getParameter("");
-        // 继续调用下一个过滤器，没有则调用业务
+        // 继续调用下一个过滤器,没有则调用业务
         filterChain.doFilter(servletRequest, servletResponse);
         logger.info("---MyFilter.doFilter.end---");
 

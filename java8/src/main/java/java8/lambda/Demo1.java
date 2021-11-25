@@ -15,7 +15,7 @@ import java.util.function.Function;
  * @date 2021/7/18 20:17
  * <p>
  * 使用 -> 分左右两边
- * 左边:括号内是写参数列表,参数列表只有一个参数时，()可以省略
+ * 左边:括号内是写参数列表,参数列表只有一个参数时,()可以省略
  * - 参数是可以有多个,多个时是一定要加 () 的,即使没有参数也要写一个空的 ()
  * - 参数列表就是接口内抽象方法的参数列表,也就是示例中 run() 的参数列表
  * - 当只有一个参数时,可以省略括号
@@ -71,7 +71,7 @@ public class Demo1 {
      * 再简化一下
      */
     public static void testLambda2() {
-        // 方法体内只有一行，则可以把 {} 去掉
+        // 方法体内只有一行,则可以把 {} 去掉
         Runnable runnable = () -> System.out.println("Demo1.testStream2");
         Thread thread = new Thread(runnable);
         thread.start();

@@ -12,6 +12,6 @@
     <!--推荐使用zookeeper来进行注册发现,用 zookeeper 开头    -->
     <dubbo:registry address="zookeeper://www.xiaowenshu.cn:2181"/>
 
-    <!-- 生成远程服务代理，可以和本地bean一样使用demoService， check="false"不会检查 service 是否启动-->
+    <!-- 生成远程服务代理,可以和本地bean一样使用demoService, check="false"不会检查 service 是否启动-->
     <dubbo:reference id="demoService" interface="service.DemoService" check="false"/>
 </beans>

@@ -57,7 +57,7 @@ public class ThreadSingleton {
 
 
     /**
-     * 不规范写法:创建一个线程池去执行任务.缺点在于,假设每次我们去调用 test 的方法，都会去启 32 个线程组成一个线程池;而且方法栈结束之后,线程池会被回收
+     * 不规范写法:创建一个线程池去执行任务.缺点在于,假设每次我们去调用 test 的方法,都会去启 32 个线程组成一个线程池;而且方法栈结束之后,线程池会被回收
      */
     public static void testUnNromal() {
         ExecutorService executorService = Executors.newFixedThreadPool(32);

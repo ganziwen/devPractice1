@@ -182,7 +182,7 @@ public class SyncServiceImpl implements SyncService {
     }
 
     public void syncColumn(ConnectInfo srcConnectInfo, ConnectInfo dstConnectInfo, String dbName, String tableName) {
-        // 1. 去 src 找到对应的 实例.数据库.表 获取字段+索引(获取索引和列的字段可以用 druid 进行获取，到时看看能不能优化)
+        // 1. 去 src 找到对应的 实例.数据库.表 获取字段+索引(获取索引和列的字段可以用 druid 进行获取,到时看看能不能优化)
         Set<ColumnsDo> srcColumns = DaoFacade.ofMapper(srcConnectInfo, ColumnsMapper.class, columnsMapper -> columnsMapper.selectByTable(dbName, tableName));
         // 2. 去 dst 找到对应的 实例.数据库.表 获取字段+索引
         Set<ColumnsDo> dstColumns = DaoFacade.ofMapper(dstConnectInfo, ColumnsMapper.class, columnsMapper -> columnsMapper.selectByTable(dbName, tableName));
@@ -382,7 +382,7 @@ public class SyncServiceImpl implements SyncService {
 
     /**
      * 根据有差异的列以及目标列,生成列的相关 sql
-     * 思路是:先将差异的列去dst内查一下，假设列名存在则需要 modify,不存在说明需要 add
+     * 思路是:先将差异的列去dst内查一下,假设列名存在则需要 modify,不存在说明需要 add
      *
      * @param diffColumn
      * @return

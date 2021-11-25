@@ -34,7 +34,7 @@ public @interface CaseSelector {
 
     String val() default "";
 
-    // 其实只用 key 和 val 即可，这是新扩展的功能
+    // 其实只用 key 和 val 即可,这是新扩展的功能
     String team() default "";
 
     String group() default "";

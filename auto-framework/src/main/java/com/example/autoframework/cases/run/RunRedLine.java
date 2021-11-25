@@ -1,6 +1,7 @@
 package com.example.autoframework.cases.run;
 
 import com.example.autoframework.annotation.CaseSelector;
+import com.example.autoframework.annotation.DingTalkAlarm;
 
 /**
  * @author Ganziwen
@@ -11,34 +12,34 @@ import com.example.autoframework.annotation.CaseSelector;
  */
 public class RunRedLine {
 
-    // TODO 29min 有问题
-    // 指定某个包下面，满足 key 和 value 的测试用例
+    // 指定某个包下面,满足 key 和 value 的测试用例
     @CaseSelector(scanPackage = "com.example.autoframework.cases.pay", key = "level", val = "normal")
+    @DingTalkAlarm(token = "test_token")
     public void runPayLine() {
 
     }
 
 
-    // 指定某个包下面，满足 key 和 value 的测试用例
+    // 指定某个包下面,满足 key 和 value 的测试用例
     @CaseSelector(scanPackage = "com.example.autoframework.cases.accout", team = "test_team", group = "test_group")
     public void runAccount() {
 
     }
 
-    // 指定某个包下面，满足 key 和 value 的测试用例
+    // 指定某个包下面,满足 key 和 value 的测试用例
     @CaseSelector(scanPackage = "com.example.autoframework.cases.accout", team = "test_team", group = "test_group", key = "level", val = "redline")
     public void runAccount2() {
 
     }
 
-    // 指定某个包下面，满足 key 和 value 的测试用例
+    // 指定某个包下面,满足 key 和 value 的测试用例
     @CaseSelector(scanPackage = "com.example.autoframework.cases.accout")
     public void runAccount3() {
 
     }
 
-    // 用来指定做测试报告，可以做接口报警的机制，有异常就发送给dingding或者是其他的可以对接的邮件等
-    @CaseSelector(scanPackage = "com.example.autoframework.cases.accout")
+    // 用来指定做测试报告,可以做接口报警的机制,有异常就发送给dingding或者是其他的可以对接的邮件等
+    @CaseSelector(scanPackage = "com.example.autoframework.cases.alarm")
     public void ruReport() {
 
     }
