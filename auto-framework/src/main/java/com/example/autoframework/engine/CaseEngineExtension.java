@@ -1,8 +1,8 @@
-package com.example.autoframework.extention;
+package com.example.autoframework.engine;
 
 import com.example.autoframework.annotation.CaseSelector;
-import com.example.autoframework.extention.engine.CaseGroupDiscoveryFilter;
-import com.example.autoframework.extention.engine.CaseTagDiscoveryFilter;
+import com.example.autoframework.engine.filter.CaseGroupDiscoveryFilter;
+import com.example.autoframework.engine.filter.CaseTagDiscoveryFilter;
 import com.example.autoframework.util.RequiredUtils;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -11,7 +11,6 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
-import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 import java.lang.reflect.Method;
 
@@ -41,12 +40,15 @@ public class CaseEngineExtension implements BeforeTestExecutionCallback {
                 .filters(new CaseGroupDiscoveryFilter(caseSelector))
                 .build();
 
-        // 信息结果收集的监听器
+        //   信息结果收集的监听器
+        // TODO: 2021/11/26 这里的被注释掉的话，就啥都不会返回了，需要着重研究下，而且这里我估计跟异常返回没有捕获是有关的，需要倒带回去看下
         SummaryGeneratingListener listener = new SummaryGeneratingListener();
+
 
         // listener 可以统计到用例的执行信息,可以拿来统计报告
         LauncherFactory.create().execute(launcherDiscoveryRequest, listener);
-        TestExecutionSummary summary = listener.getSummary();
+
+        // TestExecutionSummary summary = listener.getSummary();
         // System.out.println("summary.getTestsFailedCount() = " + summary.getTestsFailedCount());
         // System.out.println("summary.getTestsFoundCount() = " + summary.getTestsFoundCount());
         // System.out.println("summary.getTestsStartedCount() = " + summary.getTestsStartedCount());

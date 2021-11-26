@@ -1,7 +1,7 @@
-package com.example.autoframework.extention;
+package com.example.autoframework.engine;
 
 import com.example.autoframework.annotation.CaseSelector;
-import com.example.autoframework.extention.engine.CaseDiscoveryFilter;
+import com.example.autoframework.engine.filter.CaseDiscoveryFilter;
 import com.example.autoframework.util.RequiredUtils;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;

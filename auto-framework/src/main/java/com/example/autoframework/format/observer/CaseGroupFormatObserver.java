@@ -1,6 +1,7 @@
-package com.example.autoframework.extention.format;
+package com.example.autoframework.format.observer;
 
 import com.example.autoframework.annotation.CaseGroup;
+import com.example.autoframework.format.FormatObserver;
 import com.example.autoframework.util.RequiredUtils;
 
 import java.lang.reflect.Method;

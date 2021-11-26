@@ -1,4 +1,4 @@
-package com.example.autoframework.extention.format;
+package com.example.autoframework.format;
 
 import com.example.autoframework.exception.IllegalFormatException;
 

@@ -1,4 +1,4 @@
-package com.example.autoframework.extention.engine;
+package com.example.autoframework.engine.filter;
 
 import com.example.autoframework.annotation.CaseSelector;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
@@ -36,9 +36,10 @@ public abstract class AbstractDiscoveryFilter implements PostDiscoveryFilter {
     public FilterResult apply(TestDescriptor testDescriptor) {
         // 这步判断是做啥的不理解。判断传入的方法是不是测试方法,不是测试方法就不进行处理
         if (!(testDescriptor instanceof TestMethodTestDescriptor)) {
+
             return FilterResult.includedIf(false);
         }
-        // 当标签不存在
+        // 当 tag/group 不存在
         if (!preFilter(this.selector)) {
             // 这里是放行
             return FilterResult.includedIf(true);

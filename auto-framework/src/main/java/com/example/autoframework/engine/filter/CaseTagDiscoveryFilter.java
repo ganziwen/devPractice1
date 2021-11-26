@@ -1,7 +1,8 @@
-package com.example.autoframework.extention.engine;
+package com.example.autoframework.engine.filter;
 
 import com.example.autoframework.annotation.CaseSelector;
 import com.example.autoframework.annotation.CaseTag;
+import com.example.autoframework.annotation.CaseTags;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.FilterResult;
@@ -24,7 +25,6 @@ public class CaseTagDiscoveryFilter extends AbstractDiscoveryFilter {
 
     @Override
     protected boolean preFilter(CaseSelector selector) {
-
         return StringUtils.isNotBlank(selector.key().trim()) && StringUtils.isNotBlank(selector.val().trim());
 
     }
@@ -32,7 +32,8 @@ public class CaseTagDiscoveryFilter extends AbstractDiscoveryFilter {
     @Override
     protected FilterResult onApply(TestMethodTestDescriptor descriptor) {
         Method testMethod = descriptor.getTestMethod();
-        if (testMethod.isAnnotationPresent(CaseTag.class)) {
+        // 要注意，这里是 CaseTags ，这个问题坑了好久
+        if (testMethod.isAnnotationPresent(CaseTags.class)) {
 
             CaseTag[] caseTags = testMethod.getAnnotationsByType(CaseTag.class);
             long selectTagCount = Arrays.stream(caseTags).filter(tag ->

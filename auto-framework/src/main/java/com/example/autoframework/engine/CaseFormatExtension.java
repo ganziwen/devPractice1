@@ -1,6 +1,6 @@
-package com.example.autoframework.extention;
+package com.example.autoframework.engine;
 
-import com.example.autoframework.extention.format.FormatManager;
+import com.example.autoframework.format.observer.FormatManager;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 

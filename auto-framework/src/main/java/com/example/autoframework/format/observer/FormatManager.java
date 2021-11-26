@@ -1,5 +1,6 @@
-package com.example.autoframework.extention.format;
+package com.example.autoframework.format.observer;
 
+import com.example.autoframework.format.FormatObserver;
 import org.assertj.core.util.Lists;
 
 import java.lang.reflect.Method;
@@ -31,7 +32,7 @@ public enum FormatManager {
     }
 
     /**
-     * 回调消息到达,触发所有观察者来处理消息
+     * 回调消息到达，触发所有观察者来处理消息
      */
     public void doFormatcheck(Method method) {
         for (FormatObserver observer : observers) {
