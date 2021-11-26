@@ -11,6 +11,8 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+import org.junit.platform.commons.util.StringUtils;
+
 
 import java.lang.reflect.Method;
 
@@ -62,9 +64,12 @@ public class CaseEngineExtension implements BeforeTestExecutionCallback {
         RequiredUtils.requireNotNullOrEmpty(caseSelector.scanPackage().trim(), "scan package should not be null or empty!");
 
         // TODO key 和 val 必须成对存在,异常未报出来,分支是能走进来的;team 和 group 也是要成对存在
-        if (!caseSelector.key().trim().isEmpty() ^ !caseSelector.val().trim().isEmpty()) {
+        if (StringUtils.isNotBlank(caseSelector.key().trim()) ^ StringUtils.isNotBlank(caseSelector.val().trim())) {
             System.out.println("key 和 val 有一个为空");
             RequiredUtils.requireNotNullOrEmpty(caseSelector.val().trim(), "key val should not be null or empty!");
+        } else if (StringUtils.isNotBlank(caseSelector.team().trim()) ^ StringUtils.isNotBlank(caseSelector.group().trim())) {
+            System.out.println("team 和 group 有一个为空");
+            RequiredUtils.requireNotNullOrEmpty(caseSelector.val().trim(), "team group should not be null or empty!");
         }
         return caseSelector;
     }
