@@ -32,8 +32,8 @@ public class CaseTagDiscoveryFilter extends AbstractDiscoveryFilter {
     @Override
     protected FilterResult onApply(TestMethodTestDescriptor descriptor) {
         Method testMethod = descriptor.getTestMethod();
-        // 要注意，这里是 CaseTags ，这个问题坑了好久
-        if (testMethod.isAnnotationPresent(CaseTags.class)) {
+        // 要注意，这里是 CaseTags ，这个问题坑了好久,测试 case 里面有单个 tag 或者多个 tag 都应该金来判断
+        if (testMethod.isAnnotationPresent(CaseTags.class) || testMethod.isAnnotationPresent(CaseTag.class)) {
 
             CaseTag[] caseTags = testMethod.getAnnotationsByType(CaseTag.class);
             long selectTagCount = Arrays.stream(caseTags).filter(tag ->
