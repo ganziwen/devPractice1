@@ -1,6 +1,7 @@
 package com.example.autoframework.annotation;
 
 import com.example.autoframework.alarm.AlarmExtension;
+import com.example.autoframework.alarm.callback.AlarmCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.ElementType;
@@ -20,4 +21,6 @@ import java.lang.annotation.Target;
 @ExtendWith(AlarmExtension.class)
 public @interface DingTalkAlarm {
     String token();
+
+    Class<? extends AlarmCallback> callback();
 }

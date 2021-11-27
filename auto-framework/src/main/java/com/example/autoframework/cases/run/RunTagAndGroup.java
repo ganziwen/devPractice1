@@ -1,5 +1,6 @@
 package com.example.autoframework.cases.run;
 
+import com.example.autoframework.alarm.callback.DefaultAlarmCallback;
 import com.example.autoframework.annotation.CaseSelector;
 import com.example.autoframework.annotation.DingTalkAlarm;
 
@@ -27,7 +28,7 @@ public class RunTagAndGroup {
 
     // 指定某个包下面,满足 key 和 value 的测试用例
     @CaseSelector(scanPackage = ACCOUNT_PACKAGE, key = "level", val = LEVEL_NORMAL)
-    @DingTalkAlarm(token = "test_token")
+    @DingTalkAlarm(token = "test_token", callback = DefaultAlarmCallback.class)
     public void runAccount2() {
 
     }

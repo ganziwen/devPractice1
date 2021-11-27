@@ -1,5 +1,6 @@
 package com.example.autoframework.test.demo1;
 
+import com.example.autoframework.alarm.callback.DefaultAlarmCallback;
 import com.example.autoframework.annotation.*;
 import org.junit.jupiter.api.*;
 
@@ -39,7 +40,7 @@ public class TestDemo1 {
     @AutoTest
     @CaseTitle("测试用例") // 给 case 加标题便于后续查找和区分,必填
     @CaseDesc(desc = "111", owner = "441")
-    @DingTalkAlarm(token = "testToken") // 用于报警处理
+    @DingTalkAlarm(token = "testToken", callback = DefaultAlarmCallback.class) // 用于报警处理
     @CheckPoint("检查点")// 为 case 检查点,必填
     @CheckPoint("3232")// 为 case 检查点,必填
     @CaseTag(key = "project", val = "meituan")// 为 case 添加标签后方便后续运行时做筛选,必填

@@ -1,6 +1,8 @@
 package com.example.autoframework.cases.run;
 
+import com.example.autoframework.alarm.callback.DefaultAlarmCallback;
 import com.example.autoframework.annotation.CaseSelector;
+import com.example.autoframework.annotation.DingTalkAlarm;
 
 /**
  * @author steven01.gan
@@ -9,6 +11,7 @@ import com.example.autoframework.annotation.CaseSelector;
  */
 public class RunAlarmCases {
     @CaseSelector(scanPackage = "com.example.autoframework.cases.alarm")
+    @DingTalkAlarm(token = "xx",callback = DefaultAlarmCallback.class)
     public void testSelect1() {
 
     }

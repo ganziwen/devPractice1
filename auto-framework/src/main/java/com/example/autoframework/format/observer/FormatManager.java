@@ -32,7 +32,7 @@ public enum FormatManager {
     }
 
     /**
-     * 回调消息到达，触发所有观察者来处理消息
+     * 回调消息到达,触发所有观察者来处理消息
      */
     public void doFormatcheck(Method method) {
         for (FormatObserver observer : observers) {
