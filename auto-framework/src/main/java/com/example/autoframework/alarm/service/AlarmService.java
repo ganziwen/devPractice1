@@ -11,6 +11,14 @@ import com.example.autoframework.model.FailureResult;
  */
 public class AlarmService {
     public void doAlarm(FailureResult failureResult) {
+        System.out.println("这是告警的内容");
+        // 报警逻辑，此刻面临两个问题
+        // 1. 用例标题等信息去哪获取？(从注解内获取)
+        // 2. 用例告警的信息怎么组装（创建一个发送格式的模板）
+        // 告警的内容：
+        // 用例 id：xxx
+        // 用例标题：xxx
+        // 用例xxx：xxx
 
     }
 }

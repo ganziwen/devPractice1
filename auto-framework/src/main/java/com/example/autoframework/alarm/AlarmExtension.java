@@ -19,8 +19,8 @@ public class AlarmExtension implements TestExecutionExceptionHandler {
 
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-        System.out.println("throwable = " + throwable);
-        System.out.println("这里将消息发送给钉钉");
+        // System.out.println("throwable = " + throwable);
+        // System.out.println("这里将消息发送给钉钉");
 
         Method testMethod = context.getRequiredTestMethod();
         Class<?> testClasses = context.getRequiredTestClass();
