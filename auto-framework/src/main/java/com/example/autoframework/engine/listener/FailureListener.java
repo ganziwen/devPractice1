@@ -5,11 +5,10 @@ import com.example.autoframework.model.FailureResult;
 import com.example.autoframework.util.ReflectUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
-import org.junit.platform.engine.support.descriptor.MethodSource;
 
-import java.awt.*;
 import java.util.Optional;
 
 /**
