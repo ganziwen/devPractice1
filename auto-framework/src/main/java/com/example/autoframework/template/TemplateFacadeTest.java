@@ -1,8 +1,11 @@
-package com.example.autoframework.template.factory;
+package com.example.autoframework.template;
 
 import com.example.autoframework.model.TemplateInfo;
 import com.example.autoframework.template.service.TemplateService;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Ganziwen
@@ -11,14 +14,24 @@ import org.junit.jupiter.api.Test;
  * @Description
  * @date 2021/11/27 20:24
  */
-public class TemplateFactoryTest {
-    // TODO: day 14 第四篇章 2021/12/2
+public class TemplateFacadeTest {
     @Test
     public void testTemp() {
-        TemplateInfo defaultAlarmTemplate = TemplateFactory.of().getTemplateByName("default_alarm_template");
-        TemplateInfo defaultReportTemplate = TemplateFactory.of().getTemplateByName("default_report_template");
+        TemplateInfo defaultAlarmTemplate = TemplateFacade.getTemplateByName("default_alarm_template");
+        TemplateInfo defaultReportTemplate = TemplateFacade.getTemplateByName("default_report_template");
+
         System.out.println("defaultAlarmTemplate = " + defaultAlarmTemplate);
         System.out.println("defaultReportTemplate = " + defaultReportTemplate);
+    }
+
+    @Test
+    public void testReplace() {
+        Map<String, String> map = new HashMap<>();
+        map.put("title", "my_title");
+        map.put("id", "my_id");
+        map.put("info", "my_info");
+        String defaultAlarmTemplate = TemplateFacade.replaceTemplate("default_alarm_template", map);
+        System.out.println("defaultAlarmTemplate = " + defaultAlarmTemplate);
     }
 
     @Test

@@ -3,9 +3,9 @@ package com.example.autoframework.template.service;
 import com.example.autoframework.model.TemplateInfo;
 import com.example.autoframework.template.factory.TemplateFactory;
 import com.example.autoframework.util.RequiredUtils;
-import org.assertj.core.error.ShouldBeBeforeYear;
-import org.junit.jupiter.api.Test;
+import org.springframework.util.StringUtils;
 
+import java.util.Formatter;
 import java.util.Map;
 
 /**
@@ -23,7 +23,18 @@ public class TemplateService {
     }
 
     public String replaceTemplate(String templateKey, Map<String, String> mapping) {
-        return null;
+        TemplateInfo templateInfo = getTemplateName(templateKey);
+        String templateValue = templateInfo.getTemplateValue();
+
+        for (Map.Entry<String, String> entry : mapping.entrySet()) {
+            templateValue = StringUtils.replace(templateValue, createTemplateKey(entry.getKey()), entry.getValue());
+        }
+
+        return templateValue;
+    }
+
+    public String createTemplateKey(String key) {
+        return new Formatter().format("${%s}", key).toString();
     }
 
 
