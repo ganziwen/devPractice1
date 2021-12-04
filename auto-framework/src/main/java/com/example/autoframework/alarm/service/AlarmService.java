@@ -1,20 +1,35 @@
 package com.example.autoframework.alarm.service;
 
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSON;
 import cn.hutool.log.StaticLog;
+import com.alibaba.fastjson.JSONObject;
+import com.dingtalk.api.DefaultDingTalkClient;
+import com.dingtalk.api.DingTalkClient;
+import com.dingtalk.api.request.OapiRobotSendRequest;
+import com.dingtalk.api.response.OapiRobotSendResponse;
 import com.example.autoframework.annotation.CaseDesc;
 import com.example.autoframework.annotation.CaseTitle;
 import com.example.autoframework.annotation.CheckPoint;
 import com.example.autoframework.annotation.CheckPoints;
+import com.example.autoframework.engine.listener.FailureListener;
 import com.example.autoframework.model.FailureResult;
 import com.example.autoframework.template.TemplateFacade;
 import com.example.autoframework.util.ReflectUtils;
 import com.google.common.collect.Maps;
+import com.taobao.api.ApiException;
+import okhttp3.Response;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Collectors;
+
+import static com.example.autoframework.enums.Project.DING_DING_TOKEN;
+import static com.example.autoframework.enums.Project.DING_TALK_ROOT_URL;
 
 /**
  * @author Ganziwen
@@ -66,7 +81,7 @@ public class AlarmService {
         boolean isCheckPointSet = testMethod.isAnnotationPresent(CheckPoints.class);
         if (isCheckPointSet) {
             CheckPoint[] checkPoints = testMethod.getAnnotationsByType(CheckPoint.class);
-            check = Arrays.stream(checkPoints).map(CheckPoint::value).collect(Collectors.joining(","));
+            check = Arrays.stream(checkPoints).map(CheckPoint::value).collect(Collectors.joining(";"));
 
         }
 
@@ -78,10 +93,63 @@ public class AlarmService {
         resultMap.put("check", check);
         resultMap.put("caseId", caseId);
         resultMap.put("cause", cause);
-
-        String alarmTemplateRes = TemplateFacade.replaceTemplate("default_alarm_template", resultMap);
+        String alarmTemplateRes = TemplateFacade.replaceTemplate("default_alarm_template.md", resultMap);
 
         // 将此消息发出去
-        StaticLog.info(alarmTemplateRes);
+        // StaticLog.error(alarmTemplateRes);
+
+        // 调用 dingtalk 的 sdk 方法
+        OapiRobotSendResponse oapiRobotSendResponse = sendDingTalkMarkDown(DING_TALK_ROOT_URL, DING_DING_TOKEN, alarmTemplateRes);
+        StaticLog.info(oapiRobotSendResponse.getBody());
     }
+
+    /**
+     * 钉钉的 sdk 提供的方式
+     *
+     * @param url
+     * @param token
+     * @param markdownText
+     * @return
+     */
+    private OapiRobotSendResponse sendDingTalkMarkDown(String url, String token, String markdownText) {
+        DingTalkClient client = new DefaultDingTalkClient(StrUtil.format("{}?access_token={}", url, token));
+        OapiRobotSendRequest request = new OapiRobotSendRequest();
+        request.setMsgtype("markdown");
+        OapiRobotSendRequest.Markdown markdown = new OapiRobotSendRequest.Markdown();
+        markdown.setTitle("告警");
+        markdown.setText(markdownText);
+        request.setMarkdown(markdown);
+        try {
+            OapiRobotSendResponse response = client.execute(request);
+            return response;
+        } catch (ApiException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    /**
+     * http 发送的方式
+     *
+     * @param url
+     * @param token
+     * @param text
+     * @return
+     */
+    private String sendDingTalkHttp(String url, String token, String text) {
+        HashMap<String, Object> paramMap = new HashMap<>();
+        paramMap.put("access_token", DING_DING_TOKEN);
+
+        // markdown 的发送形式
+        String postTemp = StrUtil.format("{\"msgtype\": \"markdown\",\"markdown\": {\"title\":\"告警\",\"text\":\"{}\"}}", text);
+        // JSONObject jsonObject = JSON.parseObject(postTemp);
+        StaticLog.info(DING_TALK_ROOT_URL + HttpUtil.toParams(paramMap));
+        StaticLog.info(postTemp);
+
+        String body = HttpRequest.post(DING_TALK_ROOT_URL + "?" + HttpUtil.toParams(paramMap)).body(postTemp).timeout(2000).execute().body();
+        StaticLog.info(body);
+        return body;
+
+    }
+
+
 }

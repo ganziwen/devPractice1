@@ -1,4 +1,4 @@
-package com.example.autoframework.test.demo1;
+package com.example.autoframework.demo1;
 
 import com.example.autoframework.alarm.callback.DefaultAlarmCallback;
 import com.example.autoframework.annotation.*;

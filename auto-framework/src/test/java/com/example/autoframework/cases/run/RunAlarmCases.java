@@ -11,7 +11,7 @@ import com.example.autoframework.annotation.DingTalkAlarm;
  */
 public class RunAlarmCases {
     @CaseSelector(scanPackage = "com.example.autoframework.cases.alarm")
-    @DingTalkAlarm(token = "xx",callback = DefaultAlarmCallback.class)
+    @DingTalkAlarm(token = "xx", callback = DefaultAlarmCallback.class)
     public void testSelect1() {
         // assertThat(1).isEqualTo(2);
     }

@@ -1,4 +1,4 @@
-package com.example.autoframework.test.demo1;
+package com.example.autoframework.demo1;
 
 import org.junit.jupiter.api.*;
 

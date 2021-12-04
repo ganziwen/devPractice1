@@ -1,5 +1,7 @@
 package com.example.autoframework.enums;
 
+import java.util.StringJoiner;
+
 /**
  * @author steven01.gan
  * @version 1.0
@@ -12,5 +14,7 @@ public class Project {
     public static final String ALARM_PACKAGE = "com.example.autoframework.cases.alarm";
     public static final String LEVEL_NORMAL = "NORMAL";
     public static final String LEVEL_RED_LINE = "redline";
-
+    public static final String DING_TALK_ROOT_URL = "https://oapi.dingtalk.com/robot/send";
+    public static final String DING_DING_TOKEN = "6e33cfd5c739272b92e10a0e558370e2142d5a4dd68215e913393dcbed4397f3";
 }
+

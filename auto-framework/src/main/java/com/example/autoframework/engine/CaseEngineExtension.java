@@ -55,7 +55,7 @@ public class CaseEngineExtension implements BeforeTestExecutionCallback {
             DingTalkAlarm dingTalkAlarm = testMethod.getAnnotation(DingTalkAlarm.class);
 
             // 这里是处理失败的监听器,是我们自定义的.这里只是负责抛出去但不负责处理，处理是在 callback 里面进行处理的
-            FailureListener failureListener = new FailureListener(dingTalkAlarm.token(),dingTalkAlarm.callback());
+            FailureListener failureListener = new FailureListener(dingTalkAlarm.token(), dingTalkAlarm.callback());
 
             // listener 可以统计到用例的执行信息,可以拿来统计报告
             // 将 failureListener 塞进来
@@ -67,7 +67,6 @@ public class CaseEngineExtension implements BeforeTestExecutionCallback {
         }
         // 整个批量结束后才回调，并不是每个方法执行完就回调
         TestExecutionSummary summary = listener.getSummary();
-        System.out.println("summary = " + summary);
 
     }
 
