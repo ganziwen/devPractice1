@@ -1,6 +1,8 @@
-package com.example.autoframework.template;
+package com.example.autoframework;
 
+import cn.hutool.log.StaticLog;
 import com.example.autoframework.model.TemplateInfo;
+import com.example.autoframework.template.TemplateFacade;
 import com.example.autoframework.template.service.TemplateService;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +21,6 @@ public class TemplateFacadeTest {
     public void testTemp() {
         TemplateInfo defaultAlarmTemplate = TemplateFacade.getTemplateByName("default_alarm_template");
         TemplateInfo defaultReportTemplate = TemplateFacade.getTemplateByName("default_report_template");
-
         System.out.println("defaultAlarmTemplate = " + defaultAlarmTemplate);
         System.out.println("defaultReportTemplate = " + defaultReportTemplate);
     }
@@ -31,7 +32,8 @@ public class TemplateFacadeTest {
         map.put("id", "my_id");
         map.put("info", "my_info");
         String defaultAlarmTemplate = TemplateFacade.replaceTemplate("default_alarm_template", map);
-        System.out.println("defaultAlarmTemplate = " + defaultAlarmTemplate);
+
+        StaticLog.info("defaultAlarmTemplate = " + defaultAlarmTemplate);
     }
 
     @Test

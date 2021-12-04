@@ -33,6 +33,7 @@ public class AlarmExtension implements TestExecutionExceptionHandler {
                 .methodName(testMethod.getName())
                 .parameterTypes(parameterTypes)
                 .token(dingTalkAlarm.token())
+                .throwable(throwable)
                 .build();
         AlarmFacade.doAlarm(failureResult);
     }

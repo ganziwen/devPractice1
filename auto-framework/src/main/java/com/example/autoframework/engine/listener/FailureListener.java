@@ -1,5 +1,6 @@
 package com.example.autoframework.engine.listener;
 
+import cn.hutool.core.util.ReflectUtil;
 import com.example.autoframework.alarm.callback.AlarmCallback;
 import com.example.autoframework.model.FailureResult;
 import com.example.autoframework.util.ReflectUtils;
@@ -67,8 +68,10 @@ public class FailureListener implements TestExecutionListener {
         FailureResult failureResult = FailureResult.builder().className(className).methodName(methodName).parameterTypes(methodParameterTypes).throwable(throwable).token(this.token).build();
         // 处理报警的逻辑
 
-        // 实现了 callback，在这里进行处理告警
+        // 实现了 callback，在这里进行处理告警，这里利用的是自己写的反射工具类处理
         ReflectUtils.newInstance(alarmCallback).postExecutionFailure(failureResult);
+        // 这里是利用了 hutool 的反射工具类直接使用
+        // ReflectUtil.newInstance(AlarmCallback.class).postExecutionFailure(failureResult);
 
     }
 }

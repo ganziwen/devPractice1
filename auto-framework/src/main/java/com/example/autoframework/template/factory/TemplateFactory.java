@@ -32,6 +32,7 @@ public class TemplateFactory {
 
     private TemplateFactory() {
         this.templateMapping = initTemplateMapping();
+
     }
 
     /**
@@ -67,6 +68,7 @@ public class TemplateFactory {
     }
 
     public TemplateInfo getTemplateByName(String templateName) {
+        // 这里的方式是直接加载的方式，其实可以改成懒加载的形式。进来之后判断templateName 在不在 Mapping内，不在的话再去读取一下配置文件进行加载
         if (this.templateMapping.containsKey(templateName)) {
             return this.templateMapping.get(templateName);
         } else {
