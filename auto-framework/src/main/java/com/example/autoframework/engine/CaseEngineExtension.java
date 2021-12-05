@@ -65,7 +65,7 @@ public class CaseEngineExtension implements BeforeTestExecutionCallback {
             LauncherFactory.create().execute(launcherDiscoveryRequest, listener);
 
         }
-        // 整个批量结束后才回调，并不是每个方法执行完就回调
+        // 整个批量结束后才回调，并不是每个方法执行完就回调,这里可以用来进行处理 report 的逻辑
         TestExecutionSummary summary = listener.getSummary();
 
     }

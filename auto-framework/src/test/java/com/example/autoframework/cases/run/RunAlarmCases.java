@@ -3,6 +3,7 @@ package com.example.autoframework.cases.run;
 import com.example.autoframework.alarm.callback.DefaultAlarmCallback;
 import com.example.autoframework.annotation.CaseSelector;
 import com.example.autoframework.annotation.DingTalkAlarm;
+import com.example.autoframework.annotation.ReportConfig;
 
 /**
  * @author steven01.gan
@@ -12,6 +13,7 @@ import com.example.autoframework.annotation.DingTalkAlarm;
 public class RunAlarmCases {
     @CaseSelector(scanPackage = "com.example.autoframework.cases.alarm")
     @DingTalkAlarm(token = "xx", callback = DefaultAlarmCallback.class)
+    @ReportConfig
     public void testSelect1() {
         // assertThat(1).isEqualTo(2);
     }

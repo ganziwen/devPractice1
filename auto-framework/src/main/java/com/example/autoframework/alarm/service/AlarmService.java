@@ -59,7 +59,7 @@ public class AlarmService {
         // 报错信息
         String cause = failureResult.getThrowable() == null ? "无" : failureResult.getThrowable().getMessage();
 
-        // 基于 className 和 methodName 用反射获取到 java.lang.reflect.Method
+        // 基于 className 和 methodName 用反射获取到 java.lang.reflect.Method 这里拿到的反射是发生了错误的 case 的那个 method
         // Method testMethod = ReflectUtil.getMethodOfObj(failureResult, failureResult.getMethodName());
         // Method testMethod = ReflectUtil.getMethod(failureResult.getClass(), failureResult.getMethodName());
         // Method testMethod = ReflectUtil.getMethod(ReflectUtil.newInstance(failureResult.getClassName()).getClass(), failureResult.getMethodName());
@@ -98,8 +98,11 @@ public class AlarmService {
         // 将此消息发出去
         // StaticLog.error(alarmTemplateRes);
 
+        // TODO: 2021/12/5 还是有点问题，就是假设跑的是个 package，每次执行错误一个，就会发送请求出去，未免太烦了吧，
+        //  可不可以直接判断本次所有的用例执行结果呢？但是假设是跑完再去发就跟发测试报告没什么大的区别的，所以这里的策略需要在考虑下，是不是应该跑到一定的重试次数再去发这个告警
+        //  可以在测试类上加个注解，叫 @AlarmConfig(id = "testAlarm",num = 3)，可以去控制这个测试类里面 p0 级别的 case 错了几个，再来 用个 Map<string , AtomicInteger>控制叠加的次数，再发送告警，这是针对测试类的级别进行控制
         // 调用 dingtalk 的 sdk 方法
-        OapiRobotSendResponse oapiRobotSendResponse = sendDingTalkMarkDown(DING_TALK_ROOT_URL, DING_DING_TOKEN, alarmTemplateRes);
+        OapiRobotSendResponse oapiRobotSendResponse = sendDingTalkMarkDown(DING_TALK_ROOT_URL, failureResult.getToken(), alarmTemplateRes);
         StaticLog.info(oapiRobotSendResponse.getBody());
     }
 
