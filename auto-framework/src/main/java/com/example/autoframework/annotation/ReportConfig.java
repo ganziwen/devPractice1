@@ -1,6 +1,8 @@
 package com.example.autoframework.annotation;
 
+import com.example.autoframework.alarm.callback.DefaultAlarmCallback;
 import com.example.autoframework.model.ReportType;
+import com.example.autoframework.report.callback.ReportCallback;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -18,4 +20,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ReportConfig {
     ReportType type() default ReportType.DING_TALK;
+
+    String token() default "";
+
+    Class<? extends ReportCallback> callback();
 }

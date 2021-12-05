@@ -4,6 +4,10 @@ import com.example.autoframework.alarm.callback.DefaultAlarmCallback;
 import com.example.autoframework.annotation.CaseSelector;
 import com.example.autoframework.annotation.DingTalkAlarm;
 import com.example.autoframework.annotation.ReportConfig;
+import com.example.autoframework.report.callback.DefaultReportCallback;
+
+import static com.example.autoframework.enums.Project.DING_DING_TOKEN;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author steven01.gan
@@ -12,10 +16,11 @@ import com.example.autoframework.annotation.ReportConfig;
  */
 public class RunAlarmCases {
     @CaseSelector(scanPackage = "com.example.autoframework.cases.alarm")
-    @DingTalkAlarm(token = "xx", callback = DefaultAlarmCallback.class)
-    @ReportConfig
+    @DingTalkAlarm(token = DING_DING_TOKEN, callback = DefaultAlarmCallback.class)
+    @ReportConfig(token = DING_DING_TOKEN, callback = DefaultReportCallback.class)
     public void testSelect1() {
-        // assertThat(1).isEqualTo(2);
+        assertThat(1).isEqualTo(0);
+
     }
 
 

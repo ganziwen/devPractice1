@@ -22,6 +22,7 @@ import com.example.autoframework.util.ReflectUtils;
 import com.google.common.collect.Maps;
 import com.taobao.api.ApiException;
 import okhttp3.Response;
+import sun.swing.plaf.synth.DefaultSynthStyle;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -86,7 +87,7 @@ public class AlarmService {
         }
 
         // 开始封装成个 map
-        HashMap<String, String> resultMap = Maps.newHashMap();
+        HashMap<String, Object> resultMap = Maps.newHashMap();
         resultMap.put("title", title);
         resultMap.put("desc", desc);
         resultMap.put("owner", owner);
@@ -114,7 +115,7 @@ public class AlarmService {
      * @param markdownText
      * @return
      */
-    private OapiRobotSendResponse sendDingTalkMarkDown(String url, String token, String markdownText) {
+    public OapiRobotSendResponse sendDingTalkMarkDown(String url, String token, String markdownText) {
         DingTalkClient client = new DefaultDingTalkClient(StrUtil.format("{}?access_token={}", url, token));
         OapiRobotSendRequest request = new OapiRobotSendRequest();
         request.setMsgtype("markdown");
@@ -123,8 +124,8 @@ public class AlarmService {
         markdown.setText(markdownText);
         request.setMarkdown(markdown);
         try {
-            OapiRobotSendResponse response = client.execute(request);
-            return response;
+            StaticLog.info("开始请求");
+            return client.execute(request);
         } catch (ApiException e) {
             throw new IllegalStateException(e);
         }

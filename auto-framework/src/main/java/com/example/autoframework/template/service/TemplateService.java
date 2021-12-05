@@ -22,12 +22,12 @@ public class TemplateService {
 
     }
 
-    public String replaceTemplate(String templateKey, Map<String, String> mapping) {
+    public String replaceTemplate(String templateKey, Map<String, Object> mapping) {
         TemplateInfo templateInfo = getTemplateName(templateKey);
         String templateValue = templateInfo.getTemplateValue();
 
-        for (Map.Entry<String, String> entry : mapping.entrySet()) {
-            templateValue = StringUtils.replace(templateValue, createTemplateKey(entry.getKey()), entry.getValue());
+        for (Map.Entry<String, Object> entry : mapping.entrySet()) {
+            templateValue = StringUtils.replace(templateValue, createTemplateKey(entry.getKey()), entry.getValue().toString());
         }
 
         return templateValue;

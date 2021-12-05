@@ -1,0 +1,11 @@
+## 报告告警
+### 数量
+* 总数：${testsFoundCount}
+* 成功数：${testsSucceededCount}
+* 失败数：${testsFailedCount}
+* 跳过数：${testsSkippedCount}
+### 时间
+* 开始时间：${timeStarted}
+* 结束时间：${timeFinished}
+### 失败原因
+* ${failureReason}

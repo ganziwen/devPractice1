@@ -27,7 +27,7 @@ public class TemplateFacadeTest {
 
     @Test
     public void testReplace() {
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("title", "my_title");
         map.put("id", "my_id");
         map.put("info", "my_info");

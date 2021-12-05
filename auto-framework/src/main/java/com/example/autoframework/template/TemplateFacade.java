@@ -21,7 +21,7 @@ public class TemplateFacade {
         return new TemplateService().getTemplateName(templateName);
     }
 
-    public static String replaceTemplate(String templateName, Map<String, String> mapping) {
+    public static String replaceTemplate(String templateName, Map<String, Object> mapping) {
         return new TemplateService().replaceTemplate(templateName, mapping);
     }
 }
