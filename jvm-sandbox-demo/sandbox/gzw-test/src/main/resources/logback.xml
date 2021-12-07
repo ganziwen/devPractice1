@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration scan="true" scanPeriod="10000">
+
+    <!-- DEBUG模块：PallasRestAnalyseModule监控日志 -->
+    <logger name="PallasRestAnalyseModule" level="INFO">
+        <appender class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/apps/logs/sandbox/debug/pallas-rest-analyse.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <FileNamePattern>/apps/logs/sandbox/debug/pallas-rest-analyse.%d{yyyy-MM-dd}</FileNamePattern>
+                <MaxHistory>30</MaxHistory>
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %msg%n</pattern>
+                <charset>UTF-8</charset>
+            </encoder>
+        </appender>
+    </logger>
+
+
+    <!-- DEBUG模块：ErrorLogModule监控日志 -->
+    <logger name="ErrorLogModule" level="INFO">
+        <appender class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/apps/logs/sandbox/debug/error-log.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <FileNamePattern>/apps/logs/sandbox/debug/error-log.%d{yyyy-MM-dd}</FileNamePattern>
+                <MaxHistory>30</MaxHistory>
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %msg%n</pattern>
+                <charset>UTF-8</charset>
+            </encoder>
+        </appender>
+    </logger>
+
+    <!-- DEBUG模块：SqlDataModule监控日志 -->
+    <logger name="SqlDataModule" level="INFO">
+        <appender class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/apps/logs/sandbox/debug/sql_data.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <FileNamePattern>/apps/logs/sandbox/debug/sql_data.%d{yyyy-MM-dd}</FileNamePattern>
+                <MaxHistory>30</MaxHistory>
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %msg%n</pattern>
+                <charset>UTF-8</charset>
+            </encoder>
+        </appender>
+    </logger>
+
+    <!-- DEBUG模块：RedisDataModule监控日志 -->
+    <logger name="RedisDataModule" level="INFO">
+        <appender class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/apps/logs/sandbox/debug/redis_data.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <FileNamePattern>/apps/logs/sandbox/debug/redis_data.%d{yyyy-MM-dd}</FileNamePattern>
+                <MaxHistory>30</MaxHistory>
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %msg%n</pattern>
+                <charset>UTF-8</charset>
+            </encoder>
+        </appender>
+    </logger>
+
+
+    <!-- DEBUG模块：DataModule监控日志 -->
+    <logger name="DataModule" level="INFO">
+        <appender class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/apps/logs/sandbox/debug/data.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <FileNamePattern>/apps/logs/sandbox/debug/data.%d{yyyy-MM-dd}</FileNamePattern>
+                <MaxHistory>30</MaxHistory>
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %msg%n</pattern>
+                <charset>UTF-8</charset>
+            </encoder>
+        </appender>
+    </logger>
+
+
+
+    <!-- DEBUG模块：VmsModule监控日志 -->
+    <logger name="VmsModule" level="INFO">
+        <appender class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/apps/logs/sandbox/debug/vms.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <FileNamePattern>/apps/logs/sandbox/debug/vms.%d{yyyy-MM-dd}</FileNamePattern>
+                <MaxHistory>30</MaxHistory>
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %msg%n</pattern>
+                <charset>UTF-8</charset>
+            </encoder>
+        </appender>
+    </logger>
+
+</configuration>
