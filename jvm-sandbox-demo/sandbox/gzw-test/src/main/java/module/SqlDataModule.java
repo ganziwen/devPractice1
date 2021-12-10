@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 /**
  * @author steven01.gan
  * @version 1.0
+ * 监控的日志在 logback.xml 内进行配置的
  */
 
 @MetaInfServices(Module.class)
@@ -72,7 +73,6 @@ public class SqlDataModule implements Module {
 
                                     method.setAccessible(true);
 
-
                                     // 这里控制读写属性的拦截
                                     String readWrite = "ReadWrite";
 
@@ -92,7 +92,7 @@ public class SqlDataModule implements Module {
                                         }
                                     }
                                 } catch (Exception e) {
-                                   logger.debug("获取注解发生异常", e);
+                                    logger.debug("获取注解发生异常", e);
                                 }
                             }
 

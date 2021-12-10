@@ -96,10 +96,9 @@ public class CaseEngineExtension implements BeforeTestExecutionCallback {
             summaryResult.setToken(reportConfig.token());
             // 利用反射实例化出来 ReportConfig内，callback 写的类的对象，执行对应的 postExecutionSummary 方法
             ReflectUtils.newInstance(reportConfig.callback()).postExecutionSummary(summaryResult);
-            //
 
+            // 运行的结果可以插入到 mysql ，比如：SummaryResultDao.insert(summary);
         }
-
     }
 
 
