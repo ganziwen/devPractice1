@@ -25,6 +25,7 @@ public class DefaultReportCallback implements ReportCallback {
 
     @Override
     public void postExecutionSummary(SummaryResult summaryResult) {
+        StaticLog.info("转换前的summaryResult" + summaryResult.toString());
         StaticLog.info("测试报告默认的callback");
 
         HashMap<String, Object> reportTemplateMapping = Maps.newHashMap();
@@ -39,6 +40,7 @@ public class DefaultReportCallback implements ReportCallback {
 
         // 模板数据替换
         String reportTemplate = TemplateFacade.replaceTemplate("default_report_template.md", reportTemplateMapping);
+        StaticLog.info("发送报告的信息为" + reportTemplate);
 
         OapiRobotSendResponse oapiRobotSendResponse = new AlarmService().sendDingTalkMarkDown(DING_TALK_ROOT_URL, summaryResult.getToken(), reportTemplate);
         // StaticLog.info(oapiRobotSendResponse.getBody());

@@ -35,7 +35,7 @@ public class FailureListener implements TestExecutionListener {
      */
     @Override
     public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-        StaticLog.info(testExecutionResult.toString());
+        // StaticLog.info(testExecutionResult.toString());
         TestExecutionResult.Status status = testExecutionResult.getStatus();
         // 基于 status 进行用例执行失败状态的判断,当 status==Status.FAILED时,表示这个用例执行失败,此刻我们在批量运行用例时就拿到了单个用例执行失败的一个回调
         // 既然在这里做了失败的回调,那此时就可以将必要的信息处理之后,做发出（报警）

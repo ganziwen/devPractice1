@@ -94,7 +94,10 @@ public class AlarmService {
         resultMap.put("check", check);
         resultMap.put("caseId", caseId);
         resultMap.put("cause", cause);
+
+
         String alarmTemplateRes = TemplateFacade.replaceTemplate("default_alarm_template.md", resultMap);
+        // StaticLog.info("发送告警的信息为" + alarmTemplateRes);
 
         // 将此消息发出去
         // StaticLog.error(alarmTemplateRes);

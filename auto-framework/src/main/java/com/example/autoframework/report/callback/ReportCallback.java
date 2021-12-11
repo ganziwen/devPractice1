@@ -10,5 +10,5 @@ import com.example.autoframework.model.SummaryResult;
  * @date 2021/12/5 16:44
  */
 public interface ReportCallback {
-    void postExecutionSummary(SummaryResult summaryResultj);
+    void postExecutionSummary(SummaryResult summaryResult);
 }
