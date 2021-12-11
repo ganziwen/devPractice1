@@ -1,6 +1,7 @@
 package com.example.autoframework.annotation;
 
 import com.example.autoframework.engine.CaseEngineExtension;
+import com.example.autoframework.engine.CaseSelectExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 

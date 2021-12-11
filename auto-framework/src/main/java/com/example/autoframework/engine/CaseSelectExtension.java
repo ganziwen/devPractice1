@@ -41,16 +41,17 @@ public class CaseSelectExtension implements BeforeTestExecutionCallback {
                 .build();
 
 
-        SummaryGeneratingListener listener = new SummaryGeneratingListener();
+        // SummaryGeneratingListener listener = new SummaryGeneratingListener();
 
         // listener 可以统计到用例的执行信息,可以拿来统计报告
-        LauncherFactory.create().execute(launcherDiscoveryRequest, listener);
-        TestExecutionSummary summary = listener.getSummary();
-        System.out.println("summary.getTestsFailedCount() = " + summary.getTestsFailedCount());
-        System.out.println("summary.getTestsFoundCount() = " + summary.getTestsFoundCount());
-        System.out.println("summary.getTestsStartedCount() = " + summary.getTestsStartedCount());
-        System.out.println("summary.getTestsSkippedCount() = " + summary.getTestsSkippedCount());
-        System.out.println("summary.getTestsSucceededCount() = " + summary.getTestsSucceededCount());
+        LauncherFactory.create().execute(launcherDiscoveryRequest);
+        // LauncherFactory.create().execute(launcherDiscoveryRequest, listener);
+        // TestExecutionSummary summary = listener.getSummary();
+        // System.out.println("summary.getTestsFailedCount() = " + summary.getTestsFailedCount());
+        // System.out.println("summary.getTestsFoundCount() = " + summary.getTestsFoundCount());
+        // System.out.println("summary.getTestsStartedCount() = " + summary.getTestsStartedCount());
+        // System.out.println("summary.getTestsSkippedCount() = " + summary.getTestsSkippedCount());
+        // System.out.println("summary.getTestsSucceededCount() = " + summary.getTestsSucceededCount());
 
     }
 
