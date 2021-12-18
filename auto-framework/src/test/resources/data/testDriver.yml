@@ -2,3 +2,8 @@
   id: 1
 - name: Bob
   id: 2
+#自定义对象
+#- course.auto.test.model.Order:
+#  id: 1
+#  name: ganziwen
+#  age: 18
