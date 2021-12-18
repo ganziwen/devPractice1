@@ -48,7 +48,7 @@ public final class YmlUtils {
      * @return
      */
     public static List<DataEntity> read(String path) {
-
+        StaticLog.info("path=" + path);
         RequiredUtils.requireNotNullOrEmpty(path, "file path should not null or empty");
         InputStream inputStream = null;
         List<DataEntity> entities = Lists.newArrayList();
@@ -96,6 +96,6 @@ public final class YmlUtils {
     @Test
     public void testRead() {
         List<DataEntity> dataEntities = read("data/testDriver.yml");
-        dataEntities.forEach(e-> System.out.println(e.toString()));
+        dataEntities.forEach(e -> System.out.println(e.toString()));
     }
 }

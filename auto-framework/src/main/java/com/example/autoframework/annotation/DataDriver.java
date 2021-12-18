@@ -18,8 +18,8 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(DataDriverExtension.class)
-@TestTemplate
+@ExtendWith(DataDriverExtension.class) // 这里面实现了  TestTemplate  的接口
+@TestTemplate // 关键注解
 public @interface DataDriver {
     // 测试用例文件路径，最好默认值就是当前包的当前方法名称
     String path() default "className";

@@ -1,8 +1,11 @@
 package com.example.autoframework.cases.driver;
 
 import com.example.autoframework.annotation.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.*;
 
-import java.security.Key;
+import java.lang.reflect.Parameter;
+
 
 /**
  * @author Ganziwen
@@ -21,6 +24,8 @@ public class testDriver {
      * @return
      */
     public String call(String name, Integer id) {
+        System.out.println(name);
+        System.out.println(id);
         return name + String.valueOf(id);
     }
 
@@ -50,13 +55,28 @@ public class testDriver {
         String res = call(name, id);
     }
 
+    // @AutoTest
+    // @CheckPoint("没检查点")
+    // @CaseTitle("新的做法")
+    // @CaseDesc(desc = "新测试", owner = "qa")
+    // @CaseTag(key = "name", val = "val")
+    // @DataDriver(path = "data/testDriver.yml")
+    // public void testCallNew(String name, Integer id) {
+    //     // 1. 去 @DataDriver 中找到 path 为对应的文件进行解析
+    //     // 2. 解析资源文件，存为 List<T>
+    //     // 3. 将 List 中的每个数据类型按照方法签名的参数名或者类型做赋值
+    //     // 4. 实现循环调用，将值全部塞给方法
+    //     String res = call(name, id);
+    // }
+
+
     @AutoTest
     @CheckPoint("没检查点")
     @CaseTitle("新的做法")
     @CaseDesc(desc = "新测试", owner = "qa")
     @CaseTag(key = "name", val = "val")
-    @DataDriver(path = "data/dataDriver.yml")
-    public void testCallNew(String name, Integer id) {
+    @DataDriver(path = "data/testDriver.yml")
+    public void testCallNew2(@DataParam("name") String name, @DataParam("id") Integer id) {
         // 1. 去 @DataDriver 中找到 path 为对应的文件进行解析
         // 2. 解析资源文件，存为 List<T>
         // 3. 将 List 中的每个数据类型按照方法签名的参数名或者类型做赋值
@@ -64,4 +84,29 @@ public class testDriver {
         String res = call(name, id);
     }
 
+
+    /**
+     * 最简单粗暴的例子
+     *
+     * @param name
+     */
+    @Test
+    @ExtendWith(test111.class)
+    public void test111(String name) {
+        System.out.println("name = " + name);
+    }
+
+    static class test111 implements ParameterResolver {
+        @Override
+        public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+            return true;
+        }
+
+        @Override
+        public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+            Parameter parameter = parameterContext.getParameter();
+            System.out.println("parameter = " + parameter);
+            return "hello";
+        }
+    }
 }
