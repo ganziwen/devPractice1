@@ -82,6 +82,7 @@ public class testDriver {
         // 3. 将 List 中的每个数据类型按照方法签名的参数名或者类型做赋值
         // 4. 实现循环调用，将值全部塞给方法
         String res = call(name, id);
+        System.out.println("res = " + res);
     }
 
 

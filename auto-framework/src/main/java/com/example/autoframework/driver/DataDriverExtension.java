@@ -1,14 +1,10 @@
 package com.example.autoframework.driver;
 
-import cn.hutool.log.StaticLog;
 import com.alibaba.fastjson.JSON;
 import com.example.autoframework.annotation.DataDriver;
 import com.example.autoframework.annotation.DataParam;
 import com.example.autoframework.model.DataEntity;
 import com.example.autoframework.util.YmlUtils;
-import com.sun.org.apache.bcel.internal.generic.INEG;
-import com.sun.org.apache.bcel.internal.generic.RET;
-import jdk.internal.org.objectweb.asm.tree.AbstractInsnNode;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.*;
@@ -128,6 +124,13 @@ public class DataDriverExtension implements TestTemplateInvocationContextProvide
             }
         }
 
+        /**
+         * 该方法没有必要
+         *
+         * @param val
+         * @param type
+         * @return
+         */
         private Object parseToJavaType(String val, Class<?> type) {
             switch (type.getName()) {
 
@@ -166,6 +169,7 @@ public class DataDriverExtension implements TestTemplateInvocationContextProvide
             return "testInfo";
         }
     }
+
     @Test
     public void testFastJson() {
         String str = "123";

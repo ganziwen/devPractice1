@@ -7,7 +7,6 @@ import com.example.autoframework.annotation.ReportConfig;
 import com.example.autoframework.report.callback.DefaultReportCallback;
 
 import static com.example.autoframework.enums.Project.DING_DING_TOKEN;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author steven01.gan
@@ -19,7 +18,7 @@ public class RunAlarmCases {
     @DingTalkAlarm(token = DING_DING_TOKEN, callback = DefaultAlarmCallback.class)
     @ReportConfig(token = DING_DING_TOKEN, callback = DefaultReportCallback.class)
     public void testSelect1() {
-        assertThat(1).isEqualTo(0);
+        // assertThat(1).isEqualTo(0);
 
     }
 
