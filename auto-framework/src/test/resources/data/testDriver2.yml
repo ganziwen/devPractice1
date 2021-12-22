@@ -1,0 +1,17 @@
+- merchantId: mer_1
+  order:
+    id: 1
+    orderId: testOrderId_1
+    amount: 100
+
+- merchantId: mer_2
+  order:
+    id: 2
+    orderId: testOrderId_2
+    amount: 200
+
+- merchantId: mer_3
+  order:
+    id: 3
+    orderId: testOrderId_3
+    amount: 300

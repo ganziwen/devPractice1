@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.google.common.collect.Maps;
 import com.google.common.io.Resources;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
@@ -40,6 +41,25 @@ public final class YmlUtils {
         // 解析出错直接报错
         MAPPER = yamlMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
     }
+
+    public static Map<String, String> readForMap(String path) {
+        RequiredUtils.requireNotNullOrEmpty(path, "file path should not null or empty");
+        InputStream inputStream = null;
+
+        try {
+            Map<String, String> map = Maps.newHashMap();
+            inputStream = Resources.getResource(path).openStream();
+            JsonNode jsonNode = MAPPER.readTree(inputStream);
+            jsonNode.fields().forEachRemaining(e -> {
+                map.put(e.getKey(), e.getValue().asText());
+            });
+
+            return map;
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
 
     /**
      * 读取文件，其实我觉得直接读出来的 json 全部转成 HashMap 即可
@@ -89,7 +109,7 @@ public final class YmlUtils {
     private static DataEntity.Entity transToEntity(Map.Entry<String, JsonNode> json) {
 
         JsonNode jsonValue = json.getValue();
-        return DataEntity.Entity.of(jsonValue.isObject(), json.getKey(), jsonValue.asText());
+        return DataEntity.Entity.of(jsonValue.isObject(), json.getKey(), jsonValue.toString());
 
     }
 
