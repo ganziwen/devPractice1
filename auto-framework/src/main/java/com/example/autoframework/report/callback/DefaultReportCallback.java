@@ -36,7 +36,7 @@ public class DefaultReportCallback implements ReportCallback {
         reportTemplateMapping.put("timeStarted", summaryResult.getTimeStarted());
         reportTemplateMapping.put("timeFinished", summaryResult.getTimeFinished());
 
-        reportTemplateMapping.put("failureReason", summaryResult.getFailureInfos().stream().map(failureInfo -> failureInfo.getThrowable().getMessage()).collect(Collectors.joining("\n* ")));
+        reportTemplateMapping.put("failureReason", summaryResult.getFailureInfos().stream().map(failureInfo -> failureInfo.getThrowable().getMessage()).collect(Collectors.joining("\n")));
 
         // 模板数据替换
         String reportTemplate = TemplateFacade.replaceTemplate("default_report_template.md", reportTemplateMapping);

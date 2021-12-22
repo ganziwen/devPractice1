@@ -19,7 +19,7 @@ public class RunAlarmCases {
     @DingTalkAlarm(token = DING_DING_TOKEN, callback = DefaultAlarmCallback.class)
     @ReportConfig(token = DING_DING_TOKEN, callback = DefaultReportCallback.class)
     public void testSelect1() {
-        assertThat(1).isEqualTo(0);
+        // assertThat(1).isEqualTo(0);
 
     }
 
