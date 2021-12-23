@@ -1,0 +1,12 @@
+package com.example.autoframework.model;
+
+/**
+ * @author Ganziwen
+ * @version 1.0
+ * @ClassName RetMsg
+ * @Description
+ * @date 2021/12/23 12:19
+ */
+public class RetMsg {
+
+}

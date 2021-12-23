@@ -26,7 +26,7 @@ import java.util.Map;
  * @author Ganziwen
  * @version 1.0
  * @ClassName App
- * @Description mybatis
+ * @Description 数据库操作需要再想一下怎么解决问题
  * @date 2021/12/22 13:14
  */
 public class App {
@@ -104,7 +104,6 @@ public class App {
         MySqlSchemaStatVisitor visitor = new MySqlSchemaStatVisitor();
         statement.accept(visitor);
 
-        System.out.println(visitor);
         // 从visitor中拿出你所关注的信息
         System.out.println(visitor.getColumns());
     }

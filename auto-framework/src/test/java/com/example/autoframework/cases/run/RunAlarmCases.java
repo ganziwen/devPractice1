@@ -3,6 +3,7 @@ package com.example.autoframework.cases.run;
 import com.example.autoframework.alarm.callback.DefaultAlarmCallback;
 import com.example.autoframework.annotation.CaseSelector;
 import com.example.autoframework.annotation.DingTalkAlarm;
+import com.example.autoframework.annotation.EnvProfile;
 import com.example.autoframework.annotation.ReportConfig;
 import com.example.autoframework.report.callback.DefaultReportCallback;
 
@@ -18,6 +19,7 @@ public class RunAlarmCases {
     @CaseSelector(scanPackage = "com.example.autoframework.cases.alarm")
     @DingTalkAlarm(token = DING_DING_TOKEN, callback = DefaultAlarmCallback.class)
     @ReportConfig(token = DING_DING_TOKEN, callback = DefaultReportCallback.class)
+    @EnvProfile("dev")// 真正需要用 profile 的地方
     public void testSelect1() {
         // assertThat(1).isEqualTo(0);
 

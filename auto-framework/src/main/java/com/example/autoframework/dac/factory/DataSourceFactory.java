@@ -1,6 +1,7 @@
 package com.example.autoframework.dac.factory;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.example.autoframework.profile.ProfileHolder;
 import com.example.autoframework.util.YmlUtils;
 import com.google.common.collect.Maps;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
@@ -37,7 +38,14 @@ public final class DataSourceFactory {
 
 
     public DataSource getDataSource() {
-        Map<String, String> mysqlConfigMap = YmlUtils.readForMap("config/dev.yml");
+        String configFile = "config/config-" + ProfileHolder.of().getProfile() + ".yml";
+
+        // 控制 dataSource 只建一次
+        Map<String, String> mysqlConfigMap = YmlUtils.readForMap(configFile);
+        if (this.dataSourceMap.containsKey(configFile)) {
+            return this.dataSourceMap.get(configFile);
+        }
+
         System.out.println("mysqlConfigMap = " + mysqlConfigMap);
         DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setUrl(mysqlConfigMap.get("mysql-url"));
@@ -57,6 +65,9 @@ public final class DataSourceFactory {
         druidDataSource.setPoolPreparedStatements(true);
         druidDataSource.setMaxOpenPreparedStatements(20);
         druidDataSource.setAsyncInit(true);
+
+        this.dataSourceMap.put(configFile, druidDataSource);
+
         return druidDataSource;
     }
 
