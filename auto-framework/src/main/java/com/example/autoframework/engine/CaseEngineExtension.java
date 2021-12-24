@@ -56,6 +56,9 @@ public class CaseEngineExtension implements BeforeTestExecutionCallback {
                 // 过滤器：筛选完包之后筛选 tag,这里可以加入多过滤器,比如加入 tag 的再加入 group 的
                 .filters(new CaseTagDiscoveryFilter(caseSelector))
                 .filters(new CaseGroupDiscoveryFilter(caseSelector))
+                // 这里是多线程的开关，还有参数的量,可以从注解值上取
+                .configurationParameter("junit.jupiter.execution.parallel.enabled", "true")
+                .configurationParameter("junit.jupiter.execution.parallel.config.fixed.parallelism", "5")
                 .build();
 
         //   信息结果收集的监听器
@@ -88,7 +91,7 @@ public class CaseEngineExtension implements BeforeTestExecutionCallback {
 
         // 整个批量结束后才回调，并不是每个方法执行完就回调,这里可以用来进行处理 report 的逻辑
         TestExecutionSummary summary = listener.getSummary();
-        StaticLog.info("caseengine的summary"+summary.getFailures());
+        StaticLog.info("caseengine的summary" + summary.getFailures());
 
         // 如果设置了 ReportConfig 注解说明要走我们自己定义好的报告模板
         if (testMethod.isAnnotationPresent(ReportConfig.class)) {

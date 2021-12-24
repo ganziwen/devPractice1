@@ -1,5 +1,7 @@
 package com.example.autoframework.model;
 
+import lombok.Data;
+
 /**
  * @author Ganziwen
  * @version 1.0
@@ -7,6 +9,9 @@ package com.example.autoframework.model;
  * @Description
  * @date 2021/12/23 12:19
  */
-public class RetMsg {
-
+@Data
+public class RetMsg<T> {
+    private Integer errNo;
+    private String errMsg;
+    private T data;
 }
