@@ -37,12 +37,14 @@ public class MockController {
     public String doMock() {
 
 
-        logger.info("request.uri = {}", request.getRequestURI());
         // 将 uri 的第一个 / 去除掉，并且将所有的 / 替换成 _
         String filePath = StringUtils.replace(StringUtils.substringAfterLast(request.getRequestURI(), "/"), "/", "_");
+        logger.info("request.uri = {}", request.getRequestURI());
         try {
             // 将指定路径下的文件内容返回
-            return IoUtil.read(new FileInputStream(new File(MOCK_DATA_ROOT_PATH + filePath)), Charset.defaultCharset());
+            String data = IoUtil.read(new FileInputStream(new File(MOCK_DATA_ROOT_PATH + filePath)), Charset.defaultCharset());
+            logger.info("request.response = {}", data);
+            return data;
         } catch (FileNotFoundException e) {
             throw new IllegalStateException(e);
         }
