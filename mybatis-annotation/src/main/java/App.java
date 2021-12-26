@@ -44,7 +44,7 @@ public class App {
     @Test
     public void testSelectByUserId() {
         TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
-        List<TbUser1> tu1s = tbUser1Mapper.selectByUserId("1000001");
+        List<TbUser1> tu1s = tbUser1Mapper.selectByUserId("1000005");
         System.out.println("tu1s = " + tu1s);
 
     }

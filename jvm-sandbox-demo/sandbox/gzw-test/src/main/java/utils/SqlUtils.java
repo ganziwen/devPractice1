@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 /**
  * @author steven01.gan
  * @version 1.0
+ * 其实可以直接获取 preparedstatement 对象，mybatis 应该也是基于 jdbc 来玩的
  */
 public class SqlUtils {
 
