@@ -22,4 +22,8 @@ import java.lang.annotation.Target;
 @ExtendWith(CaseFormatExtension.class)
 @Test
 public @interface AutoTest {
+    boolean parallel() default false;
+
+    int parallelism() default 1;
+
 }

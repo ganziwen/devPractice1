@@ -112,6 +112,7 @@ public class DataDriverExtension implements TestTemplateInvocationContextProvide
                 // 就是我们需要去做数据设置的
                 DataEntity.Entity entity = dataEntity.getEntity(dataParam.value());
                 if (entity.isJavaBean()) {
+                    StaticLog.info("entity.getVal()="+entity.getVal());
                     // 如果是 bean 的话，就将 entity 的值转化成对应的对象出去
                     return JSON.parseObject(entity.getVal(), parameter.getType());
                 } else {

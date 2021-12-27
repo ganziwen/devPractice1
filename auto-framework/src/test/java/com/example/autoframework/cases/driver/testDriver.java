@@ -1,6 +1,7 @@
 package com.example.autoframework.cases.driver;
 
 import com.example.autoframework.annotation.*;
+import com.example.autoframework.driver.model.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 
@@ -82,35 +83,21 @@ public class testDriver {
         // 3. 将 List 中的每个数据类型按照方法签名的参数名或者类型做赋值
         // 4. 实现循环调用，将值全部塞给方法
         String res = call(name, id);
-        System.out.println("res = " + res);
     }
 
-
-
-
-
-    /**
-     * 最简单粗暴的例子
-     *
-     * @param name
-     */
-    @Test
-    @ExtendWith(test111.class)
-    public void test111(String name) {
-        System.out.println("name = " + name);
+    @AutoTest
+    @CheckPoint("没检查点")
+    @CaseTitle("新的做法")
+    @CaseDesc(desc = "新测试", owner = "qa")
+    @CaseTag(key = "name", val = "val")
+    @DataDriver(path = "data/testDriver2.yml")
+    public void testCallNewBean(@DataParam("merchantId") String merchantId, @DataParam("order") Order order) {
+        // 1. 去 @DataDriver 中找到 path 为对应的文件进行解析
+        // 2. 解析资源文件，存为 List<T>
+        // 3. 将 List 中的每个数据类型按照方法签名的参数名或者类型做赋值
+        // 4. 实现循环调用，将值全部塞给方法
+        System.out.println("merchantId = " + merchantId);
+        System.out.println("order = " + order.toString());
     }
 
-    static class test111 implements ParameterResolver {
-        @Override
-        public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-            return true;
-        }
-
-        @Override
-        public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-            Parameter parameter = parameterContext.getParameter();
-            System.out.println("parameter = " + parameter);
-            return "hello";
-        }
-    }
 }

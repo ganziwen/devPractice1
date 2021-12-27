@@ -13,7 +13,7 @@
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
                 <property name="url"
-                          value="jdbc:mysql://www.xiaowenshu.cn:3388/test_table?useUnicode=true&amp;ampcharacterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=UTC"/>
+                          value="jdbc:mysql://www.xiaowenshu.cn:3399/test_table?useUnicode=true&amp;ampcharacterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=UTC"/>
                 <property name="username" value="root"/>
                 <property name="password" value="123456"/>
             </dataSource>
