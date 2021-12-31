@@ -13,9 +13,17 @@
     <!--        </classes>-->
     <!--    </test> &lt;!&ndash; TestNG &ndash;&gt;-->
 
+    <listeners>
+        <listener class-name="com.auto.listener.ISuiteListenerImpl" />
+    </listeners>
+
+    <listeners>
+        <listener class-name="com.Monitor.IHookableImp"/>
+    </listeners>
+
     <test verbose="2" preserve-order="true" name="TestNG">
         <classes>
-            <class name="com.example.demo.cases.TestNGHelloWorld1"/>
+            <class name="cases.TestCase1"/>
         </classes>
     </test>
 

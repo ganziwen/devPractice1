@@ -20,6 +20,7 @@
         <module>kafka</module>
         <module>dubbo-demo</module>
         <module>dubbo-springboot</module>
+        <module>testng-aop</module>
     </modules>
 
     <properties>

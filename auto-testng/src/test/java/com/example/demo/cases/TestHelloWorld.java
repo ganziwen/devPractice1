@@ -1,5 +1,7 @@
 package com.example.demo.cases;
 
+import com.example.demo.annotation.TestAnnotation;
+import org.springframework.stereotype.Component;
 import org.testng.annotations.*;
 
 /**
@@ -9,7 +11,7 @@ import org.testng.annotations.*;
  * @Description
  * @date 2021/12/24 18:12
  */
-
+@Component
 @Test(groups = "Tomandy")
 public class TestHelloWorld {
     @BeforeSuite(groups = "bfSuite")
@@ -37,6 +39,7 @@ public class TestHelloWorld {
         System.out.println("TestNGHelloWorld BeforeMethod!");
     }
 
+    @TestAnnotation
     @Test(groups = "Tom")
     public void helloWorldTest() {
         System.out.println("====TestNGHelloWorld Test!====");

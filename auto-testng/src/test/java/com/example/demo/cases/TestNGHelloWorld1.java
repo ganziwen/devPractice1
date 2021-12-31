@@ -1,5 +1,8 @@
 package com.example.demo.cases;
 
+import com.example.demo.annotation.TestAnnotation;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -17,7 +20,8 @@ public class TestNGHelloWorld1 {
         System.out.println("TestNGHelloWorld1 beforTest!");
     }
 
-    @Test(description = "test",enabled = true)
+    // @TestAnnotation
+    @Test(description = "test")
     public String helloWorldTest1() {
         System.out.println("TestNGHelloWorld1 Test1!");
         return "@Test return!";

@@ -59,7 +59,7 @@ public class App {
     @Test
     public void testInsertUser() {
         TbUserMapper1 tbUser1Mapper = sqlSession.getMapper(TbUserMapper1.class);
-        Integer insertNums = tbUser1Mapper.insertUser1(new TbUser1("1000005", "zhangsan5"));
+        Integer insertNums = tbUser1Mapper.insertUser1(new TbUser1("1000002", "zhangsan2"));
         System.out.println("insertNums = " + insertNums);
     }
 
