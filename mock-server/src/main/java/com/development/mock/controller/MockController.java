@@ -1,5 +1,6 @@
 package com.development.mock.controller;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import com.development.mock.model.MockContext;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -65,6 +67,10 @@ public class MockController {
 
         }
 
+        // 假设是路径，这时候就要去解析出所有文件，点然后计算匹配，计算权重，找到最大的，然后返回
+        List<String> mockDataFileNames = FileUtil.listFileNames(filePath);
+        for (String mockDataFileName : mockDataFileNames) {
+        }
         return "none";
     }
 
