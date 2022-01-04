@@ -1,0 +1,9 @@
+mappingHost: "127.0.0.1"
+
+mappingParams:
+  - accountId: 1
+    weight: 3
+  - accountName: "张三"
+    weight: 3
+
+response: "{\"errNo\":500,\"errMsg\":\"failed\"}"

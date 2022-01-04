@@ -1,29 +1,23 @@
 package com.development.mock.controller;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.setting.yaml.YamlUtil;
 import com.development.mock.model.MappingParamData;
 import com.development.mock.model.MappingParamEntity;
 import com.development.mock.model.MappingParamInfo;
 import com.development.mock.model.MockContext;
+import com.development.mock.util.JsonFactory;
 import com.development.mock.util.YmlUtils;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.testng.util.Strings;
+import org.tinylog.Logger;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.testng.util.Strings;
-import org.tinylog.Logger;
 
 /**
  * @author Ganziwen
@@ -57,27 +51,25 @@ public class MockController {
                 .requestUri(request.getRequestURI())
                 .requestParams(parseRequestParam())
                 .build();
-        Logger.info("do mock start ,context = {}", String.valueOf(mockContext));
+        Logger.info("do mock start ,context = {}", JsonFactory.objectToJson(mockContext));
 
         /*
         基于 uri 获取目录下的指定文件，并判断其属性，是目录还是文件
             如果是文件，直接返回了，如果是目录则需要解析匹配
          */
         String filePath = MOCK_DATA_ROOT_PATH_VIP + mockContext.getMockFileName();
-        Logger.info("filePath = {}", filePath);
         File mockDataFile = new File(filePath);
         // 判断是文件还是路径
-        if (mockDataFile.exists()) {
-            Logger.info("文件/路径存在");
-        } else {
-            Logger.info("文件/路径不存在");
+
+        if (!mockDataFile.exists()) {
+            Logger.info("文件/路径:{}不存在", filePath);
         }
         if (mockDataFile.isFile()) {
             Logger.info("{} is file", filePath);
             try {
                 MappingParamInfo mappingParamInfo = MappingParamInfo.fromMappingParamData(YmlUtils.readForObject(filePath, MappingParamData.class));
-                Logger.info("读取的mock文件信息为 {}", mappingParamInfo.toString());
-                Logger.info("返回内容为{}", mappingParamInfo.getResponse());
+                Logger.info("读取的mock文件信息为 {}", JsonFactory.objectToJson(mappingParamInfo));
+                Logger.info("返回内容为{}", JsonFactory.objectToJson(mappingParamInfo));
                 // 单文件就不用去匹配，直接拿文件返回就完事了,但是有个问题是单文件怎么知道要返回 yml 的文件呢，或者强行将路径最后拼接一个 yml 直接读取呢
                 return mappingParamInfo.getResponse();
             } catch (Exception e) {
@@ -93,14 +85,17 @@ public class MockController {
             Logger.info("传进来的匹配条件:{}", requestParamList.toString());
             int weightResult = 0;
             String response = null;
+            // 多个文件循环
             for (String mockDataFileName : mockDataFileNames) {
+                int weightSum = 0;
                 // String path = filePath + "/" + mockDataFileName;
                 String path = filePath + "/" + mockDataFileName;
                 Logger.info("path = {}", path);
                 MappingParamInfo mappingParamInfo = MappingParamInfo.fromMappingParamData(YmlUtils.readForObject(path, MappingParamData.class));
-                Logger.info("读取的mock文件信息为 {}", mappingParamInfo.toString());
+                Logger.info("读取的mock文件信息为:{}", JsonFactory.objectToJson(mappingParamInfo));
                 // 因为这里是有多个文件，所以要开始做参数匹配了.这里目前做的还是精确匹配，未来肯定是要可以支持正则或者是什么其他的条件的，不然限定的太死没法玩
                 List<MappingParamEntity> mappingParamEntities = mappingParamInfo.getMappingParams();
+                // 单个文件内的 mappingParams 进行循环
                 for (MappingParamEntity mappingParamEntity : mappingParamEntities) {
 
                     Map<String, Object> mappingParam = mappingParamEntity.getMappingParam();
@@ -109,16 +104,29 @@ public class MockController {
                     if (requestParamList.contains(param)) {
                         // 捞出权重
                         Integer weight = mappingParamEntity.getWeight();
-                        // 捞出来的权重假设大于默认的值
-                        if (weight > weightResult) {
-                            weightResult = weight;
-                            response = mappingParamInfo.getResponse();
-                        }
+                        weightSum += weight;
+
                     }
                 }
+                // 单文件内的权重值 >  当前总权重的话，则将 map 住的信息赋值给 response
+                if (weightSum > weightResult) {
+                    weightResult = weightSum;
+                    response = mappingParamInfo.getResponse();
+                } else {
+                    Logger.info("当前匹配的权重和为:{}", weightResult);
+                }
+
             }
             // 最后判断下返回的 response 为空则返回没命中的信息，不为空则返回命中的内容
-            return Strings.isNullOrEmpty(response) ? "mock not attach" : response;
+
+            if (Strings.isNullOrEmpty(response)) {
+
+                return "mock not attach";
+            } else {
+                Logger.info("返回的 response = {}", JsonFactory.objectToJson(response));
+                return response;
+            }
+
 
         } else {
             Logger.info("{} is not file or dictionary", filePath);

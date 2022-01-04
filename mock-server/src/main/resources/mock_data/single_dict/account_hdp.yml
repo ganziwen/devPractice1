@@ -1,8 +1,8 @@
 mappingHost: "127.0.0.1"
 
 mappingParams:
-  - accountId: 4567
-    weight: 2
+  - accountId: 1
+    weight: 3
   - accountName: "张三"
     weight: 3
 
