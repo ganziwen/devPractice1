@@ -12,9 +12,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Api {
+    String url() default "";
+
     String address() default "";
 
     String method() default "";
-
-    String url() default "";
 }

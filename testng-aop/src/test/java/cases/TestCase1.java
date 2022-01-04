@@ -24,6 +24,7 @@ public class TestCase1 extends BaseCase {
     }
 
     @Test(dataProvider = "data1")
+    // @Test()
     public void test2(String name, Integer age) {
         System.out.printf("name is %s,age is %s%n", name, age);
     }

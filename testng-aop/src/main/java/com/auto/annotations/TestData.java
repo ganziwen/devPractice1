@@ -12,4 +12,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface TestData {
+    Class<?>[] clazz() default {};
+
+    String method() default "";
 }
