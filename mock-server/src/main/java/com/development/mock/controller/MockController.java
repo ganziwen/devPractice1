@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.testng.util.Strings;
 import org.tinylog.Logger;
 
 /**
@@ -88,8 +89,10 @@ public class MockController {
             Logger.info("{} is dictionary", filePath);
             // 假设是路径，这时候就要去解析出所有文件，点然后计算匹配，计算权重，找到最大的，然后返回
             List<String> mockDataFileNames = FileUtil.listFileNames(filePath);
-            mockContext.getRequestParams().entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue()).collect(Collectors.toList());
+            List<String> requestParamList = mockContext.getRequestParams().entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue()).collect(Collectors.toList());
+            Logger.info("传进来的匹配条件:{}", requestParamList.toString());
             int weightResult = 0;
+            String response = null;
             for (String mockDataFileName : mockDataFileNames) {
                 // String path = filePath + "/" + mockDataFileName;
                 String path = filePath + "/" + mockDataFileName;
@@ -101,10 +104,22 @@ public class MockController {
                 for (MappingParamEntity mappingParamEntity : mappingParamEntities) {
 
                     Map<String, Object> mappingParam = mappingParamEntity.getMappingParam();
-                    Integer weight = mappingParamEntity.getWeight();
+                    String param = mappingParam.entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue()).findFirst().get();
+                    // 请求的参数内，包含了我们写的参数，说明命中了
+                    if (requestParamList.contains(param)) {
+                        // 捞出权重
+                        Integer weight = mappingParamEntity.getWeight();
+                        // 捞出来的权重假设大于默认的值
+                        if (weight > weightResult) {
+                            weightResult = weight;
+                            response = mappingParamInfo.getResponse();
+                        }
+                    }
                 }
             }
-            return "none";
+            // 最后判断下返回的 response 为空则返回没命中的信息，不为空则返回命中的内容
+            return Strings.isNullOrEmpty(response) ? "mock not attach" : response;
+
         } else {
             Logger.info("{} is not file or dictionary", filePath);
             return "none";

@@ -2,7 +2,8 @@ mappingHost: "127.0.0.1"
 
 mappingParams:
   - accountId: 4567
-    accountName: "张三"
     weight: 2
+  - accountName: "张三"
+    weight: 3
 
 response: "{\"errNo\":500,\"errMsg\":\"failed\"}"
