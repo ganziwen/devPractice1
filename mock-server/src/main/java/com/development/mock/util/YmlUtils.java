@@ -77,10 +77,15 @@ public final class YmlUtils {
 
     @Test
     public static void testReadForObject() {
-        MappingParamData mappingParamData = readForObject("D:\\Learn\\JAVA\\TestDevelement\\devPractice\\mock-server\\src\\main\\resources\\mock_data\\create_account\\account_1.yml", MappingParamData.class);
-        MappingParamInfo mappingParamInfo = MappingParamInfo.fromMappingParamData(mappingParamData);
-        System.out.println("mappingParamData = " + mappingParamData);
-        System.out.println("mappingParamInfo = " + mappingParamInfo);
+        // MappingParamData mappingParamData = readForObject("D:\\Learn\\JAVA\\TestDevelement\\devPractice\\mock-server\\src\\main\\resources\\mock_data\\create_account\\account_1.yml", MappingParamData.class);
+        // MappingParamInfo mappingParamInfo = MappingParamInfo.fromMappingParamData(mappingParamData);
+        // System.out.println("mappingParamData = " + mappingParamData);
+        // System.out.println("mappingParamInfo = " + mappingParamInfo);
+
+        MappingParamData mappingParamDataVip = readForObject("D:\\gzw\\giteeCode\\devPractice\\mock-server\\src\\main\\resources\\mock_data\\create_account\\account_1.yml", MappingParamData.class);
+        MappingParamInfo mappingParamInfoVip = MappingParamInfo.fromMappingParamData(mappingParamDataVip);
+        System.out.println("mappingParamData = " + mappingParamDataVip);
+        System.out.println("mappingParamInfo = " + mappingParamInfoVip);
     }
 
 
