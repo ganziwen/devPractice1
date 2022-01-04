@@ -10,6 +10,10 @@ import org.testng.annotations.Listeners;
  * @version 1.0
  * @date 2021/12/31-15:18
  */
-@Listeners({IHookableImpl.class, ISuiteListenerImpl.class, ITestListenerImpl.class})
+@Listeners({
+        IHookableImpl.class,
+        ISuiteListenerImpl.class,
+        ITestListenerImpl.class
+})
 public class BaseCase {
 }
