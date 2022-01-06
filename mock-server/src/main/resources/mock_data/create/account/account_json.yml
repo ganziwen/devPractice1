@@ -6,6 +6,4 @@ mappingParams:
   - accountName: "json"
     weight: 3
 
-response:
-  errNo: 200
-  errMsg: "success"
+response: "{\"errNo\":500,\"errMsg\":\"不确定\"}"

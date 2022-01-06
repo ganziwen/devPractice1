@@ -21,6 +21,7 @@
         <module>dubbo-demo</module>
         <module>dubbo-springboot</module>
         <module>testng-aop</module>
+        <module>myself-tools</module>
     </modules>
 
     <properties>
