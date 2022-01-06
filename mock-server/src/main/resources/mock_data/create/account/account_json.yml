@@ -3,7 +3,9 @@ mappingHost: "127.0.0.2"
 mappingParams:
   - accountId: 1
     weight: 4
-  - accountName: "张三"
+  - accountName: "json"
     weight: 3
 
-response: "{\"errNo\":200,\"errMsg\":\"success\"}"
+response:
+  errNo: 200
+  errMsg: "success"

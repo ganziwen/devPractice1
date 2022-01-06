@@ -8,19 +8,20 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.testng.annotations.Test;
+import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
  * @author Ganziwen
  * @version 1.0
  * @ClassName YmlUtils
- * @Description
+ * @Description ArrayList<Object>
  * @date 2021/12/18 11:08
  */
 public final class YmlUtils {
@@ -35,6 +36,52 @@ public final class YmlUtils {
         YAMLMapper yamlMapper = new YAMLMapper(yamlFactory);
         // 解析出错直接报错
         MAPPER = yamlMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+    }
+
+    /**
+     * 只能读取单组配置
+     *
+     * @param absolutePath
+     * @return
+     */
+    public static Object ymlLoadSingleToJson(String absolutePath) {
+        //初始化Yaml解析器
+        Yaml yaml = new Yaml();
+        File f = new File(absolutePath);
+        //读入文件
+        Object result = null;
+        try {
+            result = yaml.load(new FileInputStream(f));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 读取 yml 内的多组配置
+     *
+     * @param absolutePath
+     * @return
+     */
+    public static ArrayList<Object> ymlLoadAllToJson(String absolutePath) {
+        Yaml yaml = new Yaml();
+        File f = new File(absolutePath);
+        ArrayList<Object> lists = Lists.newArrayList();
+        Iterable<Object> result = null;
+        try {
+            result = yaml.loadAll(new FileInputStream(f));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (result != null) {
+            for (Object obj : result) {
+                lists.add(obj);
+            }
+        } else {
+            throw new IllegalStateException("file " + absolutePath + "is empty");
+        }
+        return lists;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.development.mock.util;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.development.mock.model.MockContext;
@@ -19,7 +20,8 @@ public class JsonFactory {
      * @return
      */
     public static <T> String objectToJson(T obj) {
-        return JSONArray.toJSONString(obj, SerializerFeature.PrettyFormat);
+        // return JSONArray.toJSONString(obj, SerializerFeature.PrettyFormat);
+        return JSON.toJSONString(obj, SerializerFeature.PrettyFormat);
     }
 
     @Test

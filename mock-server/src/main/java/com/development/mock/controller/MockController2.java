@@ -1,6 +1,8 @@
 package com.development.mock.controller;
 
 import cn.hutool.core.io.FileUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.development.mock.model.MappingParamData;
 import com.development.mock.model.MappingParamEntity;
 import com.development.mock.model.MappingParamInfo;
@@ -23,11 +25,11 @@ import java.util.stream.Collectors;
  * @author Ganziwen
  * @version 1.0
  * @ClassName MockController
- * @Description
+ * @Description 目前用的是文件的形式，其实按照我的理解，可以迁移到 redis 内，redis 也可以按层级来标识文件信息，而且更直观
  * @date 2021/12/26 15:56
  */
 @RestController
-public class MockController {
+public class MockController2 {
 
     // private static final Logger logger = LoggerFactory.getLogger(MockController.class);
 
@@ -74,7 +76,6 @@ public class MockController {
                 return mappingParamInfo.getResponse();
             } catch (Exception e) {
                 throw new IllegalStateException(e);
-                // e.printStackTrace();
             }
 
         } else if (mockDataFile.isDirectory()) {
@@ -85,22 +86,31 @@ public class MockController {
             Logger.info("传进来的匹配条件:{}", requestParamList.toString());
             int weightResult = 0;
             String response = null;
-            // 多个文件循环
+            // 多个文件循环遍历，并且计算权重
             for (String mockDataFileName : mockDataFileNames) {
+
                 int weightSum = 0;
                 // String path = filePath + "/" + mockDataFileName;
                 String path = filePath + "/" + mockDataFileName;
                 Logger.info("path = {}", path);
                 MappingParamInfo mappingParamInfo = MappingParamInfo.fromMappingParamData(YmlUtils.readForObject(path, MappingParamData.class));
-                Logger.info("读取的mock文件信息为:{}", JsonFactory.objectToJson(mappingParamInfo));
                 // 因为这里是有多个文件，所以要开始做参数匹配了.这里目前做的还是精确匹配，未来肯定是要可以支持正则或者是什么其他的条件的，不然限定的太死没法玩
                 List<MappingParamEntity> mappingParamEntities = mappingParamInfo.getMappingParams();
-                // 单个文件内的 mappingParams 进行循环
+
+                // 这里要匹配一下 host 是否命中，命中再往下，没命中就 continue，或者在 weight 内我们再设置一个权重，再加到 param 的权重内进行全局加和比较
+                if (!mappingParamInfo.getMappingHost().equals(mockContext.getRequestIp())) {
+                    continue;
+                } else {
+                    Logger.info("ip 命中");
+                }
+
+                // 单个文件内的 mappingParams 进行循环遍历，所有参数进行匹配，累加权重进行计算
                 for (MappingParamEntity mappingParamEntity : mappingParamEntities) {
 
                     Map<String, Object> mappingParam = mappingParamEntity.getMappingParam();
                     String param = mappingParam.entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue()).findFirst().get();
                     // 请求的参数内，包含了我们写的参数，说明命中了
+                    // 这里的判断是将 请求的 key=value 拼接，对文件内的 key=value 进行字符串比对，其实用 map 比对比较好，因为有的 value 值并不是 string ，可能还有一些 json 之类的
                     if (requestParamList.contains(param)) {
                         // 捞出权重
                         Integer weight = mappingParamEntity.getWeight();
@@ -110,6 +120,8 @@ public class MockController {
                 }
                 // 单文件内的权重值 >  当前总权重的话，则将 map 住的信息赋值给 response
                 if (weightSum > weightResult) {
+                    Logger.info("命中的mock文件信息为:{}", JsonFactory.objectToJson(mappingParamInfo));
+
                     weightResult = weightSum;
                     response = mappingParamInfo.getResponse();
                 } else {
@@ -123,7 +135,7 @@ public class MockController {
 
                 return "mock not attach";
             } else {
-                Logger.info("返回的 response = {}", JsonFactory.objectToJson(response));
+                Logger.info("返回的 response = {}", JsonFactory.objectToJson(JSON.parseObject(response)));
                 return response;
             }
 
