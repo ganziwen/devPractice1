@@ -1,25 +1,15 @@
 package com.development.mock.controller;
 
-import cn.hutool.core.io.FileUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.development.mock.model.MappingParamData;
-import com.development.mock.model.MappingParamEntity;
-import com.development.mock.model.MappingParamInfo;
 import com.development.mock.model.MockContext;
 import com.development.mock.service.MockService;
 import com.development.mock.util.ArrayUtils;
 import com.development.mock.util.JsonFactory;
-import com.development.mock.util.YmlUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.testng.util.Strings;
 import org.tinylog.Logger;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 

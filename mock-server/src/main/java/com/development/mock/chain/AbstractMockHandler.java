@@ -7,6 +7,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.Objects;
 
+import static com.development.mock.constants.PathConstant.MOCK_DATA_ROOT_PATH;
 import static com.development.mock.constants.PathConstant.MOCK_DATA_ROOT_PATH_VIP;
 
 /**
@@ -44,7 +45,7 @@ public abstract class AbstractMockHandler<T, R> {
     }
 
     public Pair<String, File> judgeFile(MockContext mockContext) {
-        String filePath = MOCK_DATA_ROOT_PATH_VIP + mockContext.getMockFileName();
+        String filePath = MOCK_DATA_ROOT_PATH + mockContext.getMockFileName();
         File mockDataFile = new File(filePath);
         Pair<String, File> filePair = Pair.of(filePath, mockDataFile);
         if (!mockDataFile.exists()) {

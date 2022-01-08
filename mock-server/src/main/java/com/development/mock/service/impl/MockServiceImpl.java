@@ -3,12 +3,11 @@ package com.development.mock.service.impl;
 import cn.hutool.core.io.FileUtil;
 import com.alibaba.fastjson.JSON;
 import com.development.mock.chain.ChainManager;
-import com.development.mock.model.MappingParamData;
+import com.development.mock.model.MockDataEntity;
 import com.development.mock.model.MappingParamEntity;
-import com.development.mock.model.MappingParamInfo;
+import com.development.mock.model.MockDataInfo;
 import com.development.mock.model.MockContext;
 import com.development.mock.service.MockService;
-import com.development.mock.util.ArrayUtils;
 import com.development.mock.util.JsonFactory;
 import com.development.mock.util.YmlUtils;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.development.mock.constants.PathConstant.MOCK_DATA_ROOT_PATH_VIP;
+import static com.development.mock.constants.PathConstant.MOCK_DATA_ROOT_PATH;
 
 /**
  * @author steven01.gan
@@ -50,7 +49,7 @@ public class MockServiceImpl implements MockService {
             如果是文件，直接返回了，如果是目录则需要解析匹配
          */
         // 这个地址是你自己电脑上的绝对路径
-        String filePath = MOCK_DATA_ROOT_PATH_VIP + mockContext.getMockFileName();
+        String filePath = MOCK_DATA_ROOT_PATH + mockContext.getMockFileName();
         File mockDataFile = new File(filePath);
         // 判断是文件还是路径
 
@@ -60,11 +59,11 @@ public class MockServiceImpl implements MockService {
         if (mockDataFile.isFile()) {
             Logger.info("{} is file", filePath);
             try {
-                MappingParamInfo mappingParamInfo = MappingParamInfo.fromMappingParamData(YmlUtils.readForObject(filePath, MappingParamData.class));
-                Logger.info("读取的mock文件信息为 {}", JsonFactory.objectToJson(mappingParamInfo));
-                Logger.info("返回内容为{}", JsonFactory.objectToJson(mappingParamInfo));
+                MockDataInfo mockDataInfo = MockDataInfo.fromMappingParamData(YmlUtils.readForObject(filePath, MockDataEntity.class));
+                Logger.info("读取的mock文件信息为 {}", JsonFactory.objectToJson(mockDataInfo));
+                Logger.info("返回内容为{}", JsonFactory.objectToJson(mockDataInfo));
                 // 单文件就不用去匹配，直接拿文件返回就完事了,但是有个问题是单文件怎么知道要返回 yml 的文件呢，或者强行将路径最后拼接一个 yml 直接读取呢
-                return mappingParamInfo.getResponse();
+                return mockDataInfo.getResponse();
             } catch (Exception e) {
                 throw new IllegalStateException(e);
             }
@@ -84,12 +83,12 @@ public class MockServiceImpl implements MockService {
                 // String path = filePath + "/" + mockDataFileName;
                 String path = filePath + "/" + mockDataFileName;
                 Logger.info("path = {}", path);
-                MappingParamInfo mappingParamInfo = MappingParamInfo.fromMappingParamData(YmlUtils.readForObject(path, MappingParamData.class));
+                MockDataInfo mockDataInfo = MockDataInfo.fromMappingParamData(YmlUtils.readForObject(path, MockDataEntity.class));
                 // 因为这里是有多个文件，所以要开始做参数匹配了.这里目前做的还是精确匹配，未来肯定是要可以支持正则或者是什么其他的条件的，不然限定的太死没法玩
-                List<MappingParamEntity> mappingParamEntities = mappingParamInfo.getMappingParams();
+                List<MappingParamEntity> mappingParamEntities = mockDataInfo.getMappingParams();
 
                 // 这里要匹配一下 host 是否命中，命中再往下，没命中就 continue，或者在 weight 内我们再设置一个权重，再加到 param 的权重内进行全局加和比较
-                if (!mappingParamInfo.getMappingHost().equals(mockContext.getRequestIp())) {
+                if (!mockDataInfo.getMappingHost().equals(mockContext.getRequestIp())) {
                     continue;
                 } else {
                     Logger.info("ip 命中");
@@ -111,10 +110,10 @@ public class MockServiceImpl implements MockService {
                 }
                 // 单文件内的权重值 >  当前总权重的话，则将 map 住的信息赋值给 response
                 if (weightSum > weightResult) {
-                    Logger.info("命中的mock文件信息为:{}", JsonFactory.objectToJson(mappingParamInfo));
+                    Logger.info("命中的mock文件信息为:{}", JsonFactory.objectToJson(mockDataInfo));
 
                     weightResult = weightSum;
-                    response = mappingParamInfo.getResponse();
+                    response = mockDataInfo.getResponse();
                 } else {
                     Logger.info("当前匹配的权重和为:{}", weightResult);
                 }

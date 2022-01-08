@@ -1,8 +1,8 @@
 package com.development.mock.util;
 
 import cn.hutool.core.io.IoUtil;
-import com.development.mock.model.MappingParamData;
-import com.development.mock.model.MappingParamInfo;
+import com.development.mock.model.MockDataEntity;
+import com.development.mock.model.MockDataInfo;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -129,10 +129,10 @@ public final class YmlUtils {
         // System.out.println("mappingParamData = " + mappingParamData);
         // System.out.println("mappingParamInfo = " + mappingParamInfo);
 
-        MappingParamData mappingParamDataVip = readForObject("D:\\gzw\\giteeCode\\devPractice\\mock-server\\src\\main\\resources\\mock_data\\create_account\\account_gzw.yml", MappingParamData.class);
-        MappingParamInfo mappingParamInfoVip = MappingParamInfo.fromMappingParamData(mappingParamDataVip);
-        System.out.println("mappingParamData = " + mappingParamDataVip);
-        System.out.println("mappingParamInfo = " + mappingParamInfoVip);
+        MockDataEntity mockDataEntityVip = readForObject("D:\\gzw\\giteeCode\\devPractice\\mock-server\\src\\main\\resources\\mock_data\\create_account\\account_gzw.yml", MockDataEntity.class);
+        MockDataInfo mockDataInfoVip = MockDataInfo.fromMappingParamData(mockDataEntityVip);
+        System.out.println("mappingParamData = " + mockDataEntityVip);
+        System.out.println("mappingParamInfo = " + mockDataInfoVip);
     }
 
 

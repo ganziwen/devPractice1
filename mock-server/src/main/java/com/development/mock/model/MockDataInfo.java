@@ -4,21 +4,19 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
  * @author Ganziwen
  * @version 1.0
- * @ClassName MappingParamInfo
+ * @ClassName MockDataInfo
  * @Description
  * @date 2022/1/3 15:29
  */
 @Data
 @Builder
-public class MappingParamInfo {
+public class MockDataInfo {
     private String mappingHost;
     private List<MappingParamEntity> mappingParams;
     private String response;
@@ -27,13 +25,13 @@ public class MappingParamInfo {
     /**
      * 这里是将 weight 提取出来，其实按我的理解，这个 weight 可以跟 host 一样，没必要放进 param 里面，也就没必要单独处理出来
      *
-     * @param mappingParamData
+     * @param mockDataEntity
      * @return
      */
-    public static MappingParamInfo fromMappingParamData(MappingParamData mappingParamData) {
+    public static MockDataInfo fromMappingParamData(MockDataEntity mockDataEntity) {
 
         // 从 mappingParamData 内取出 weight 返回 list
-        List<MappingParamEntity> paramEntities = mappingParamData.getMappingParams().stream()
+        List<MappingParamEntity> paramEntities = mockDataEntity.getMappingParams().stream()
                 .map(m -> {
                             Object weightVal = m.remove("weight");
                             // 获取出来的 weight 不能为 null ，否则默认设置为 1
@@ -42,9 +40,9 @@ public class MappingParamInfo {
                         }
 
                 ).collect(Collectors.toList());
-        return MappingParamInfo.builder()
-                .mappingHost(mappingParamData.getMappingHost())
-                .response(mappingParamData.getResponse())
+        return MockDataInfo.builder()
+                .mappingHost(mockDataEntity.getMappingHost())
+                .response(mockDataEntity.getResponse())
                 .mappingParams(paramEntities)
                 .build();
     }

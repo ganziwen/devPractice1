@@ -8,14 +8,13 @@ import java.util.Map;
 /**
  * @author Ganziwen
  * @version 1.0
- * @ClassName MappingParamInfo
- * @Description
+ * @ClassName MockDataEntity
+ * @Description 每个 mock 文件对应的对象
  * @date 2022/1/3 11:36
  */
 @Data
-public class MappingParamData {
+public class MockDataEntity {
     private String mappingHost;
-    // private long weight;
     private List<Map<String, Object>> mappingParams;
     private String response;
 }
