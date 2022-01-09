@@ -28,8 +28,11 @@ public enum ObserverManager {
         2. 基于请求的参数集合来计算第一步中的所有匹配的数据权重加和 -> CalcWeightObserver
         3. 处理数据……
          */
-        this.observers = Lists.newArrayList(new LoadMockFilesObserver(),
-                new CalcWeightObserver());
+        this.observers = Lists.newArrayList(
+                new LoadMockFilesObserver(),
+                new CalcWeightObserver(),
+                new PackResponseObserver()
+        );
     }
 
     public String getMockData(MockContext mockContext) {
