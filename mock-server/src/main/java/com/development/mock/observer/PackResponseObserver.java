@@ -14,7 +14,9 @@ public class PackResponseObserver implements IObserver<MockContext> {
     public void update(MockContext mockContext) {
         String finalResponse = mockContext.getFinalResponse();
         if (finalResponse.contains("${random:id}")) {
-            finalResponse.replaceAll("\$\{random\:id\}", "")
+            return;
+            // finalResponse.replaceAll("\$\{random\:id\}", "")
         }
+
     }
 }
