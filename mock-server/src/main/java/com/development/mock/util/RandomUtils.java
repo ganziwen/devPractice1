@@ -1,5 +1,9 @@
 package com.development.mock.util;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.assertj.core.api.Assertions;
+import org.testng.annotations.Test;
+
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 
@@ -11,12 +15,23 @@ import java.time.LocalDateTime;
  * @date 2022/1/9 15:39
  */
 public class RandomUtils {
-    public static String random32Id(int size) {
-        if (size <= 0) {
-            throw new IllegalStateException("size should not less than 0");
-        } else {
-            return DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now());
-        }
+    /**
+     * 产生 32 位随机数:时间拼接_8位_8位
+     *
+     * @param size
+     * @return
+     */
+    public static String random32Id() {
 
+        String time14Stamp = DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now());
+        return time14Stamp + "_" + RandomStringUtils.randomAlphanumeric(8) + "_" + RandomStringUtils.randomAlphanumeric(8);
+    }
+
+    @Test
+    public void testRandom32Id() {
+        String random32Id = random32Id();
+        System.out.println("random32Id = " + random32Id);
     }
 }
+
+

@@ -8,7 +8,6 @@ import java.io.File;
 import java.util.Objects;
 
 import static com.development.mock.constants.PathConstant.MOCK_DATA_ROOT_PATH;
-import static com.development.mock.constants.PathConstant.MOCK_DATA_ROOT_PATH_VIP;
 
 /**
  * @author steven01.gan
