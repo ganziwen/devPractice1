@@ -1,5 +1,6 @@
 package com.development.mock.chain;
 
+import com.development.mock.decorator.DecoratorManager;
 import com.development.mock.model.MockDataEntity;
 import com.development.mock.model.MockDataInfo;
 import com.development.mock.model.MockContext;
@@ -37,7 +38,10 @@ public class SingleMappingHandler extends AbstractMockHandler<MockContext, Strin
             Logger.info("读取的mock文件信息为 {}", JsonFactory.objectToJson(mockDataInfo));
             Logger.info("返回内容为{}", JsonFactory.objectToJson(mockDataInfo));
             // 单文件就不用去匹配，直接拿文件返回就完事了,但是有个问题是单文件怎么知道要返回 yml 的文件呢，或者强行将路径最后拼接一个 yml 直接读取呢
-            return mockDataInfo.getResponse();
+            // 不想去找装饰者就直接返回就好了
+            // return mockDataInfo.getResponse();
+            // 这里是假设匹配到一个文件也去找装饰者
+            return DecoratorManager.newInstance.doPack(mockDataInfo.getResponse());
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
