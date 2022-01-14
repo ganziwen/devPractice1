@@ -13,28 +13,34 @@ import java.util.regex.Pattern;
  * @author steven01.gan
  * @version 1.0
  * @date 2022/1/10-21:52
+ * 这里就是写个正则，匹配到 id 返回就完事了
  */
 public class RandomIdDecorator extends BasePackageResponseDecorator {
 
-    public static final Pattern PATTERN = Pattern.compile("\\$\\{random:id:(.*)}");
+    public static final Pattern PATTERN = Pattern.compile("(?<=\\$\\{random:id:)(.*?)(?=\\})");
 
     public RandomIdDecorator(BasePackageResponseDecorator innerDecorator) {
         super(innerDecorator);
     }
 
     @Override
-    protected String onDecorat(String data) {
+    protected String onDecorate(String data) {
         // if (data.contains("${random:id}")) {
         //     return data.replaceAll("\\$\\{random:id}", RandomUtils.random32Id());
         // }
         Matcher matcher = PATTERN.matcher(data);
         while (matcher.find()) {
-            String element = matcher.group(0);
-            int size = Integer.parseInt(element);
+            // String element = matcher.group(0);
+            int size = Integer.parseInt(matcher.group(0));
+            String searchElement = genSearchElement(size);
             String randomId = RandomUtils.randomId(size);
-            data = StringUtils.replace(data, element, randomId);
+            data = StringUtils.replace(data, searchElement, randomId);
         }
         return data;
+    }
+
+    private String genSearchElement(int size) {
+        return String.format("${random:id:%d}", size);
     }
 
 

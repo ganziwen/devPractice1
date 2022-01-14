@@ -17,4 +17,5 @@ public class Case1 {
         MockContext mockContext = MockContext.builder().requestUri(uri).build();
         System.out.println("mockContext.getMockFileName() = " + mockContext.getMockFileName());
     }
+
 }

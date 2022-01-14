@@ -14,15 +14,15 @@ public abstract class BasePackageResponseDecorator implements IDecorator<String>
     public BasePackageResponseDecorator(BasePackageResponseDecorator innerDecorator) {
         this.innerDecorator = innerDecorator;
     }
-    protected abstract String onDecorat(String data);
+    protected abstract String onDecorate(String data);
 
 
     @Override
     public String decorate(String data) {
         if (!Objects.isNull(this.innerDecorator)) {
             String result = this.innerDecorator.decorate(data);
-            return onDecorat(result);
+            return onDecorate(result);
         }
-        return onDecorat(data);
+        return onDecorate(data);
     }
 }

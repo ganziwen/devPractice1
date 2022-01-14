@@ -1,5 +1,6 @@
 package com.development.mock.util;
 
+import cn.hutool.core.util.RandomUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.Parameters;
@@ -7,6 +8,7 @@ import org.testng.annotations.Test;
 
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
+import java.util.Random;
 
 /**
  * @author Ganziwen
@@ -29,9 +31,15 @@ public class RandomUtils {
     }
 
     public static String randomId(int size) {
+        return RandomStringUtils.randomNumeric(size);
+        // return RandomStringUtils.randomAlphanumeric(size);
+    }
 
+    public static String randomStr(int size) {
+        // return RandomUtil.randomInts(size);
         return RandomStringUtils.randomAlphanumeric(size);
     }
+
 
     @Test
     public void testRandom32Id() {
