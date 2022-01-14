@@ -6,4 +6,4 @@ mappingParams:
   - accountName: "regex"
     weight: 3
 
-response: "{\"errNo\":${random:id},\"errMsg\":\"不确定\"}"
+response: "{\"errNo\":${random:id:6},\"errMsg\":\"不确定\"}"

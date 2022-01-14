@@ -2,6 +2,7 @@ package com.development.mock.util;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import java.time.format.DateTimeFormatter;
@@ -27,11 +28,25 @@ public class RandomUtils {
         return time14Stamp + "_" + RandomStringUtils.randomAlphanumeric(8) + "_" + RandomStringUtils.randomAlphanumeric(8);
     }
 
+    public static String randomId(int size) {
+
+        return RandomStringUtils.randomAlphanumeric(size);
+    }
+
     @Test
     public void testRandom32Id() {
         String random32Id = random32Id();
         System.out.println("random32Id = " + random32Id);
     }
+
+    @Test
+    public void testRandomId() {
+        int size = 6;
+        String randomId = randomId(size);
+        System.out.println("randomId = " + randomId);
+    }
+
+
 }
 
 

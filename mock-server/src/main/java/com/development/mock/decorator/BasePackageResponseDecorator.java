@@ -14,7 +14,6 @@ public abstract class BasePackageResponseDecorator implements IDecorator<String>
     public BasePackageResponseDecorator(BasePackageResponseDecorator innerDecorator) {
         this.innerDecorator = innerDecorator;
     }
-
     protected abstract String onDecorat(String data);
 
 

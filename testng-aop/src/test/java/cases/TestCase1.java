@@ -5,10 +5,13 @@ import com.auto.annotations.Api;
 import com.auto.annotations.Assert;
 import com.auto.annotations.AssertUtil;
 import com.auto.utils.BaseCase;
+import com.google.common.collect.Lists;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
+
+import java.util.ArrayList;
 
 /**
  * @author steven01.gan
