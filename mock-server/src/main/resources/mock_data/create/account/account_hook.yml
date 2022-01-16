@@ -1,0 +1,9 @@
+mappingHost: "127.0.0.2"
+
+mappingParams:
+  - accountId: 1
+    weight: 4
+  - accountName: "hook"
+    weight: 3
+
+response: "{\"errNo\":500,\"errMsg\":\"不确定\",\"data\":{\"randomId\":${random:id:6},\"randomStr\":\"${random:str:6}\",\"hookStr\":\"${hook:userId}\"}}"

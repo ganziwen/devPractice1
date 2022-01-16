@@ -29,9 +29,14 @@ public enum ObserverManager {
         3. 处理数据……
          */
         this.observers = Lists.newArrayList(
+                // 第一步加载本地 mock 文件并解析出我们需要的数据模型
                 new LoadMockFilesObserver(),
+                // 第二步计算权重，找到最大的那个
                 new CalcWeightObserver(),
-                new PackResponseObserver()
+                // 第三步包装返回数据
+                new PackResponseObserver(),
+                // 第四步处理透传数据
+                new HookResponseObserver()
         );
     }
 
