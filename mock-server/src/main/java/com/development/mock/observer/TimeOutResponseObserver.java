@@ -26,20 +26,33 @@ public class TimeOutResponseObserver implements IObserver<MockContext> {
         3. 如果 MockDataInfo 中有此字段的配置，即需要实现超时的能力
         4. 如果没有配置则逻辑正常往下处理
          */
-        Logger.info("time out start ,timeout = {}ms", mockContext.getTimeOut());
-        if (!Objects.isNull(mockContext.getTimeOut()) && mockContext.getTimeOut() > 0) {
-            Logger.info("time is sleeping……");
-            ThreadUtil.sleep(mockContext.getTimeOut());
-            Logger.info("time sleep end");
-        } else {
-            Logger.info("time out is not set or timeout value is 0");
+
+        // 这里多线程进来可能会有问题，全部 sleep 在这里
+        // Logger.info("time out start ,timeout = {}ms", mockContext.getTimeOut());
+        // if (!Objects.isNull(mockContext.getTimeOut()) && mockContext.getTimeOut() > 0) {
+        //     Logger.info("time is sleeping……");
+        //     ThreadUtil.sleep(mockContext.getTimeOut());
+        //     Logger.info("time sleep end");
+        // } else {
+        //     Logger.info("time out is not set or timeout value is 0");
+        // }
+
+        // 这里的操作可以解决第一个场景的问题
+        long startTime = System.currentTimeMillis();
+        while (true) {
+            long currentTimeMillisTime = System.currentTimeMillis();
+            if (currentTimeMillisTime - startTime >= mockContext.getTimeOut()) {
+                break;
+            }
+            Thread.yield();
         }
 
         /*
         思考：
         1. 这样粗暴的 sleep 有没有问题？假设现在机器的 cpu 是 8 核，但是有 N(N>8) 多请求是在做超时处理
-        2. 超时处理真的就这么简单吗？
-        场景：比如做压测时的 mock 服务
+        2. 超时处理真的就这么简单吗？答案肯定是不行的
+        场景1：比如做压测时的 mock 服务，多个线程请求进来难道全部在这 sleep 么？
+        场景2：线上真实的响应时间返回，是不确定的：可能 20% 的流量，超时时间是 400-500 ms 之间随机；30% 的流量，超时时间是 500-1200 随机；另外的 50% 是 1200-1800 之间随机
          */
     }
 }
