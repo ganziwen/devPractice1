@@ -25,9 +25,9 @@ public class MockContext {
     private Map<String, String> requestParams;
     private String requestIp;
     private String mockFileName;
-
     private String finalResponse;
     private List<MockDataInfo> mockDataInfoList;
+    private Long timeOut;
 
     public String getMockFileName() {
         // 将 uri 的第一个 / 去除掉，并且将所有的 / 替换成 _

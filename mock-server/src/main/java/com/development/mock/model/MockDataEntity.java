@@ -17,4 +17,5 @@ public class MockDataEntity {
     private String mappingHost;
     private List<Map<String, Object>> mappingParams;
     private String response;
+    private Long timeOut;
 }

@@ -20,6 +20,7 @@ public class MockDataInfo {
     private String mappingHost;
     private List<MappingParamEntity> mappingParams;
     private String response;
+    private Long timeOut;
 
 
     /**
@@ -44,6 +45,7 @@ public class MockDataInfo {
                 .mappingHost(mockDataEntity.getMappingHost())
                 .response(mockDataEntity.getResponse())
                 .mappingParams(paramEntities)
+                .timeOut(mockDataEntity.getTimeOut())
                 .build();
     }
 

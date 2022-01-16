@@ -26,6 +26,7 @@ public class CalcWeightObserver implements IObserver<MockContext> {
     public void update(MockContext mockContext) {
         int weightResult = 0;
         String response = null;
+        Long timeOut = null;
         List<MockDataInfo> mockDataInfoList = mockContext.getMockDataInfoList();
         List<String> requestParamList = mockContext.getRequestParams().entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue()).collect(Collectors.toList());
 
@@ -51,8 +52,10 @@ public class CalcWeightObserver implements IObserver<MockContext> {
             }
             // 单文件内的权重值 >  当前总权重的话，则将 map 住的信息赋值给 response
             if (weightSum > weightResult) {
-                weightResult = weightSum;
                 response = mockData.getResponse();
+                timeOut = mockData.getTimeOut();
+                weightResult = weightSum;
+
             } else {
                 Logger.info("当前匹配的权重和为:{}", weightResult);
             }
@@ -62,5 +65,6 @@ public class CalcWeightObserver implements IObserver<MockContext> {
             throw new IllegalStateException("mock not attach");
         }
         mockContext.setFinalResponse(response);
+        mockContext.setTimeOut(timeOut);
     }
 }

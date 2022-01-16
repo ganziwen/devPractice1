@@ -1,0 +1,10 @@
+mappingHost: "127.0.0.2"
+
+mappingParams:
+  - accountId: 1
+    weight: 7
+  - accountName: "timeout"
+    weight: 3
+timeOut: 6000
+
+response: "{\"errNo\":500,\"errMsg\":\"不确定\",\"data\":{\"randomId\":${random:id:6},\"randomStr\":\"${random:str:6}\",\"hookStr\":\"${hook:userId}\"}}"

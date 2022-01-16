@@ -35,7 +35,9 @@ public enum ObserverManager {
                 // 第三步包装返回数据
                 new PackResponseObserver(),
                 // 第四步处理透传数据
-                new HookResponseObserver()
+                new HookResponseObserver(),
+                // 第五步做响应时间超时处理
+                new TimeOutResponseObserver()
         );
     }
 
