@@ -11,10 +11,10 @@ import java.util.regex.Pattern;
  * @version 1.0
  * @date 2022/1/10-21:52
  */
-public class RandomStrDecorator extends BasePackageResponseDecorator {
+public class RandomStrDecorator extends BaseResponseDecorator<String> {
     public static final Pattern PATTERN = Pattern.compile("(?<=\\$\\{random:str:)(.*?)(?=\\})");
 
-    public RandomStrDecorator(BasePackageResponseDecorator innerDecorator) {
+    public RandomStrDecorator(BaseResponseDecorator innerDecorator) {
         super(innerDecorator);
     }
 

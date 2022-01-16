@@ -2,7 +2,6 @@ package com.development.mock.observer;
 
 import com.development.mock.model.MockContext;
 import org.assertj.core.util.Lists;
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 
 import java.util.List;
 

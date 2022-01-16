@@ -1,11 +1,9 @@
 package com.development.mock.decorator;
 
 import com.development.mock.util.RandomUtils;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
-import org.testng.annotations.Test;
+import org.checkerframework.checker.index.qual.SubstringIndexUnknown;
 
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,11 +13,11 @@ import java.util.regex.Pattern;
  * @date 2022/1/10-21:52
  * 这里就是写个正则，匹配到 id 返回就完事了
  */
-public class RandomIdDecorator extends BasePackageResponseDecorator {
+public class RandomIdDecorator extends BaseResponseDecorator<String> {
 
     public static final Pattern PATTERN = Pattern.compile("(?<=\\$\\{random:id:)(.*?)(?=\\})");
 
-    public RandomIdDecorator(BasePackageResponseDecorator innerDecorator) {
+    public RandomIdDecorator(BaseResponseDecorator innerDecorator) {
         super(innerDecorator);
     }
 
