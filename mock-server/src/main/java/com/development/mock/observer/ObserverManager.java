@@ -32,6 +32,9 @@ public enum ObserverManager {
                 new LoadMockFilesObserver(),
                 // 第二步计算权重，找到最大的那个
                 new CalcWeightObserver(),
+                // 这里塞透传的请求
+                new PenetrateObserver(),
+
                 // 第三步包装返回数据
                 new PackResponseObserver(),
                 // 第四步处理透传数据

@@ -21,6 +21,7 @@ public class MockDataInfo {
     private List<MappingParamEntity> mappingParams;
     private String response;
     private Long timeOut;
+    private String pentrateUrl;
 
 
     /**
@@ -46,6 +47,7 @@ public class MockDataInfo {
                 .response(mockDataEntity.getResponse())
                 .mappingParams(paramEntities)
                 .timeOut(mockDataEntity.getTimeOut())
+                .pentrateUrl(mockDataEntity.getPentrateUrl())
                 .build();
     }
 

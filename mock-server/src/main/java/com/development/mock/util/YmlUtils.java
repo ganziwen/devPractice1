@@ -129,10 +129,13 @@ public final class YmlUtils {
         // System.out.println("mappingParamData = " + mappingParamData);
         // System.out.println("mappingParamInfo = " + mappingParamInfo);
 
-        MockDataEntity mockDataEntityVip = readForObject("D:\\gzw\\giteeCode\\devPractice\\mock-server\\src\\main\\resources\\mock_data\\create_account\\account_gzw.yml", MockDataEntity.class);
-        MockDataInfo mockDataInfoVip = MockDataInfo.fromMappingParamData(mockDataEntityVip);
-        System.out.println("mappingParamData = " + mockDataEntityVip);
-        System.out.println("mappingParamInfo = " + mockDataInfoVip);
+        // MockDataEntity mockDataEntityVip = readForObject("D:\\gzw\\giteeCode\\devPractice\\mock-server\\src\\main\\resources\\mock_data\\create_account\\account_gzw.yml", MockDataEntity.class);
+        String mockDataEntityVip2 = readForObject("D:\\Learn\\JAVA\\TestDevelement\\devPractice\\mock-server\\src\\main\\resources\\mock_data\\create_order", String.class);
+        System.out.println("mockDataEntityVip2 = " + mockDataEntityVip2);
+
+        // MockDataInfo mockDataInfoVip = MockDataInfo.fromMappingParamData(mockDataEntityVip);
+        // System.out.println("mappingParamData = " + mockDataEntityVip);
+        // System.out.println("mappingParamInfo = " + mockDataInfoVip);
     }
 
 

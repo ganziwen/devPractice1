@@ -27,11 +27,11 @@ public class CalcWeightObserver implements IObserver<MockContext> {
         int weightResult = 0;
         String response = null;
         Long timeOut = null;
+        String pentrateUrl = null;
         List<MockDataInfo> mockDataInfoList = mockContext.getMockDataInfoList();
         List<String> requestParamList = mockContext.getRequestParams().entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue()).collect(Collectors.toList());
 
         for (MockDataInfo mockData : mockDataInfoList) {
-
             int weightSum = 0;
 
             // 因为这里是有多个文件，所以要开始做参数匹配了.这里目前做的还是精确匹配，未来肯定是要可以支持正则或者是什么其他的条件的，不然限定的太死没法玩
@@ -54,6 +54,7 @@ public class CalcWeightObserver implements IObserver<MockContext> {
             if (weightSum > weightResult) {
                 response = mockData.getResponse();
                 timeOut = mockData.getTimeOut();
+                pentrateUrl = mockData.getPentrateUrl();
                 weightResult = weightSum;
 
             } else {
@@ -66,5 +67,6 @@ public class CalcWeightObserver implements IObserver<MockContext> {
         }
         mockContext.setFinalResponse(response);
         mockContext.setTimeOut(timeOut);
+        mockContext.setPentrateUrl(pentrateUrl);
     }
 }

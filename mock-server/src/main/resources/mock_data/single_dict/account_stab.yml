@@ -1,0 +1,9 @@
+mappingHost: "127.0.0.1"
+
+mappingParams:
+  - accountId: 1
+    weight: 7
+  - accountName: "pen"
+    weight: 3
+
+response: "{\"errNo\":200,\"errMsg\":\"success\"}"

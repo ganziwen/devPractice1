@@ -18,4 +18,5 @@ public class MockDataEntity {
     private List<Map<String, Object>> mappingParams;
     private String response;
     private Long timeOut;
+    private String pentrateUrl;
 }

@@ -42,7 +42,7 @@ public class MockController2 {
                 .requestUri(request.getRequestURI())
                 .requestParams(parseRequestParam())
                 .build();
-        Logger.info("do mock start ,context = {}", JsonFactory.objectToJson(mockContext));
+        Logger.info("do mock start ,context: \n{}", JsonFactory.objectToJson(mockContext));
 
         return mockService.doMock(mockContext);
 

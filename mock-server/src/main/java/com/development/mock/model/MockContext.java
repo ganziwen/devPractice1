@@ -28,6 +28,7 @@ public class MockContext {
     private String finalResponse;
     private List<MockDataInfo> mockDataInfoList;
     private Long timeOut;
+    private String pentrateUrl;
 
     public String getMockFileName() {
         // 将 uri 的第一个 / 去除掉，并且将所有的 / 替换成 _

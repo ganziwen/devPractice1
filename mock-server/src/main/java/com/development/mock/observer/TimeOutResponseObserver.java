@@ -28,24 +28,25 @@ public class TimeOutResponseObserver implements IObserver<MockContext> {
          */
 
         // 这里多线程进来可能会有问题，全部 sleep 在这里
-        // Logger.info("time out start ,timeout = {}ms", mockContext.getTimeOut());
-        // if (!Objects.isNull(mockContext.getTimeOut()) && mockContext.getTimeOut() > 0) {
-        //     Logger.info("time is sleeping……");
-        //     ThreadUtil.sleep(mockContext.getTimeOut());
-        //     Logger.info("time sleep end");
-        // } else {
-        //     Logger.info("time out is not set or timeout value is 0");
-        // }
+        Logger.info("time out start ,timeout = {}ms", mockContext.getTimeOut());
+        if (!Objects.isNull(mockContext.getTimeOut()) && mockContext.getTimeOut() > 0) {
+            Logger.info("time is sleeping……");
+            ThreadUtil.sleep(mockContext.getTimeOut());
+            Logger.info("time sleep end");
+        } else {
+            Logger.info("time out is not set or timeout value is 0");
+            return;
+        }
 
         // 这里的操作可以解决第一个场景的问题
-        long startTime = System.currentTimeMillis();
-        while (true) {
-            long currentTimeMillisTime = System.currentTimeMillis();
-            if (currentTimeMillisTime - startTime >= mockContext.getTimeOut()) {
-                break;
-            }
-            Thread.yield();
-        }
+        // long startTime = System.currentTimeMillis();
+        // while (true) {
+        //     long currentTimeMillisTime = System.currentTimeMillis();
+        //     if (currentTimeMillisTime - startTime >= mockContext.getTimeOut()) {
+        //         break;
+        //     }
+        //     Thread.yield();
+        // }
 
         /*
         思考：
