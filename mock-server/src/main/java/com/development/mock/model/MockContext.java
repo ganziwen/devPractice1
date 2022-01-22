@@ -1,12 +1,8 @@
 package com.development.mock.model;
 
-import ch.qos.logback.core.util.SystemInfo;
 import lombok.Builder;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.Map;
@@ -34,6 +30,11 @@ public class MockContext {
     中断标志位，设置为 true 的时候代表直接退出不处理接下来的策略
      */
     private boolean breakFlag;
+
+    public void setBreakFlag() {
+        breakFlag = true;
+    }
+
 
     public String getMockFileName() {
         // 将 uri 的第一个 / 去除掉，并且将所有的 / 替换成 _
