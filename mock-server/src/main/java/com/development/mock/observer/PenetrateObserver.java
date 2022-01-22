@@ -39,9 +39,21 @@ public class PenetrateObserver implements IObserver<MockContext> {
             Map<String, String> requestParams = mockContext.getRequestParams();
             String newUrl = mockContext.getPentrateUrl();
             Logger.info("request penetrate start,url = {},body =\n {}", newUrl, JSON.toJSONString(requestParams));
-            // doHttp request 这里需要研究一下，发动出去的 requestParam 为空
+            // doHttp request 这里需要研究一下，发送出去的 requestParam 为空
             String body = HttpRequest.post(newUrl).header(Header.CONTENT_TYPE, "application/x-www-form-urlencoded").form(String.valueOf(requestParams)).execute().body();
             mockContext.setFinalResponse(body);
+
+            /*
+            这里代表设置break
+             */
+            mockContext.setBreakFlag(true);
         }
+
+        /*
+        问题：
+        1. 既然选择了走透传,即去掉真实的服务,那么还有必要做包装，hook以及响应超时处理么?
+            其实是没必要做的，因为我们自定义的返回的策略是因为不知道真实的服务是什么策略，所以加了一些能力，但是现在都去请求真实的环境了，接口也拿到返回了，其实是没有太大的必要去做策略的处理
+            那么，有真实的返回之后，怎么绕过后面的策略呢？
+         */
     }
 }

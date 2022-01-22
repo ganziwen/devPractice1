@@ -46,6 +46,9 @@ public enum ObserverManager {
 
     public String getMockData(MockContext mockContext) {
         for (IObserver<MockContext> observer : observers) {
+            if (mockContext.isBreakFlag()) {
+                break;
+            }
             observer.update(mockContext);
         }
         return mockContext.getFinalResponse();

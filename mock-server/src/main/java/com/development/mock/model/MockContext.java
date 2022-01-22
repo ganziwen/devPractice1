@@ -30,6 +30,11 @@ public class MockContext {
     private Long timeOut;
     private String pentrateUrl;
 
+    /*
+    中断标志位，设置为 true 的时候代表直接退出不处理接下来的策略
+     */
+    private boolean breakFlag;
+
     public String getMockFileName() {
         // 将 uri 的第一个 / 去除掉，并且将所有的 / 替换成 _
         // return StringUtils.replace(StringUtils.substringAfter(this.requestUri, "/"), "/", "_");
