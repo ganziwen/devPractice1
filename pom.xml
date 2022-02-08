@@ -22,6 +22,7 @@
         <module>dubbo-springboot</module>
         <module>testng-aop</module>
         <module>myself-tools</module>
+        <module>practice-round-one</module>
     </modules>
 
     <properties>
