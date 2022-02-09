@@ -24,6 +24,28 @@ public class Basic {
         System.out.println(students.getNameAndAge("方法重载第二种", 19));
         System.out.println(students.joinAllArguments("哈哈", "这是啥"));
     }
+
+
+    public void change(int a, int[] arr, String string) {
+        a = a + 1;
+        arr[0] = 9999;
+        string = string + "add";
+    }
+
+    /**
+     * 值传递和引用传递
+     */
+    @Test
+    public void transfer() {
+        int a = 3;
+        int[] arr1 = {1, 2, 3};
+        String test = "test";
+        change(a, arr1, test);
+        System.out.println("a = " + a);
+        System.out.println("Arrays.toString(arr1) = " + Arrays.toString(arr1));
+        System.out.println("test = " + test);
+    }
+
 }
 
 class Students {
