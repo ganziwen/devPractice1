@@ -2,6 +2,8 @@ package str;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Objects;
+
 /**
  * StringUtils 工具类方法,其实只是避免了 NPE 异常
  *
@@ -20,5 +22,6 @@ public class StringUtilsFunc {
     public static void test1() {
         String string = "hello world";
         StringUtils.isNotEmpty(string);
+
     }
 }
