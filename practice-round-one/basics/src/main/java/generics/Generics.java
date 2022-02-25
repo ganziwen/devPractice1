@@ -3,6 +3,8 @@ package generics;
 import lombok.Data;
 import org.testng.annotations.Test;
 
+import java.security.PrivateKey;
+
 /**
  * @author Ganziwen
  * @version 1.0
@@ -44,6 +46,18 @@ public class Generics {
 
         RetMsg<TestGenericClass<String, Integer>> errRetMsg = RetMsg.buildFailMsg(testClass);
         System.out.println("errRetMsg = " + errRetMsg);
+    }
+
+    @Test
+    public void testGenericInterface() {
+        GenericClass genericClass = new GenericClass();
+        System.out.println("genericClass.next() = " + genericClass.next());
+    }
+
+    @Test
+    public void testGenericInterface2() {
+        GenericClass2<String> genericClass2 = new GenericClass2<>("test2");
+        System.out.println(genericClass2.next().toString());
     }
 }
 
@@ -114,3 +128,34 @@ class RetMsg<T> {
     }
 }
 
+/**
+ * 泛型接口
+ *
+ * @param <T>
+ */
+interface GenericInterface<T> {
+    public T next();
+}
+
+class GenericClass implements GenericInterface<String> {
+
+    @Override
+    public String next() {
+        return "stringInfo";
+    }
+}
+
+class GenericClass2<T> implements GenericInterface<T> {
+
+    private T t;
+
+    public GenericClass2(T t) {
+        this.t = t;
+    }
+
+
+    @Override
+    public T next() {
+        return t;
+    }
+}
