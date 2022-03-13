@@ -14,11 +14,11 @@
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.hujiang.aspectjx/gradle-android-plugin-aspectjx -->
-        <dependency>
-            <groupId>com.hujiang.aspectjx</groupId>
-            <artifactId>gradle-android-plugin-aspectjx</artifactId>
-            <version>2.0.10</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.hujiang.aspectjx</groupId>-->
+<!--            <artifactId>gradle-android-plugin-aspectjx</artifactId>-->
+<!--            <version>2.0.10</version>-->
+<!--        </dependency>-->
 
 
         <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.codehaus.mojo/aspectj-maven-plugin &ndash;&gt;-->

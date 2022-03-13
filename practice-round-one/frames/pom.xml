@@ -10,6 +10,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>frames</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>spring-round-one-annotation</module>
+        <module>spring-aop</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
